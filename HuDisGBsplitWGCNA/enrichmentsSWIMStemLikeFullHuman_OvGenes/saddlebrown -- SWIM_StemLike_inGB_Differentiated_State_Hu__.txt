@@ -1,0 +1,3 @@
+"","saddlebrown....SWIM_StemLike_inGB_Differentiated_State_Hu__"
+"1","IL1R1"
+"2","SLC43A2"

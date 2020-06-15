@@ -1,0 +1,7 @@
+"","HuAgeGBsplit_21....TAPbyQNP__"
+"1","GATAD2A"
+"2","IGDCC4"
+"3","ODF3L1"
+"4","RBM34"
+"5","SIMC1"
+"6","SMYD5"

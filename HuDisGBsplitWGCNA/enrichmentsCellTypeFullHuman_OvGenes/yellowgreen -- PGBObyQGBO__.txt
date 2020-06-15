@@ -1,0 +1,7 @@
+"","yellowgreen....PGBObyQGBO__"
+"1","AC244102.1"
+"2","COL19A1"
+"3","LINC02577"
+"4","MAGEA1"
+"5","MAGEB17"
+"6","MAGEB2"

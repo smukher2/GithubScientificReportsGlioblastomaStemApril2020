@@ -1,0 +1,8 @@
+"","HuAgeGBsplit_28....NSCbyNPC__"
+"1","BCL6B"
+"2","C15orf41"
+"3","C4orf19"
+"4","FGD3"
+"5","FZD9"
+"6","IRGM"
+"7","RNASE10"

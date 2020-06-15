@@ -1,0 +1,5 @@
+"","brain_tumor","hippocampus","prefrontal_cortex","optic_chiasm","brain_tumor","hippocampus","prefrontal_cortex","optic_chiasm"
+"brain_tumor",1,0.822550970136208,0.92919732400411,0.921268485292278,NA,0,0,0
+"hippocampus",0.822550970136208,1,0.878425112563153,0.823623011469454,0,NA,0,0
+"prefrontal_cortex",0.92919732400411,0.878425112563153,1,0.909841720000232,0,0,NA,0
+"optic_chiasm",0.921268485292278,0.823623011469454,0.909841720000232,1,0,0,0,NA

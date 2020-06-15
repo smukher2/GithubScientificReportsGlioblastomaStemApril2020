@@ -1,0 +1,5 @@
+"","darkred....QNPbyTAP__"
+"1","C17orf98"
+"2","FUCA1"
+"3","RUBCN"
+"4","WDR53"

@@ -1,0 +1,8 @@
+"","HuAgeGBsplit_22....NPCbyNSC__"
+"1","ASRGL1"
+"2","GLO1"
+"3","HIGD2B"
+"4","MDGA1"
+"5","NANOS3"
+"6","SYNGAP1"
+"7","VAMP2"

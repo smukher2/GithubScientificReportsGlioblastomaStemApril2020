@@ -1,0 +1,4 @@
+"","HuAgeGBsplit_00....PSVZbyQSVZ__"
+"1","COL17A1"
+"2","DENND2A"
+"3","NACAD"

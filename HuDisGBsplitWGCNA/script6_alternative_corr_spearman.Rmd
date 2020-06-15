@@ -1,0 +1,314 @@
+---
+title: "script6_alternative_corr_spearman"
+author: "Shradha Mukherjee"
+date: "April 16, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+###############################################Different correlations############################################################################
+####################################HuAgeGBsplit#######################################
+###Step13: Load libraries, set working directory and Import data for WGCNA###
+```{r}
+#If restarting program uncomment line below
+#load(file="temp.RData")
+#load("./Module_Trait_wgcnaRData/WGCNA_temp75.RData")
+load("./Module_Trait_wgcnaRData/WGCNA_truncated75.RData")
+#save working directory location
+wd<-getwd()
+wd
+``` 
+
+```{r}
+#Load additional functions required for this pipeline
+#Reference: Miller, J.A., Horvath, S., and Geschwind, D.H. (2010). Divergence of Human and mouse brain transcriptome highlights Alzheimer disease pathways. Proceedings of the National Academy of Sciences of the United States of America 107, 12698-12703.
+
+write.geneList <- function(PG, filename, allProbes=0, allGenes=0, probe="g")
+{
+## These functions write a genelist / probelist to a file of geneNames
+
+## USER inputs
+# PG = the probe/gene you want written to a gene list
+# allProbes = the list of probe names for the above probes
+# allGenes = the list of gene names for the corresponding probes
+# filename = the filename (can include folder)
+# probe = the default ("g") says PG is a gene and doesn''t need to be converted
+#         to a gene.  Otherwise PG is assumed to be a probe and converted
+
+gene = PG
+if (probe!="g") {
+  gene = probe2Gene(PG,allProbes,allGenes)
+}
+write(gene,filename,sep="\n")
+
+}
+
+cor.test.l = function(x){
+## Performs a Pearson correlation on a vector of genes
+ ct = cor.test(x,var)
+ return(c(ct$est,ct$p.val))
+}
+```
+
+```{r}
+#library(BiocInstaller)
+#biocLite("qvalue")
+#install.packages(c("impute","dynamicTreeCut","flashClust","Hmisc","WGCNA","stringi","enrichR","filesstrings"))
+library(impute)
+library(dynamicTreeCut)
+library(qvalue)
+library(flashClust)
+library(Hmisc)
+library(WGCNA)
+library(stringi)
+library(stringr)
+library(enrichR)#for pathway analysis
+library(filesstrings)#for file organization
+options(stringsAsFactors = FALSE)
+```
+
+###Step19: Visualization of trait module relatonships for data A1###
+#In this step we use the coded metadata files
+
+#Relating modules to physiological traits for A1
+```{r}
+# For data A1
+# Define numbers of genes and samples
+nGenesA1 = nrow(datExprA1g2)
+nSamplesA1 = ncol(datExprA1g2)
+# Recalculate MEs with color labels
+MEs0A1= moduleEigengenes(t(datExprA1g2),modulesA1)$eigengenes
+MEsA1= orderMEs(MEs0A1)
+#modTraitCorA1 = cor(MEsA1, metadataA1g_coded, use = "p")
+#modTraitCorA1 = cor(MEsA1, metadataA1g_coded, use="complete.obs", method = c("pearson", "kendall", "spearman"))
+modTraitCorA1 = cor(MEsA1, metadataA1g_coded, use="pairwise.complete.obs", method = c("spearman"))
+
+modTraitPA1 = corPvalueStudent(modTraitCorA1, nSamplesA1)
+textMatrixA1 = paste(signif(modTraitCorA1, 2), "\n(",
+signif(modTraitPA1, 1), ")", sep = "")
+dim(textMatrixA1) = dim(modTraitCorA1)
+par(mar = c(6, 8.5, 3, 3))
+# Display the correlation values within a heatmap plot
+labeledHeatmap(Matrix = modTraitCorA1, xLabels = names(metadataA1g_coded),
+yLabels = names(MEsA1), ySymbols = names(MEsA1), cex.lab = 0.05,
+colorLabels =FALSE,colors=greenWhiteRed(50),textMatrix=textMatrixA1,
+setStdMargins = FALSE, cex.text = 0.05, zlim = c(-1,1),
+main = paste("A1_Module-trait relationships colors"))
+dev.print(pdf,"Step19_plot_A1_relating modules to trait colors spearman.pdf", width=5, height=8)
+
+#This is for color module trait table
+colnames(modTraitPA1) = paste("p.value.", colnames(modTraitCorA1), sep="");
+out3<-cbind(Module=rownames(modTraitCorA1), modTraitCorA1, modTraitPA1)
+dim(out3)
+write.table(out3, "Step19_result_A1_relating modules to trait colors spearman.csv", sep=",",row.names=F)
+```
+
+#Same as above for labeled modules
+#Relating modules to physiological traits for A1
+```{r}
+# For data A1
+# Define numbers of genes and samples
+nGenesA1L = nrow(datExprA1g2)
+nSamplesA1L = ncol(datExprA1g2)
+# Recalculate MEs with color labels
+MEs0A1L= moduleEigengenes(t(datExprA1g2),modulesA1L)$eigengenes
+MEsA1L= orderMEs(MEs0A1L)
+#modTraitCorA1L = cor(MEsA1L, metadataA1g_coded, use = "p")
+#modTraitCorA1L = cor(MEsA1L, metadataA1g_coded, use="complete.obs", method = c("pearson", "kendall", "spearman"))
+modTraitCorA1L = cor(MEsA1L, metadataA1g_coded, use="pairwise.complete.obs", method = c("spearman"))
+modTraitPA1L = corPvalueStudent(modTraitCorA1L, nSamplesA1L)
+textMatrixA1L = paste(signif(modTraitCorA1L, 2), "\n(",
+signif(modTraitPA1L, 1), ")", sep = "")
+dim(textMatrixA1L) = dim(modTraitCorA1L)
+par(mar = c(6, 8.5, 3, 3))
+# Display the correlation values within a heatmap plot
+labeledHeatmap(Matrix = modTraitCorA1L, xLabels = names(metadataA1g_coded),
+yLabels = names(MEsA1L), ySymbols = names(MEsA1L), cex.lab = 0.25,
+colorLabels =FALSE,colors=greenWhiteRed(50),textMatrix=textMatrixA1L,
+setStdMargins = FALSE, cex.text = 0.25, zlim = c(-1,1),
+main = paste("A1_Module-trait relationships labels"))
+dev.print(pdf,"Step19_plot_A1_relating modules to trait labels spearman.pdf", width=5, height=8)
+
+#This is for label module trait table
+colnames(modTraitPA1L) = paste("p.value.", colnames(modTraitCorA1L), sep="");
+out3L<-cbind(Module=rownames(modTraitCorA1L), modTraitCorA1L, modTraitPA1L)
+dim(out3L)
+write.table(out3L, "Step19_result_A1_relating modules to trait labels spearman.csv", sep=",",row.names=F)
+```
+
+```{r}
+#Gene trait significance and correlation for entire gene set i.e. all genes from all modules
+#geneTraitCorA1 = cor(t(datExprA1g2), metadataA1g_coded, use = "p")
+geneTraitCorA1 = cor(t(datExprA1g2), metadataA1g_coded, use="pairwise.complete.obs", method = c("spearman"))
+geneTraitPA1 = corPvalueStudent(geneTraitCorA1, nSamplesA1)
+#This is for color gene trait table
+colnames(geneTraitPA1) = paste("p.value.", colnames(geneTraitCorA1), sep="");
+out3gene<-cbind(GeneName=rownames(geneTraitCorA1), geneTraitCorA1, geneTraitPA1)
+dim(out3gene)
+write.table(out3gene, "Step19_result_A1_relating all genes to traits spearman.csv", sep=",",row.names=F)
+```
+
+#Same as above for labeled modules but only significant ones for Grade4 after revieweing results from above csv of all modules
+#Relating modules to physiological traits for A1
+```{r}
+# For data A1
+# Define numbers of genes and samples
+nGenesA1L = nrow(datExprA1g2)
+nSamplesA1L = ncol(datExprA1g2)
+# Recalculate MEs with color labels
+MEs0A1L= moduleEigengenes(t(datExprA1g2),modulesA1L)$eigengenes
+MEsA1L= orderMEs(MEs0A1L)
+
+#modification to subset significant modules only
+MEsA1Lnew=MEsA1L[,c("MEHuAgeGBsplit_36","MEHuAgeGBsplit_35","MEHuAgeGBsplit_33","MEHuAgeGBsplit_27","MEHuAgeGBsplit_26","MEHuAgeGBsplit_24","MEHuAgeGBsplit_18","MEHuAgeGBsplit_16","MEHuAgeGBsplit_08","MEHuAgeGBsplit_00")]
+#modification to subset traits of interest only
+metadataA1g_coded_new=metadataA1g_coded[,c("DiseaseGrade_2", "DiseaseGrade_3", "DiseaseGrade_4")]
+
+#modTraitCorA1L = cor(MEsA1Lnew, metadataA1g_coded, use = "p")
+#modTraitCorA1L = cor(MEsA1Lnew, metadataA1g_coded, use="complete.obs", method = c("pearson", "kendall", "spearman"))
+modTraitCorA1L = cor(MEsA1Lnew, metadataA1g_coded_new, use="pairwise.complete.obs", method = c("spearman"))
+modTraitPA1L = corPvalueStudent(modTraitCorA1L, nSamplesA1L)
+textMatrixA1L = paste(signif(modTraitCorA1L, 2), "\n(",
+signif(modTraitPA1L, 1), ")", sep = "")
+dim(textMatrixA1L) = dim(modTraitCorA1L)
+par(mar = c(6, 8.5, 3, 3))
+# Display the correlation values within a heatmap plot
+labeledHeatmap(Matrix = modTraitCorA1L, xLabels = names(metadataA1g_coded_new),
+yLabels = names(MEsA1Lnew), ySymbols = names(MEsA1Lnew), cex.lab = 1.0,
+colorLabels =FALSE,colors=greenWhiteRed(50),textMatrix=textMatrixA1L,
+setStdMargins = FALSE, cex.text = 1.0, zlim = c(-1,1),
+main = paste("A1_Module-trait relationships labels"))
+dev.print(pdf,"Step19_plot_A1_relating modules to trait labels spearman_significant.pdf", width=5, height=8)
+
+#This is for label module trait table
+colnames(modTraitPA1L) = paste("p.value.", colnames(modTraitCorA1L), sep="");
+out3L<-cbind(Module=rownames(modTraitCorA1L), modTraitCorA1L, modTraitPA1L)
+dim(out3L)
+write.table(out3L, "Step19_result_A1_relating modules to trait labels spearman_significant.csv", sep=",",row.names=F)
+```
+
+###Step21: merging trait association results and cell type enrichment results###
+```{r}
+corr_pearson=read.csv("./Module_Trait_wgcnaRData/Step19_result_A1_relating modules to trait colors.csv", header=T, sep=',')
+colnames(corr_pearson)
+DT::datatable(corr_pearson[1:3,])
+```
+
+```{r}
+#remove the character ME at the start of the module name
+corr_pearson$Module<-sub('.', '', corr_pearson$Module)
+corr_pearson$Module<-sub('.', '', corr_pearson$Module)
+DT::datatable(corr_pearson[1:3,])
+```
+
+```{r}
+corr_spearman=read.csv("./Module_Trait_wgcnaRData/Step19_result_A1_relating modules to trait colors spearman.csv", header=T, sep=',')
+colnames(corr_spearman)
+DT::datatable(corr_spearman[1:3,])
+```
+
+```{r}
+#remove the character ME at the start of the module name
+corr_spearman$Module<-sub('.', '', corr_spearman$Module)
+corr_spearman$Module<-sub('.', '', corr_spearman$Module)
+DT::datatable(corr_spearman[1:3,])
+```
+
+```{r}
+modules_celltypes=read.csv("./enrichmentsCellTypeFullHuman_OvGenes/enrichmentsCellTypeFullHuman_Sigificantcolors.csv", header=T, sep=',') 
+colnames(modules_celltypes)
+DT::datatable(modules_celltypes)
+```
+
+```{r}
+modules_celltypes_corr_pearson=merge(modules_celltypes,corr_pearson, by.x = "InputCategories", by.y = "Module", all = FALSE)
+write.csv(modules_celltypes_corr_pearson,"Step21_result_modules_celltypes_corr_pearson.csv")
+DT::datatable(head(modules_celltypes_corr_pearson))
+```
+
+```{r}
+modules_celltypes_corr_spearman=merge(modules_celltypes,corr_spearman, by.x = "InputCategories", by.y = "Module", all = FALSE)
+write.csv(modules_celltypes_corr_spearman,"Step21_result_modules_celltypes_corr_spearman.csv")
+DT::datatable(head(modules_celltypes_corr_spearman))
+```
+
+###Step21: merging trait association results and cell type enrichment results###
+#Same as above but with labels
+```{r}
+corr_pearsonL=read.csv("./Module_Trait_wgcnaRData/Step19_result_A1_relating modules to trait labels.csv", header=T, sep=',')
+colnames(corr_pearsonL)
+DT::datatable(corr_pearsonL[1:3,])
+```
+
+```{r}
+#remove the character ME at the start of the module name
+corr_pearsonL$Module<-sub('.', '', corr_pearsonL$Module)
+corr_pearsonL$Module<-sub('.', '', corr_pearsonL$Module)
+DT::datatable(corr_pearsonL[1:3,])
+```
+
+```{r}
+corr_spearmanL=read.csv("./Module_Trait_wgcnaRData/Step19_result_A1_relating modules to trait labels spearman.csv", header=T, sep=',')
+colnames(corr_spearmanL)
+DT::datatable(corr_spearmanL[1:3,])
+```
+
+```{r}
+#remove the character ME at the start of the module name
+corr_spearmanL$Module<-sub('.', '', corr_spearmanL$Module)
+corr_spearmanL$Module<-sub('.', '', corr_spearmanL$Module)
+DT::datatable(corr_spearmanL[1:3,])
+```
+
+```{r}
+modules_celltypesL=read.csv("./enrichmentsCellTypeFullHuman_OvGenes/enrichmentsCellTypeFullHuman_Sigificantlabels.csv", header=T, sep=',') 
+colnames(modules_celltypesL)
+DT::datatable(modules_celltypesL)
+```
+
+```{r}
+modules_celltypesL_corr_pearsonL=merge(modules_celltypesL,corr_pearsonL, by.x = "InputCategories", by.y = "Module", all = FALSE)
+write.csv(modules_celltypesL_corr_pearsonL,"Step21_result_modules_celltypesL_corr_pearsonL.csv")
+DT::datatable(head(modules_celltypesL_corr_pearsonL))
+```
+
+```{r}
+modules_celltypesL_corr_spearmanL=merge(modules_celltypesL,corr_spearmanL, by.x = "InputCategories", by.y = "Module", all = FALSE)
+write.csv(modules_celltypesL_corr_spearmanL,"Step21_result_modules_celltypesL_corr_spearmanL.csv")
+DT::datatable(head(modules_celltypesL_corr_spearmanL))
+```
+
+```{r}
+save.image(file="CorrCellType.RData")
+#rm(list=ls())
+#gc()
+#To reload uncomment code below
+#load(file="temp.RData")
+```
+
+#Step22: Organization and saving session (software version) information 
+```{r}
+sessionInfo()
+toLatex(sessionInfo())
+```
+
+```{r}
+#Organize of files
+#library(filesstrings)
+
+dir.create("Module_Trait_wgcnaRData")
+file.move(list.files(pattern = 'Step19_result_A1_relating*'), "Module_Trait_wgcnaRData")
+file.move(list.files(pattern = 'Step19_plot_A1_relating*'), "Module_Trait_wgcnaRData")
+file.move(list.files(pattern = 'Step21_result*'), "Module_Trait_wgcnaRData")
+file.move(list.files(pattern = 'CorrCellType.RData'), "Module_Trait_wgcnaRData")
+```
+
+```{r}
+#Remove .RData and clear environment to free up memory
+rm(list=ls())
+file.remove("temp.RData")
+gc()
+```

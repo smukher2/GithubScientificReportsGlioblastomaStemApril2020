@@ -1,0 +1,6 @@
+"","HuAgeGBsplit_13....SWIM_StemLike_inGB_Differentiated_State_Hu__"
+"1","C2orf72"
+"2","ENHO"
+"3","GLDC"
+"4","HLA-E"
+"5","TRIM38"

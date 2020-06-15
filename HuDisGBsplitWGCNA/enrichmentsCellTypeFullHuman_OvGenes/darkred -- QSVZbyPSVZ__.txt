@@ -1,0 +1,8 @@
+"","darkred....QSVZbyPSVZ__"
+"1","CNBD2"
+"2","FUCA1"
+"3","IGDCC4"
+"4","KPNA6"
+"5","PLEKHA2"
+"6","SMYD5"
+"7","WDR53"

@@ -1,0 +1,6 @@
+"","HuAgeGBsplit_26....NSCbyNPC__"
+"1","ASGR2"
+"2","FBXO48"
+"3","FES"
+"4","RNU6-210P"
+"5","SPIC"

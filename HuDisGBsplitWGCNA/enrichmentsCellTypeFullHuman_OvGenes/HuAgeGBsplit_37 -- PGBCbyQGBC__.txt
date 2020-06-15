@@ -1,0 +1,8 @@
+"","HuAgeGBsplit_37....PGBCbyQGBC__"
+"1","AC017104.2"
+"2","AC073869.3"
+"3","AK2P2"
+"4","DSTNP4"
+"5","MTCO1P30"
+"6","MTCO2P30"
+"7","RPSAP49"

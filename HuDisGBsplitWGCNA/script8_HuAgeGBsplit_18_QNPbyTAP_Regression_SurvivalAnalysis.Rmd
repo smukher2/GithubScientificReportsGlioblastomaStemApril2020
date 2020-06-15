@@ -1,0 +1,737 @@
+---
+title: "script9A_Regression_SurvivalAnalysis_QNPbyTAP_HuDis_GBsplit"
+author: "Shradha Mukherjee"
+date: "Last updated April, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+1) This pipeline is used to perform regression analysis and survival analysis
+2) Except CEND1 and SMCR8, all the other genes CD151, DCHS1, SMPD1,TPP1,GATD1,RNH1 used in the model are also in c1_HuAgeGBsplit_32 and/or c1_HuAgeGBsplit_193 
+Select color module of interest
+###Step 43: Load libraries and save working directory
+
+```{r}
+#For new way of installing epicalc uncomment lines below, since its been archived
+#install.packages("devtools")
+#install.packages("desc")
+#devtools::install_version("epicalc",version="2.15.1.0")
+#install.packages("epiDisplay")
+#install.packages("survival")
+#source("http://www.bioconductor.org/biocLite.R")
+#biocLite(c("Biobase","snpStats","broom","MASS", "effects","survival","ResourceSelection"))
+```
+
+```{r}
+library(epicalc)
+library(epiDisplay)
+library(effects)
+library(survival)
+library(ResourceSelection)
+library(Biobase)
+library(snpStats)
+library(broom)
+library(MASS)
+#c1 <- ls("package:epicalc")
+#d1 <- ls("package:epiDisplay")
+```
+
+```{r}
+wd<-getwd()
+```
+
+###Step 44: Import datasets and create input file for regression and survival analysis
+#Import the test dataset (your new dataset) with genes and modules
+```{r}
+#Any choice of genes can be used here as shown in commented code line example below.  
+#HuAgeGBsplit_18_QNPbyTAPQNPbyTAP_genes=c("C4B","C4A","CTSS","LGALS3BP","APOD","C1QC","TREM2","C1QB","C1QA","MPEG1")
+#Here we pick QNPbyTAP_ genes from our WGCNA variable that stores QNPbyTAP_ genes and the modules they belong to  
+HuAgeGBsplit_18_QNPbyTAP_genes=read.delim("./enrichmentsCellTypeFullHuman_OvGenes/HuAgeGBsplit_18 -- QNPbyTAP__.txt", header=T, sep=",") 
+#note that unlike most .txt files here the genes and their serial numbers are seperated by comma ,""
+
+colnames(HuAgeGBsplit_18_QNPbyTAP_genes)=c("X", "Gene")
+head(HuAgeGBsplit_18_QNPbyTAP_genes)
+```
+
+##########################################################################
+#extra step to convert rat genes to human genes
+###Step 1: Load libraries
+```{r}
+library(biomaRt)#required for the gene symbol conversion
+library(ggmap)#plots
+library(gplots)#plots
+library(RColorBrewer)#color pallet
+library(Hmisc)#for corelation plot
+library(dplyr)
+library(plyr)
+library(qpcR)
+options(stringsAsFactors = FALSE)
+```
+
+```{r}
+# Basic function to convert rat to human gene names in data frames
+convertRatGeneList <- function(x){
+ 
+require("biomaRt")
+human = useMart("ensembl", dataset = "hsapiens_gene_ensembl")
+rat = useMart("ensembl", dataset = "rnorvegicus_gene_ensembl")
+ 
+genesV2 = getLDS(attributes = c("rgd_symbol"), filters = "rgd_symbol", values = x , mart = rat, attributesL = c("hgnc_symbol"), martL = human, uniqueRows=T)
+
+#some genes will be duplicate so lets make them unique
+genesV2=genesV2[!duplicated(genesV2$RGD.symbol),]
+}
+```
+
+#Testing the functions convertRatGeneList, convertMouseGeneList, convertUniqueratGeneList and convertUniquemouseGeneList
+```{r}
+mygenes1=c("Rpl4", "Ascl1")
+mygenes_1=convertRatGeneList(mygenes1)
+mygenes_1
+```
+
+###Step 4: Import dataset GSE70696QNPbyTAPList
+#convert to Hu gene symbols
+```{r}
+dat1=read.csv('./InputMetadata&Lists/Step22_result_allContrasts_FC1.25(editFC40)_DEG_edgeR_AllDEGmethods.csv', sep=',')
+dat1=dat1[,c("X","Contrast")]
+names(dat1)=c("Gene","Category")
+dat1=as.data.frame(dat1)
+dim(dat1)
+head(dat1[1:3,])
+```
+
+```{r}
+mygenes_dat1Hu <- convertRatGeneList(dat1$Gene)
+
+#Lets rename the rat gene symbol column as "Gene" so we can merge with the dat1 "Gene" column
+colnames(mygenes_dat1Hu)[which(colnames(mygenes_dat1Hu) == 'RGD.symbol')] <- 'Gene'
+dim(mygenes_dat1Hu)
+head(mygenes_dat1Hu)
+```
+
+```{r}
+merge_dat1Hu <- merge(mygenes_dat1Hu, dat1, by="Gene")
+#Get rid of the rat gene symbol column
+merge_dat1Hu <- merge_dat1Hu[,-1]
+#Lets rename the human gene symbol column back to "Gene"
+colnames(merge_dat1Hu)[which(colnames(merge_dat1Hu) == 'HGNC.symbol')] <- "Gene"
+#Sort by Category 
+merge_dat1Hu<-merge_dat1Hu[order(merge_dat1Hu$Category),]
+#View(merge_dat1Hu)
+```
+
+##########################################################################
+
+```{r}
+#Import genes that have FC 20 
+QNPbyTAP_genes=merge_dat1Hu
+head(QNPbyTAP_genes)
+```
+
+```{r}
+HuAgeGBsplit_18_QNPbyTAP_genes=merge(HuAgeGBsplit_18_QNPbyTAP_genes,QNPbyTAP_genes, by = "Gene", all = FALSE)
+write.csv(HuAgeGBsplit_18_QNPbyTAP_genes,"Step44_result_HuAgeGBsplit_18_QNPbyTAP_genes.csv")
+head(HuAgeGBsplit_18_QNPbyTAP_genes)
+```
+
+```{r}
+#Import gene expression in HuDis_GB dataset 
+datExprA1g2=read.csv("./Module_GenesRankskMEHubs/Step20_result_ForPres&Hyper_HuAgeGBsplit_datExprA1g2.csv", header=T, sep=",") 
+datExprA1g2[1:3,1:3]
+```
+
+```{r}
+#keep HuAgeGBsplit_18_QNPbyTAP_genes
+Keep_genes=HuAgeGBsplit_18_QNPbyTAP_genes$Gene
+datExprA1g2_keep=datExprA1g2[which(datExprA1g2$X%in%Keep_genes),]
+rownames(datExprA1g2_keep)=datExprA1g2_keep$X #make genes row names
+datExprA1g2_keep=datExprA1g2_keep[,-1] #remove extra gene column
+datExprA1g2_keep[1:3,1:3]
+
+#transpose datExprA1g2_keep
+tdatExprA1g2_keep=t(datExprA1g2_keep)
+colnames(tdatExprA1g2_keep)=rownames(datExprA1g2_keep)
+tdatExprA1g2_keep[1:3,1:3]
+
+dim(datExprA1g2_keep)
+dim(tdatExprA1g2_keep)
+dim(HuAgeGBsplit_18_QNPbyTAP_genes)
+#shows number of genes and samples
+```
+
+```{r}
+#Human Metadata
+metadata=read.csv("./merged_expr_metadata/Step5D_result_merge_SRP091303_to_GSE100297_metadata_SampleID.csv", header=T, sep=',')
+colnames(metadata)
+```
+
+```{r}
+#Order of metadata variable selection in WGCNA same as mod and then remaining variables 
+#keep only variable we need
+metadata_1=metadata[,c("Study","Gender","Disease","Age","Tissue", "Overall_Survival","Censor_1dead_0alive")]
+#metadata_1=metadata[,4:8]
+rownames(metadata_1)=metadata$Sample_Name
+pheno=metadata_1
+head(pheno)
+```
+
+```{r}
+#Human Metadata coded. this was created in the SVA+limma step
+metadata_coded=read.csv("./merged_expr_metadata/Step8_result_merge_SRP091303_to_GSE100297_metadata_SampleID_coded_vsCONonly.csv", header=T, sep=',')
+colnames(metadata_coded)
+```
+
+```{r}
+#Order of metadata variable selection in WGCNA same as mod and then remaining variables
+#keep only variable we need
+metadata_1_coded=metadata_coded[,c("StudySRP027383","StudySRP091303","GenderM","DiseaseCON","DiseaseGrade_2","DiseaseGrade_3","DiseaseGrade_4","Age","Tissueprefrontal_cortex")]
+#metadata_1_coded=metadata_coded[,2:48]
+rownames(metadata_1_coded)=metadata_coded$Sample_Name
+pheno_coded=metadata_1_coded
+head(pheno_coded)
+```
+
+```{r}
+tdatExprA1g2_keep_meta1=merge(pheno,tdatExprA1g2_keep, by = "row.names")
+rownames(tdatExprA1g2_keep_meta1)=tdatExprA1g2_keep_meta1$Row.names
+
+tdatExprA1g2_keep_meta2=merge(pheno_coded,tdatExprA1g2_keep_meta1, by = "row.names")
+rownames(tdatExprA1g2_keep_meta2)=tdatExprA1g2_keep_meta2$Row.names
+
+tdatExprA1g2_keep_meta2=tdatExprA1g2_keep_meta2[!names(tdatExprA1g2_keep_meta2)%in%c("Row.names","Row.names.y")]
+
+head(tdatExprA1g2_keep_meta2)
+```
+
+```{r}
+#Create a new column for disease to represnet all categorical levels numerically 
+tdatExprA1g2_keep_meta3=tdatExprA1g2_keep_meta2
+tdatExprA1g2_keep_meta3$DiseaseNumeric=as.character(tdatExprA1g2_keep_meta2$Disease)
+
+
+tdatExprA1g2_keep_meta3$DiseaseNumeric[tdatExprA1g2_keep_meta3$DiseaseNumeric=="CON"] <- "0"
+tdatExprA1g2_keep_meta3$DiseaseNumeric[tdatExprA1g2_keep_meta3$DiseaseNumeric=="Grade_2"] <- "2"
+tdatExprA1g2_keep_meta3$DiseaseNumeric[tdatExprA1g2_keep_meta3$DiseaseNumeric=="Grade_3"] <- "3"
+tdatExprA1g2_keep_meta3$DiseaseNumeric[tdatExprA1g2_keep_meta3$DiseaseNumeric=="Grade_4"] <- "4"
+
+#convert the column back to factor type optional
+#tdatExprA1g2_keep_meta3$DiseaseNumeric=as.factor(tdatExprA1g2_keep_meta3$DiseaseNumeric)
+
+head(tdatExprA1g2_keep_meta3)
+```
+
+###Step 45: linear regression analysis WITHOUT interaction of genes
+```{r}
+#create new variable for storing input data
+LRdata=tdatExprA1g2_keep_meta3
+```
+
+```{r}
+#linear regression 
+lm1<-lm(DiseaseNumeric ~ 
+
+CD151+CEND1+DCHS1+SMPD1+TPP1+GATD1+RNH1+SMCR8,
+
+data=LRdata, na.action=na.exclude)
+
+summary(lm1)
+plot(lm1,which=1:4)
+##Assumptions of liear regression are violated. Linear regression can only work well if the dependent variable is continuous but here we have categorical dependent variable
+```
+
+###Step 46: linear regression analysis WITH interaction of genes
+```{r}
+#linear regression 
+lm2<-lm(DiseaseNumeric ~ 
+
+CD151+CEND1+DCHS1+SMPD1+TPP1+GATD1+RNH1+SMCR8
+
++CD151*CEND1*DCHS1*SMPD1*TPP1*GATD1*RNH1*SMCR8,
+
+data=LRdata, na.action=na.exclude)
+
+summary(lm2)
+plot(lm2,which=1:4)
+##Assumptions of liear regression are violated. Linear regression can only work well if the dependent variable is continuous but here we have categorical dependent variable
+```
+
+###Step 47: logistic regression analysis WITHOUT interaction of genes
+```{r}
+#preparing Logistic regression data
+LORdata_prep=LRdata
+
+#Keep only those rows that have samples CON and Grade_4
+Keep_LORdata_prep=c("CON", "Grade_4")
+
+LORdata<-LORdata_prep[which(LORdata_prep$Disease%in%Keep_LORdata_prep),]
+
+dim(LRdata)
+dim(LORdata_prep)
+dim(LORdata)
+head(LORdata)
+```
+
+```{r}
+#To perform logistic regression in R, you need to use the glm() function. Here, glm stands for "general linear model." Suppose we want to run the above logistic regression model in R, we use the following command
+glm1<-glm(DiseaseGrade_4 ~ 
+
+CD151+CEND1+DCHS1+SMPD1+TPP1+GATD1+RNH1+SMCR8,
+
+family = binomial(link = logit), na.action=na.exclude, data=LORdata)
+summary(glm1)
+#tidy(glm1)
+```
+
+```{r}
+#To get the significance for the overall model we use the following command
+#1-pchisq(261.44-152.63, 209-198)
+pchisq(261.44-260.43, 209-200,lower.tail = FALSE)
+#For Null deviance: 261.44  on 209 degrees of freedom
+#For Residual deviance: 260.43 on 200 degrees of freedom
+```
+
+```{r}
+#To get the significance for the overall model by comparing with null model
+glm0<-glm(DiseaseGrade_4 ~ 1, family = binomial(link = logit), na.action=na.exclude, data=LORdata) #null model
+summary(glm0)
+#compare AIC to between null and full model to know if full model is good
+```
+
+```{r}
+#To get the significance for the overall model by comparing with null model
+with(anova(glm0,glm1),pchisq(Deviance,Df,lower.tail=FALSE)[2]) 
+pchisq(deviance(glm0)-deviance(glm1), df.residual(glm0)-df.residual(glm1),lower.tail=FALSE)
+anova(glm0, glm1, test = "Chisq")
+```
+
+```{r}
+logistic.display(glm1)
+#Recommendation for variable as a single component in model keep if p-value <0.25
+#Recommendaton for interaction between variables keep if p-value <0.10
+```
+
+```{r}
+# Inverse logit transform the model coefficients into proportions, to show that the
+#	log odds of the intercept corresponds to its proportion but none of the other
+#	model coefficients do
+exp( coef(glm1) ) /  ( 1 + exp( coef(glm1) ) )
+```
+
+```{r}
+#odd ratio calculation
+exp(coef(glm1))
+```
+
+```{r}
+#Below is the Hosmer-Lemshow goodness-of-fit test 
+h1<-hoslem.test(LORdata$DiseaseGrade_4, fitted(glm1))
+h1
+```
+
+```{r}
+#table observed and expected (predicted)
+h1table<-cbind(h1$observed, h1$expected, (h1$observed-h1$expected))
+h1table
+write.csv(h1table,"Step47_h1table_logistic_regression_Without_Interaction_QNPbyTAP.csv")
+```
+
+```{r}
+pdf(file="Step47_plot_logistic_regression_Without_Interaction_QNPbyTAP.pdf", width=10, height=10)
+#par(mfrow=c(2,2))
+plot(allEffects(glm1), ylim = c(0,1))
+dev.off()
+```
+
+
+###Step 48: logistic regression analysis WITH interaction of genes
+```{r}
+#To perform logistic regression in R, you need to use the glm() function. Here, glm stands for "general linear model." Suppose we want to run the above logistic regression model in R, we use the following command
+glm2<-glm(DiseaseGrade_4 ~ 
+
+CD151+CEND1+DCHS1+SMPD1+TPP1+GATD1+RNH1+SMCR8
+
++CD151*CEND1*DCHS1*SMPD1*TPP1*GATD1*RNH1*SMCR8,
+
+family = binomial(link = logit), na.action=na.exclude, data=LORdata)
+summary(glm2)
+#tidy(glm2)
+```
+
+```{r}
+#To get the significance for the overall model we use the following command
+#1-pchisq(261.44-152.63, 209-198)
+pchisq(261.44-0.0000000012183, 209-0,lower.tail = FALSE)
+#For Null deviance: 261.44  on 209 degrees of freedom
+#For Residual deviance: 0.0000000012183 on 0  degrees of freedom
+```
+
+```{r}
+#To get the significance for the overall model by comparing with null model
+glm0<-glm(DiseaseGrade_4 ~ 1, family = binomial(link = logit), na.action=na.exclude, data=LORdata) #null model
+summary(glm0)
+#compare AIC to between null and full model to know if full model is good
+```
+
+```{r}
+#To get the significance for the overall model by comparing with null model
+with(anova(glm0,glm2),pchisq(Deviance,Df,lower.tail=FALSE)[2]) 
+pchisq(deviance(glm0)-deviance(glm2), df.residual(glm0)-df.residual(glm2),lower.tail=FALSE)
+anova(glm0, glm2, test = "Chisq")
+```
+
+```{r}
+logistic.display(glm2)
+#Recommendation for variable as a single component in model keep if p-value <0.25
+#Recommendaton for interaction between variables keep if p-value <0.10
+```
+
+```{r}
+# Inverse logit transform the model coefficients into proportions, to show that the
+#	log odds of the intercept corresponds to its proportion but none of the other
+#	model coefficients do
+exp( coef(glm2) ) /  ( 1 + exp( coef(glm2) ) )
+```
+
+```{r}
+#odd ratio calculation
+exp(coef(glm2))
+```
+
+```{r}
+#Below is the Hosmer-Lemshow goodness-of-fit test 
+h2<-hoslem.test(LORdata$DiseaseGrade_4, fitted(glm2))
+h2
+```
+
+```{r}
+#table observed and expected (predicted)
+h2table<-cbind(h2$observed, h2$expected, (h2$observed-h2$expected))
+h2table
+write.csv(h2table,"Step48_h2table_logistic_regression_With_Interaction_QNPbyTAP.csv")
+```
+
+###Step 49: survival analysis WITHOUT interaction of genes
+```{r}
+#Create a new column for converting gene expression into a categorical vriable 
+tdatExprA1g2_keep_meta4=tdatExprA1g2_keep_meta3
+
+tdatExprA1g2_keep_meta4$CEND1cat=tdatExprA1g2_keep_meta3$CEND1
+tdatExprA1g2_keep_meta4$CEND1cat <- ifelse(tdatExprA1g2_keep_meta4$CEND1cat >= mean(tdatExprA1g2_keep_meta4$CEND1cat), 1, 0)
+
+tdatExprA1g2_keep_meta4$DCHS1cat=tdatExprA1g2_keep_meta3$DCHS1
+tdatExprA1g2_keep_meta4$DCHS1cat <- ifelse(tdatExprA1g2_keep_meta4$DCHS1cat >= mean(tdatExprA1g2_keep_meta4$DCHS1cat), 1, 0)
+
+tdatExprA1g2_keep_meta4$CD151cat=tdatExprA1g2_keep_meta3$CD151
+tdatExprA1g2_keep_meta4$CD151cat <- ifelse(tdatExprA1g2_keep_meta4$CD151cat >= mean(tdatExprA1g2_keep_meta4$CD151cat), 1, 0)
+
+tdatExprA1g2_keep_meta4$SMPD1cat=tdatExprA1g2_keep_meta3$SMPD1
+tdatExprA1g2_keep_meta4$SMPD1cat <- ifelse(tdatExprA1g2_keep_meta4$SMPD1cat >= mean(tdatExprA1g2_keep_meta4$SMPD1cat), 1, 0)
+
+tdatExprA1g2_keep_meta4$SMCR8cat=tdatExprA1g2_keep_meta3$SMCR8
+tdatExprA1g2_keep_meta4$SMCR8cat <- ifelse(tdatExprA1g2_keep_meta4$SMCR8cat >= mean(tdatExprA1g2_keep_meta4$SMCR8cat), 1, 0)
+
+tdatExprA1g2_keep_meta4$RNH1cat=tdatExprA1g2_keep_meta3$RNH1
+tdatExprA1g2_keep_meta4$RNH1cat <- ifelse(tdatExprA1g2_keep_meta4$RNH1cat >= mean(tdatExprA1g2_keep_meta4$RNH1cat), 1, 0)
+
+tdatExprA1g2_keep_meta4$TPP1cat=tdatExprA1g2_keep_meta3$TPP1
+tdatExprA1g2_keep_meta4$TPP1cat <- ifelse(tdatExprA1g2_keep_meta4$TPP1cat >= mean(tdatExprA1g2_keep_meta4$TPP1cat), 1, 0)
+
+tdatExprA1g2_keep_meta4$GATD1cat=tdatExprA1g2_keep_meta3$GATD1
+tdatExprA1g2_keep_meta4$GATD1cat <- ifelse(tdatExprA1g2_keep_meta4$GATD1cat >= mean(tdatExprA1g2_keep_meta4$GATD1cat), 1, 0)
+
+SVdata=tdatExprA1g2_keep_meta4
+head(SVdata)
+```
+
+```{r}
+#Suppose we want to examine the association between the length of survival of a patient
+hist(SVdata$Overall_Survival, xlab="Length of Survival Time", main="Histogram of Survial Time in Patients")
+```
+
+```{r}
+#survival fit with ~1
+
+survfit(Surv(SVdata$Overall_Survival, SVdata$Censor_1dead_0alive)~1)
+
+summary(survfit(Surv(SVdata$Overall_Survival, SVdata$Censor_1dead_0alive)~1))
+```
+
+```{r}
+#survival fit with ~1
+#to compare the survival distributions by comparing Kaplan-Meier plots.
+plot(survfit(Surv(SVdata$Overall_Survival, SVdata$Censor_1dead_0alive)~1), main = "Plot of Survival Curve for Patients",
+xlab = "Length of Survival", ylab = "Proportion of Individuals who have Survived")
+```
+
+#Survival analysis for all genes WITHOUT interaction terms
+```{r}
+#survival fit with ~x
+survfit(Surv(SVdata$Overall_Survival, SVdata$Censor_1dead_0alive) ~ SVdata$CEND1cat+ SVdata$DCHS1cat + SVdata$CD151cat + SVdata$SMPD1cat + SVdata$SMCR8cat + SVdata$RNH1cat + SVdata$TPP1cat + SVdata$GATD1cat)
+```
+
+```{r}
+#survival fit with ~x
+#to compare the survival distributions by comparing Kaplan-Meier plots.
+plot(survfit(Surv(SVdata$Overall_Survival, SVdata$Censor_1dead_0alive) ~ SVdata$CEND1cat+ SVdata$DCHS1cat + SVdata$CD151cat + SVdata$SMPD1cat + SVdata$SMCR8cat + SVdata$RNH1cat + SVdata$TPP1cat + SVdata$GATD1cat), main = "Plot of Survival Curve for Patients all genes WITHOUT interaction terms",
+xlab = "Length of Survival", ylab = "Proportion of Individuals who have Survived", col=c("blue","red"))
+legend("topright", legend=c("_1HIGH", "_0LOW"),fill=c("blue","red"),bty="n")
+```
+
+```{r}
+coxph(formula = Surv(SVdata$Overall_Survival, SVdata$Censor_1dead_0alive) ~ SVdata$CEND1cat+ SVdata$DCHS1cat + SVdata$CD151cat + SVdata$SMPD1cat + SVdata$SMCR8cat + SVdata$RNH1cat + SVdata$TPP1cat + SVdata$GATD1cat)
+```
+
+```{r}
+survival::survdiff(survival::Surv(SVdata$Overall_Survival, SVdata$Censor_1dead_0alive) ~ SVdata$CEND1cat+ SVdata$DCHS1cat + SVdata$CD151cat + SVdata$SMPD1cat + SVdata$SMCR8cat + SVdata$RNH1cat + SVdata$TPP1cat + SVdata$GATD1cat)
+```
+
+```{r}
+summary(survival::survfit(survival::Surv(SVdata$Overall_Survival, SVdata$Censor_1dead_0alive) ~ SVdata$CEND1cat+ SVdata$DCHS1cat + SVdata$CD151cat + SVdata$SMPD1cat + SVdata$SMCR8cat + SVdata$RNH1cat + SVdata$TPP1cat + SVdata$GATD1cat), times = 5)
+```
+
+###Step 50: survival analysis WITH interaction of genes
+```{r}
+coxph(formula = Surv(SVdata$Overall_Survival, SVdata$Censor_1dead_0alive) ~ SVdata$CEND1cat+ SVdata$DCHS1cat + SVdata$CD151cat + SVdata$SMPD1cat + SVdata$SMCR8cat + SVdata$RNH1cat + SVdata$TPP1cat + SVdata$GATD1cat + SVdata$CEND1cat* SVdata$DCHS1cat * SVdata$CD151cat * SVdata$SMPD1cat * SVdata$SMCR8cat * SVdata$RNH1cat * SVdata$TPP1cat * SVdata$GATD1cat)
+```
+
+#Survival analysis for CEND1cat
+```{r}
+#survival fit with ~x
+survfit(Surv(SVdata$Overall_Survival, SVdata$Censor_1dead_0alive) ~ SVdata$CEND1cat)
+```
+
+```{r}
+#survival fit with ~x
+#to compare the survival distributions by comparing Kaplan-Meier plots.
+plot(survfit(Surv(SVdata$Overall_Survival, SVdata$Censor_1dead_0alive) ~ SVdata$CEND1cat), main = "Plot of Survival Curve for Patients CEND1cat",
+xlab = "Length of Survival", ylab = "Proportion of Individuals who have Survived", col=c("blue","red"))
+legend("topright", legend=c("CEND1cat_1HIGH", "CEND1cat_0LOW"),fill=c("blue","red"),bty="n")
+```
+
+```{r}
+coxph(formula = Surv(SVdata$Overall_Survival, SVdata$Censor_1dead_0alive) ~ SVdata$CEND1cat)
+```
+
+```{r}
+survival::survdiff(survival::Surv(SVdata$Overall_Survival, SVdata$Censor_1dead_0alive) ~ SVdata$CEND1cat)
+```
+
+```{r}
+summary(survival::survfit(survival::Surv(SVdata$Overall_Survival, SVdata$Censor_1dead_0alive) ~ SVdata$CEND1cat), times = 5)
+```
+
+#Survival analysis for DCHS1cat
+```{r}
+#survival fit with ~x
+survfit(Surv(SVdata$Overall_Survival, SVdata$Censor_1dead_0alive) ~ SVdata$DCHS1cat)
+```
+
+```{r}
+#survival fit with ~x
+#to compare the survival distributions by comparing Kaplan-Meier plots.
+plot(survfit(Surv(SVdata$Overall_Survival, SVdata$Censor_1dead_0alive) ~ SVdata$DCHS1cat), main = "Plot of Survival Curve for Patients DCHS1cat",
+xlab = "Length of Survival", ylab = "Proportion of Individuals who have Survived", col=c("blue","red"))
+legend("topright", legend=c("DCHS1cat_1HIGH", "DCHS1cat_0LOW"),fill=c("blue","red"),bty="n")
+```
+
+```{r}
+coxph(formula = Surv(SVdata$Overall_Survival, SVdata$Censor_1dead_0alive) ~ SVdata$DCHS1cat)
+```
+
+```{r}
+survival::survdiff(survival::Surv(SVdata$Overall_Survival, SVdata$Censor_1dead_0alive) ~ SVdata$DCHS1cat)
+```
+
+```{r}
+summary(survival::survfit(survival::Surv(SVdata$Overall_Survival, SVdata$Censor_1dead_0alive) ~ SVdata$DCHS1cat), times = 5)
+```
+
+#Survival analysis for CD151cat
+```{r}
+#survival fit with ~x
+survfit(Surv(SVdata$Overall_Survival, SVdata$Censor_1dead_0alive) ~ SVdata$CD151cat)
+```
+
+```{r}
+#survival fit with ~x
+#to compare the survival distributions by comparing Kaplan-Meier plots.
+plot(survfit(Surv(SVdata$Overall_Survival, SVdata$Censor_1dead_0alive) ~ SVdata$CD151cat), main = "Plot of Survival Curve for Patients CD151cat",
+xlab = "Length of Survival", ylab = "Proportion of Individuals who have Survived", col=c("blue","red"))
+legend("topright", legend=c("CD151cat_1HIGH", "CD151cat_0LOW"),fill=c("blue","red"),bty="n")
+```
+
+```{r}
+coxph(formula = Surv(SVdata$Overall_Survival, SVdata$Censor_1dead_0alive) ~ SVdata$CD151cat)
+```
+
+```{r}
+survival::survdiff(survival::Surv(SVdata$Overall_Survival, SVdata$Censor_1dead_0alive) ~ SVdata$CD151cat)
+```
+
+```{r}
+summary(survival::survfit(survival::Surv(SVdata$Overall_Survival, SVdata$Censor_1dead_0alive) ~ SVdata$CD151cat), times = 5)
+```
+
+#Survival analysis for SMPD1cat
+```{r}
+#survival fit with ~x
+survfit(Surv(SVdata$Overall_Survival, SVdata$Censor_1dead_0alive) ~ SVdata$SMPD1cat)
+```
+
+```{r}
+#survival fit with ~x
+#to compare the survival distributions by comparing Kaplan-Meier plots.
+plot(survfit(Surv(SVdata$Overall_Survival, SVdata$Censor_1dead_0alive) ~ SVdata$SMPD1cat), main = "Plot of Survival Curve for Patients SMPD1cat",
+xlab = "Length of Survival", ylab = "Proportion of Individuals who have Survived", col=c("blue","red"))
+legend("topright", legend=c("SMPD1cat_1HIGH", "SMPD1cat_0LOW"),fill=c("blue","red"),bty="n")
+```
+
+```{r}
+coxph(formula = Surv(SVdata$Overall_Survival, SVdata$Censor_1dead_0alive) ~ SVdata$SMPD1cat)
+```
+
+```{r}
+survival::survdiff(survival::Surv(SVdata$Overall_Survival, SVdata$Censor_1dead_0alive) ~ SVdata$SMPD1cat)
+```
+
+```{r}
+summary(survival::survfit(survival::Surv(SVdata$Overall_Survival, SVdata$Censor_1dead_0alive) ~ SVdata$SMPD1cat), times = 5)
+```
+
+#Survival analysis for SMCR8cat
+```{r}
+#survival fit with ~x
+survfit(Surv(SVdata$Overall_Survival, SVdata$Censor_1dead_0alive) ~ SVdata$SMCR8cat)
+```
+
+```{r}
+#survival fit with ~x
+#to compare the survival distributions by comparing Kaplan-Meier plots.
+plot(survfit(Surv(SVdata$Overall_Survival, SVdata$Censor_1dead_0alive) ~ SVdata$SMCR8cat), main = "Plot of Survival Curve for Patients SMCR8cat",
+xlab = "Length of Survival", ylab = "Proportion of Individuals who have Survived", col=c("blue","red"))
+legend("topright", legend=c("SMCR8cat_1HIGH", "SMCR8cat_0LOW"),fill=c("blue","red"),bty="n")
+```
+
+```{r}
+coxph(formula = Surv(SVdata$Overall_Survival, SVdata$Censor_1dead_0alive) ~ SVdata$SMCR8cat)
+```
+
+```{r}
+survival::survdiff(survival::Surv(SVdata$Overall_Survival, SVdata$Censor_1dead_0alive) ~ SVdata$SMCR8cat)
+```
+
+```{r}
+summary(survival::survfit(survival::Surv(SVdata$Overall_Survival, SVdata$Censor_1dead_0alive) ~ SVdata$SMCR8cat), times = 5)
+```
+
+#Survival analysis for RNH1cat
+```{r}
+#survival fit with ~x
+survfit(Surv(SVdata$Overall_Survival, SVdata$Censor_1dead_0alive) ~ SVdata$RNH1cat)
+```
+
+```{r}
+#survival fit with ~x
+#to compare the survival distributions by comparing Kaplan-Meier plots.
+plot(survfit(Surv(SVdata$Overall_Survival, SVdata$Censor_1dead_0alive) ~ SVdata$RNH1cat), main = "Plot of Survival Curve for Patients RNH1cat",
+xlab = "Length of Survival", ylab = "Proportion of Individuals who have Survived", col=c("blue","red"))
+legend("topright", legend=c("RNH1cat_1HIGH", "RNH1cat_0LOW"),fill=c("blue","red"),bty="n")
+```
+
+```{r}
+coxph(formula = Surv(SVdata$Overall_Survival, SVdata$Censor_1dead_0alive) ~ SVdata$RNH1cat)
+```
+
+```{r}
+survival::survdiff(survival::Surv(SVdata$Overall_Survival, SVdata$Censor_1dead_0alive) ~ SVdata$RNH1cat)
+```
+
+```{r}
+summary(survival::survfit(survival::Surv(SVdata$Overall_Survival, SVdata$Censor_1dead_0alive) ~ SVdata$RNH1cat), times = 5)
+```
+
+#Survival analysis for TPP1cat
+```{r}
+#survival fit with ~x
+survfit(Surv(SVdata$Overall_Survival, SVdata$Censor_1dead_0alive) ~ SVdata$TPP1cat)
+```
+
+```{r}
+#survival fit with ~x
+#to compare the survival distributions by comparing Kaplan-Meier plots.
+plot(survfit(Surv(SVdata$Overall_Survival, SVdata$Censor_1dead_0alive) ~ SVdata$TPP1cat), main = "Plot of Survival Curve for Patients TPP1cat",
+xlab = "Length of Survival", ylab = "Proportion of Individuals who have Survived", col=c("blue","red"))
+legend("topright", legend=c("TPP1cat_1HIGH", "TPP1cat_0LOW"),fill=c("blue","red"),bty="n")
+```
+
+```{r}
+coxph(formula = Surv(SVdata$Overall_Survival, SVdata$Censor_1dead_0alive) ~ SVdata$TPP1cat)
+```
+
+```{r}
+survival::survdiff(survival::Surv(SVdata$Overall_Survival, SVdata$Censor_1dead_0alive) ~ SVdata$TPP1cat)
+```
+
+```{r}
+summary(survival::survfit(survival::Surv(SVdata$Overall_Survival, SVdata$Censor_1dead_0alive) ~ SVdata$TPP1cat), times = 5)
+```
+
+#Survival analysis for GATD1cat
+```{r}
+#survival fit with ~x
+survfit(Surv(SVdata$Overall_Survival, SVdata$Censor_1dead_0alive) ~ SVdata$GATD1cat)
+```
+
+```{r}
+#survival fit with ~x
+#to compare the survival distributions by comparing Kaplan-Meier plots.
+plot(survfit(Surv(SVdata$Overall_Survival, SVdata$Censor_1dead_0alive) ~ SVdata$GATD1cat), main = "Plot of Survival Curve for Patients GATD1cat",
+xlab = "Length of Survival", ylab = "Proportion of Individuals who have Survived", col=c("blue","red"))
+legend("topright", legend=c("GATD1cat_1HIGH", "GATD1cat_0LOW"),fill=c("blue","red"),bty="n")
+```
+
+```{r}
+coxph(formula = Surv(SVdata$Overall_Survival, SVdata$Censor_1dead_0alive) ~ SVdata$GATD1cat)
+```
+
+```{r}
+survival::survdiff(survival::Surv(SVdata$Overall_Survival, SVdata$Censor_1dead_0alive) ~ SVdata$GATD1cat)
+```
+
+```{r}
+summary(survival::survfit(survival::Surv(SVdata$Overall_Survival, SVdata$Censor_1dead_0alive) ~ SVdata$GATD1cat), times = 5)
+```
+
+###Step 51: Organization and saving session (software version) information 
+```{r}
+sessionInfo()
+toLatex(sessionInfo())
+```
+
+```{r}
+#save image
+save.image(file="Regression_SurvivalAnalysis_QNPbyTAP.RData")
+```
+
+```{r}
+#Organize of files
+library(filesstrings)
+
+dir.create("Regression_SurvivalAnalysis_QNPbyTAP")
+file.move(list.files(pattern = "*HuAgeGBsplit_18.pdf"), "Regression_SurvivalAnalysis_QNPbyTAP")
+file.move(list.files(pattern = "*HuAgeGBsplit_18.csv"), "Regression_SurvivalAnalysis_QNPbyTAP", overwrite = TRUE)
+file.move(list.files(pattern = "Regression_SurvivalAnalysis_QNPbyTAP.RData"), "Regression_SurvivalAnalysis_QNPbyTAP")
+```
+
+```{r}
+#Remove .RData and clear environment to free up memory
+rm(list=ls())
+file.remove("temp.RData")
+gc()
+```
+
+###########################################################################################<Start next pipeline>############################################################################################################

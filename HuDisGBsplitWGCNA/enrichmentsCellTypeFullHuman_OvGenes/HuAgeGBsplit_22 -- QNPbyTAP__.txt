@@ -1,0 +1,8 @@
+"","HuAgeGBsplit_22....QNPbyTAP__"
+"1","APOM"
+"2","ASRGL1"
+"3","GABARAP"
+"4","MIP"
+"5","MTCH1"
+"6","NTRK3"
+"7","VAMP2"

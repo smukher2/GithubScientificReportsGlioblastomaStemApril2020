@@ -1,0 +1,7 @@
+"","lightyellow....SWIM_StemLike_inGB_Differentiated_State_Hu__"
+"1","EYA2"
+"2","ISYNA1"
+"3","NDRG2"
+"4","NOP56"
+"5","PREX1"
+"6","SOX5"

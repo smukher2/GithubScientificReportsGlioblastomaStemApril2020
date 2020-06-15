@@ -1,0 +1,8 @@
+"","greenyellow....SWIM_StemLike_inGB_Differentiated_State_Hu__"
+"1","C16orf74"
+"2","CMTM8"
+"3","DHRS13"
+"4","HILS1"
+"5","MYH14"
+"6","NUAK1"
+"7","RNF157"

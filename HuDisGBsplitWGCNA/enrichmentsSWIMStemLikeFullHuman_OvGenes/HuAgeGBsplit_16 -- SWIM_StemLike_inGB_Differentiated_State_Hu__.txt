@@ -1,0 +1,6 @@
+"","HuAgeGBsplit_16....SWIM_StemLike_inGB_Differentiated_State_Hu__"
+"1","CCDC88C"
+"2","CDC42EP3"
+"3","PPP1R14C"
+"4","SOX1"
+"5","TEX15"

@@ -1,0 +1,5 @@
+"","darkred....NPCbyNSC__"
+"1","ADAP1"
+"2","C17orf98"
+"3","DEFB136"
+"4","RBM34"

@@ -1,0 +1,7 @@
+"","HuAgeGBsplit_31....PGBObyQGBO__"
+"1","AC099066.3"
+"2","AC234782.3"
+"3","FAM92A1P1"
+"4","MTCO1P40"
+"5","RPL34P6"
+"6","TUBBP2"

@@ -1,0 +1,4 @@
+"","yellowgreen....NSCbyNPC__"
+"1","DNAJB1"
+"2","HSPA1A"
+"3","MROH2A"

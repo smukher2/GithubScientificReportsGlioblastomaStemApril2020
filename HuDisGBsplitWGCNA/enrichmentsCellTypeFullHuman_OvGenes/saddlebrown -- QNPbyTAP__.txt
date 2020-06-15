@@ -1,0 +1,7 @@
+"","saddlebrown....QNPbyTAP__"
+"1","ATG2A"
+"2","DGAT2"
+"3","IL11"
+"4","LPXN"
+"5","RTL3"
+"6","SLC43A2"
