@@ -21,7 +21,7 @@ Pubmed Link https://www.ncbi.nlm.nih.gov/pubmed/?term=Shradha+Mukherjee
 # Mukherjee, S.*# Quiescent stem cell marker genes in glioma gene networks are sufficient to distinguish between normal and glioblastoma (GBM) samples. Scientific Reports (accepted 2020).
  
 
-# Organization
+# Protocol: Organization of folders containing subfolders, files and codes. 
 
 **Step1 RNAseqASUcyverseClusterResultsScript/ 
 
