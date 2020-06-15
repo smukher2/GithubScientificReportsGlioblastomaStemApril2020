@@ -21,6 +21,8 @@ Pubmed Link https://www.ncbi.nlm.nih.gov/pubmed/?term=Shradha+Mukherjee
 # Mukherjee, S.*# Quiescent stem cell marker genes in glioma gene networks are sufficient to distinguish between normal and glioblastoma (GBM) samples. Scientific Reports (accepted 2020).
  
 
+
+
 # Protocol: Organization of folders containing subfolders, files and codes. 
 
 **Step1 RNAseqASUcyverseClusterResultsScript/ 
@@ -60,7 +62,7 @@ install.packages("BiocManager")
 BiocManager::install(c("name_of_package1","name_of_package2"))
  
 
-# Acknowledgement: 
+# Acknowledgements: 
 
 1) SVA: Dr. Jeff Leek http://jtleek.com/genstats/inst/doc/02_13_batch-effects.html and https://www.bioconductor.org/packages/release/bioc/vignettes/sva/inst/doc/sva.pdf
 2) WGCNA: Dr. Jeremy Miller https://horvath.genetics.ucla.edu/html/CoexpressionNetwork/JMiller/
