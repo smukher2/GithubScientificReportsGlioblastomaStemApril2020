@@ -15,7 +15,7 @@ Researchgate Link https://www.researchgate.net/profile/Shradha_Mukherjee
 Github Link https://github.com/smukher2
 Pubmed Link https://www.ncbi.nlm.nih.gov/pubmed/?term=Shradha+Mukherjee   
 
-# Citation: I hope you find these research findings and bioinformatics pipelines useful. Please help by citing as follows. Thank you.
+# Citation: This github repository has been made open access in hope that it will enable researchers replicate and/or adapt it for their work. So if you use or adapt the results, inferences and computational pipelines presented here, I will be greatful if you please help by citing it as follows. 
 
 
 # Mukherjee, S.*# Quiescent stem cell marker genes in glioma gene networks are sufficient to distinguish between normal and glioblastoma (GBM) samples. Scientific Reports (accepted 2020).
