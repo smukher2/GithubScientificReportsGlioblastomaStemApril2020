@@ -1,0 +1,116 @@
+---
+title: "merge_metadata_and_metadatacoded"
+author: "Shradha Mukherjee"
+date: "March 21, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, Grade_3F, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r}
+A=read.csv('./merged_expr_metadata/Step8_result_merge_SRP091303_to_GSE100297_metadata_SampleID_coded.csv')
+colnames(A)[colnames(A)=="X"] <- "Sample_Name"
+```
+
+```{r}
+B=read.csv('./merged_expr_metadata/Step5D_result_merge_SRP091303_to_GSE100297_metadata_SampleID.csv')
+```
+
+#for recoding DiseaseGrade_2, DiseaseGrade_3, DiseaseGrade_4 
+```{r}
+#Get disease id from the original metadata as.character 
+A$DiseaseGrade_2=as.character(B$Disease)
+
+#Code interest disease as 1 and CON as 0
+A$DiseaseGrade_2[A$DiseaseGrade_2=="Grade_2"] <- "1"
+A$DiseaseGrade_2[A$DiseaseGrade_2=="CON"] <- "0"
+
+#code other diseases as NA
+A$DiseaseGrade_2[A$DiseaseGrade_2=="Grade_3"] <- "NA"
+A$DiseaseGrade_2[A$DiseaseGrade_2=="Grade_4"] <- "NA"
+
+#convert the column back to factor type
+A$DiseaseGrade_2=as.factor(A$DiseaseGrade_2)
+```
+
+```{r}
+#Get disease id from the original metadata as.character 
+A$DiseaseGrade_3=as.character(B$Disease)
+
+#Code interest disease as 1 and CON as 0
+A$DiseaseGrade_3[A$DiseaseGrade_3=="Grade_3"] <- "1"
+A$DiseaseGrade_3[A$DiseaseGrade_3=="CON"] <- "0"
+
+#code other diseases as NA
+A$DiseaseGrade_3[A$DiseaseGrade_3=="Grade_2"] <- "NA"
+A$DiseaseGrade_3[A$DiseaseGrade_3=="Grade_4"] <- "NA"
+
+#convert the column back to factor type
+A$DiseaseGrade_3=as.factor(A$DiseaseGrade_3)
+```
+
+```{r}
+#Get disease id from the original metadata as.character 
+A$DiseaseGrade_4=as.character(B$Disease)
+
+#Code interest disease as 1 and CON as 0
+A$DiseaseGrade_4[A$DiseaseGrade_4=="Grade_4"] <- "1"
+A$DiseaseGrade_4[A$DiseaseGrade_4=="CON"] <- "0"
+
+#code other diseases as NA
+A$DiseaseGrade_4[A$DiseaseGrade_4=="Grade_2"] <- "NA"
+A$DiseaseGrade_4[A$DiseaseGrade_4=="Grade_3"] <- "NA"
+
+#convert the column back to factor type
+A$DiseaseGrade_4=as.factor(A$DiseaseGrade_4)
+```
+
+```{r}
+write.csv(A, "Step8_result_merge_SRP091303_to_GSE100297_metadata_SampleID_coded_vsCONonly.csv")
+```
+
+#for adding Censor and surviral data 
+```{r}
+#Get disease id from the original metadata
+C=A
+C$Overall_Survival=B$Overall_Survival
+C$Censor_1dead_0alive=B$Censor_1dead_0alive
+```
+
+```{r}
+write.csv(C, "Step8_result_merge_SRP091303_to_GSE100297_metadata_SampleID_coded_vsCONonly_Survival.csv")
+```
+
+#Clear up workspace 
+```{r}
+#save image
+save.image(file="metadata_edited_temp.RData")
+```
+
+#Organization and saving session (software version) information
+```{r}
+sessionInfo()
+toLatex(sessionInfo())
+```
+
+```{r}
+#Organize of files
+library(filesstrings)
+
+#metadata 
+dir.create("merged_expr_metadata")
+file.move(list.files(pattern = 'metadata_edited_temp.RData'), "merged_expr_metadata")
+
+#metadata 
+dir.create("merged_expr_metadata")
+file.move(list.files(pattern = 'Step8_result_merge_SRP091303_to_GSE100297_metadata_SampleID_coded_vsCONonly.csv'), "merged_expr_metadata")
+file.move(list.files(pattern = 'Step8_result_merge_SRP091303_to_GSE100297_metadata_SampleID_coded_vsCONonly_Survival.csv'), "merged_expr_metadata")
+```

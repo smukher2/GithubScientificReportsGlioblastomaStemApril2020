@@ -1,0 +1,208 @@
+---
+title: "script4_MEGENA_HuAgeDis_GBsplitRnaseq"
+author: "Shradha Mukherjee"
+date: "Last updated January, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. Html_fragmented is quicker to load than html, hence for this pipeline which genenerated a large mount of data, we have used html_fragment to report Rmarkdown.
+
+#Checklist for this pipeline 
+  #1) MEGENA assigns colors randomly (except few reserved colors like "grey" for unassigned genes). Therefore, upon re-run of this analysis it may call the age and disease associated microglia enriched "black" module by some other color such as "pink", in which case this color is specified step 29 onwards as described in point 4) above.
+  #2) The present analysis was done on MacOS, using knitToHtmlfragment.
+  
+To reuse this code for other datasets 
+  a) replace "HuAgeGBsplitRnaseq_" for module naming to pre-fix of users choice that is meaningful for the dataset. Here Hu=Human, Age=Age, Dis=Disease
+  b) in this pipeline human gene symbols are used
+
+  
+###############################################Continue with MEGENA pipeline############################################################################
+####################################HuAgeGBsplitRnaseq#######################################
+###Step13: Load libraries, set working directory and Import data for MEGENA###
+```{r}
+#If restarting program uncomment line below
+#load(file="temp.RData")
+load("./Module_Trait_megenaRData/MEGENA_temp.RData")
+#save working directory location
+wd<-getwd()
+wd
+```  
+
+```{r}
+#Load additional functions required for this pipeline
+#Reference: Miller, J.A., Horvath, S., and Geschwind, D.H. (2010). Divergence of Human and mouse brain transcriptome highlights Alzheimer disease pathways. Proceedings of the National Academy of Sciences of the United States of America 107, 12698-12703.
+
+write.geneList <- function(PG, filename, allProbes=0, allGenes=0, probe="g")
+{
+## These functions write a genelist / probelist to a file of geneNames
+
+## USER inputs
+# PG = the probe/gene you want written to a gene list
+# allProbes = the list of probe names for the above probes
+# allGenes = the list of gene names for the corresponding probes
+# filename = the filename (can include folder)
+# probe = the default ("g") says PG is a gene and doesn''t need to be converted
+#         to a gene.  Otherwise PG is assumed to be a probe and converted
+
+gene = PG
+if (probe!="g") {
+  gene = probe2Gene(PG,allProbes,allGenes)
+}
+write(gene,filename,sep="\n")
+
+}
+
+cor.test.l = function(x){
+## Performs a Pearson correlation on a vector of genes
+ ct = cor.test(x,var)
+ return(c(ct$est,ct$p.val))
+}
+
+#The MEGENA pipeline is adapted from MEGENA version 1.3.4-6 https://CRAN.R-project.org/package=MEGENA.
+#Please cite the paper below when MEGENA is applied as part of your analysis:
+#Song W.-M., Zhang B. (2015) Multiscale Embedded Gene Co-expression Network Analysis. PLoS Comput Biol 11(11): e1004574. doi: 10.1371/journal.pcbi.1004574.
+#For statistical mechanics aspects involved in MEGENA, please check:
+#Song W.-M., Di Matteo T.and Aste T., Building Complex Networks with Platonic Solids, Physical Reivew E, 2012 Apr;85(4 Pt 2):046115.
+```
+
+```{r}
+#library(BiocInstaller)
+#biocLite("qvalue")
+#install.packages(c("impute","dynamicTreeCut","flashClust","Hmisc","MEGENA","stringi","enrichR","filesstrings"))
+#BiocManager::install(c("MEGENA","tmod","rlist","magick","doParallel", "parallel"))
+library(doParallel)
+library(parallel)
+library(impute)
+library(dynamicTreeCut)
+library(qvalue)
+library(flashClust)
+library(Hmisc)
+library(WGCNA)
+library(MEGENA)
+library(stringi)
+library(stringr)
+library(enrichR)#for pathway analysis
+library(filesstrings)#for file organization
+library(rlist)
+library(magick)
+options(stringsAsFactors = FALSE)
+```
+
+
+
+###Step21: Enrichment of cell types in modules###
+
+```{r}
+SWIMStemLike=read.csv("./InputMetadata&Lists/SWIM_Glioblastoma_StemLike_Hu.csv",sep=',')
+SWIMStemLikeGeneCount=as.data.frame(table(SWIMStemLike$Category))
+SWIMStemLikeGeneCount
+write.csv(SWIMStemLikeGeneCount,"SWIM_Glioblastoma_StemLike_Hu_GeneCount.csv")
+```
+
+```{r}
+enrichmentsSWIMStemLikeFullHumanL = userListEnrichment(GeneL, modulesA1L,"./InputMetadata&Lists/SWIM_Glioblastoma_StemLike_Hu.csv", "", "enrichmentsSWIMStemLikeFullHuman_Sigificantlabels.csv")
+
+#List of genes that overlap between modules and SWIMStemLikeFullHuman
+enrichmentsSWIMStemLikeFullHuman_OvGenesL=enrichmentsSWIMStemLikeFullHumanL[[2]]
+dir.create("./enrichmentsSWIMStemLikeFullHuman_OvGenes")
+for (i in 1:length(enrichmentsSWIMStemLikeFullHuman_OvGenesL)) {
+  write.csv(enrichmentsSWIMStemLikeFullHuman_OvGenesL[i], file=paste0("enrichmentsSWIMStemLikeFullHuman_OvGenes/", names(enrichmentsSWIMStemLikeFullHuman_OvGenesL)[i], ".txt"))
+}
+
+#List of genes that overlap between modules and SWIMStemLikeFullHuman
+enrichmentsSWIMStemLikeFullHuman_NumOvGenes_pvalueL=enrichmentsSWIMStemLikeFullHumanL[[1]]
+write.csv(enrichmentsSWIMStemLikeFullHuman_NumOvGenes_pvalueL,"enrichmentsSWIMStemLikeFullHuman_NumOvGenes_pvalue_labels.csv")
+```
+
+```{r}
+geneListsModuleSummaryL=read.csv('./Module_Trait_megenaRData/Step18_result_geneListsModuleSummary_significant_modules.csv', sep=',')
+enrichmentsSummarySWIMStemLikeFullHumanL=read.csv('enrichmentsSWIMStemLikeFullHuman_NumOvGenes_pvalue_labels.csv', sep=',')
+```
+
+```{r}
+geneListsModuleSummaryModL=table(geneListsModuleSummaryL$modulesA1L)
+geneListsModuleSummaryModL=as.data.frame(geneListsModuleSummaryModL)
+write.csv(geneListsModuleSummaryModL, "geneListsModuleSummarylabels_GeneCountSWIMStemLike.csv")
+
+colnames(geneListsModuleSummaryModL)=c("InputCategories", "Freq")
+enrichmentsSummarySWIMStemLikeFullHumanmergeModL=merge(enrichmentsSummarySWIMStemLikeFullHumanL,geneListsModuleSummaryModL, by="InputCategories")
+write.csv(enrichmentsSummarySWIMStemLikeFullHumanmergeModL,"enrichmentsSummarySWIMStemLikeFullHumanmergeModL_labelsSWIMStemLike.csv")
+```
+
+```{r}
+# Basic barplot
+folder=getwd()
+pdf(paste0("Step21_plot_MEGENA_NumberOfModules_plot_SWIMStemLike", "red",".pdf"), height=25, width=5)
+p1<-ggplot(data=geneListsModuleSummaryModL, aes(x=InputCategories, y=Freq, fill="red"))+
+  geom_bar(position="stack", stat="identity")+
+  labs(title=paste0(folder,"_","MEGENA_NumberOfModules_plot"))+
+  labs(x="Module names")+
+  theme(axis.text.x=element_text(angle=90,hjust=1)) +
+  labs(y="Number of genes")+
+  coord_flip()
+  #labs(caption="based on enrichR database")+
+  #scale_fill_gradient(low="black",high="red")
+  #theme(plot.margin = margin(2,2,2,2, "cm"), plot.background = element_rect(fill = "white"))
+print(p1)
+dev.off
+```
+
+```{r}
+# Basic barplot for modules significantly associated with trait disease
+sig_mod_names<-c("c1_HuAgeGBsplitRnaseq_1513","c1_HuAgeGBsplitRnaseq_163","c1_HuAgeGBsplitRnaseq_24","c1_HuAgeGBsplitRnaseq_586","c1_HuAgeGBsplitRnaseq_1177","c1_HuAgeGBsplitRnaseq_388","c1_HuAgeGBsplitRnaseq_71","c1_HuAgeGBsplitRnaseq_8","c1_HuAgeGBsplitRnaseq_32","c1_HuAgeGBsplitRnaseq_475","c1_HuAgeGBsplitRnaseq_95","c1_HuAgeGBsplitRnaseq_1364","c1_HuAgeGBsplitRnaseq_2024","c1_HuAgeGBsplitRnaseq_79","c1_HuAgeGBsplitRnaseq_175","c1_HuAgeGBsplitRnaseq_193","c1_HuAgeGBsplitRnaseq_103","c1_HuAgeGBsplitRnaseq_25","c1_HuAgeGBsplitRnaseq_605","c1_HuAgeGBsplitRnaseq_361")
+geneListsModuleSummaryModLnew=geneListsModuleSummaryModL[geneListsModuleSummaryModL$InputCategories %in% sig_mod_names,]
+
+folder=getwd()
+pdf(paste0("Step21_plot_MEGENA_NumberOfModules_plot_significant_SWIMStemLike", "red",".pdf"), height=6, width=10)
+p1<-ggplot(data=geneListsModuleSummaryModLnew, aes(x=InputCategories, y=Freq, fill="red"))+
+  geom_bar(position="stack", stat="identity")+
+  labs(title=paste0(folder,"_","MEGENA_NumberOfModules_plot"))+
+  labs(x="Module names")+
+  theme(axis.text.x=element_text(angle=90,hjust=1, size=20),
+        axis.text.y=element_text(size=20),
+        axis.title.x=element_text(size=20),
+        axis.title.y=element_text(size=20)) +
+  labs(y="Number of genes")+
+  coord_flip()
+  #labs(caption="based on enrichR database")+
+  #scale_fill_gradient(low="black",high="red")
+  #theme(plot.margin = margin(2,2,2,2, "cm"), plot.background = element_rect(fill = "white"))
+print(p1)
+dev.off
+```
+
+#Step22: Organization and saving session (software version) information 
+```{r}
+sessionInfo()
+toLatex(sessionInfo())
+```
+
+```{r}
+#save image
+save.image(file="MEGENA_tempSWIMStemLike.RData")
+```
+
+```{r}
+#Organize of files
+#library(filesstrings)
+
+dir.create("enrichmentsSWIMStemLikeFullHuman_OvGenes")
+file.move(list.files(pattern = "enrichmentsSWIMStemLikeFullHuman_Num*"), "enrichmentsSWIMStemLikeFullHuman_OvGenes")
+file.move(list.files(pattern = "enrichmentsSWIMStemLikeFullHuman_Sig*"), "enrichmentsSWIMStemLikeFullHuman_OvGenes")
+file.move(list.files(pattern = "enrichmentsSummarySWIMStemLikeFullHuman*"), "enrichmentsSWIMStemLikeFullHuman_OvGenes")
+file.move(list.files(pattern = "*Count.csv"), "Module_GenesKDHubs")
+
+```
+
+```{r}
+#Remove .RData and clear environment to free up memory
+rm(list=ls())
+file.remove("temp.RData")
+gc()
+```
+

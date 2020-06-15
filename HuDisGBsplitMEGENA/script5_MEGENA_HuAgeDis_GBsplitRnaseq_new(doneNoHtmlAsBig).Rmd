@@ -1,0 +1,706 @@
+---
+title: "script4_MEGENA_HuAgeDis_GBsplitRnaseq"
+author: "Shradha Mukherjee"
+date: "Last updated January, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. Html_fragmented is quicker to load than html, hence for this pipeline which genenerated a large mount of data, we have used html_fragment to report Rmarkdown.
+
+#Checklist for this pipeline 
+  #1) MEGENA assigns colors randomly (except few reserved colors like "grey" for unassigned genes). Therefore, upon re-run of this analysis it may call the age and disease associated microglia enriched "black" module by some other color such as "pink", in which case this color is specified step 29 onwards as described in point 4) above.
+  #2) The present analysis was done on MacOS, using knitToHtmlfragment.
+  
+To reuse this code for other datasets 
+  a) replace "HuAgeGBsplitRnaseq_" for module naming to pre-fix of users choice that is meaningful for the dataset. Here Hu=Human, Age=Age, Dis=Disease
+  b) in this pipeline human gene symbols are used
+
+  
+###############################################Continue with MEGENA pipeline############################################################################
+####################################HuAgeGBsplitRnaseq#######################################
+###Step13: Load libraries, set working directory and Import data for MEGENA###
+```{r}
+#If restarting program uncomment line below
+#load(file="temp.RData")
+
+#save working directory location
+wd<-getwd()
+wd
+``` 
+
+```{r}
+#Load additional functions required for this pipeline
+#Reference: Miller, J.A., Horvath, S., and Geschwind, D.H. (2010). Divergence of Human and mouse brain transcriptome highlights Alzheimer disease pathways. Proceedings of the National Academy of Sciences of the United States of America 107, 12698-12703.
+
+write.geneList <- function(PG, filename, allProbes=0, allGenes=0, probe="g")
+{
+## These functions write a genelist / probelist to a file of geneNames
+
+## USER inputs
+# PG = the probe/gene you want written to a gene list
+# allProbes = the list of probe names for the above probes
+# allGenes = the list of gene names for the corresponding probes
+# filename = the filename (can include folder)
+# probe = the default ("g") says PG is a gene and doesn''t need to be converted
+#         to a gene.  Otherwise PG is assumed to be a probe and converted
+
+gene = PG
+if (probe!="g") {
+  gene = probe2Gene(PG,allProbes,allGenes)
+}
+write(gene,filename,sep="\n")
+
+}
+
+cor.test.l = function(x){
+## Performs a Pearson correlation on a vector of genes
+ ct = cor.test(x,var)
+ return(c(ct$est,ct$p.val))
+}
+
+#The MEGENA pipeline is adapted from MEGENA version 1.3.4-6 https://CRAN.R-project.org/package=MEGENA.
+#Please cite the paper below when MEGENA is applied as part of your analysis:
+#Song W.-M., Zhang B. (2015) Multiscale Embedded Gene Co-expression Network Analysis. PLoS Comput Biol 11(11): e1004574. doi: 10.1371/journal.pcbi.1004574.
+#For statistical mechanics aspects involved in MEGENA, please check:
+#Song W.-M., Di Matteo T.and Aste T., Building Complex Networks with Platonic Solids, Physical Reivew E, 2012 Apr;85(4 Pt 2):046115.
+```
+
+```{r}
+#library(BiocInstaller)
+#biocLite("qvalue")
+#install.packages(c("impute","dynamicTreeCut","flashClust","Hmisc","MEGENA","stringi","enrichR","filesstrings"))
+#BiocManager::install(c("MEGENA","tmod","rlist","magick","doParallel", "parallel"))
+library(doParallel)
+library(parallel)
+library(impute)
+library(dynamicTreeCut)
+library(qvalue)
+library(flashClust)
+library(Hmisc)
+library(WGCNA)
+library(MEGENA)
+library(stringi)
+library(stringr)
+library(enrichR)#for pathway analysis
+library(filesstrings)#for file organization
+library(rlist)
+library(magick)
+options(stringsAsFactors = FALSE)
+```
+
+```{r}
+#Human Metadata
+metadata=read.csv("./merged_expr_metadata/Step5D_result_merge_SRP091303_to_GSE100297_metadata_SampleID.csv", header=T, sep=',')
+colnames(metadata)
+```
+
+```{r}
+#Order of metadata variable selection in WGCNA same as mod and then remaining variables 
+#keep only variable we need
+metadata_1=metadata[,c("Study","Gender","Disease","Age","Tissue")]
+#metadata_1=metadata[,4:8]
+rownames(metadata_1)=metadata$Sample_Name
+pheno=metadata_1
+DT::datatable(metadata)
+DT::datatable(pheno)
+```
+
+```{r}
+#Human Metadata coded. this was created in the SVA+limma step
+metadata_coded=read.csv("./merged_expr_metadata/Step8_result_merge_SRP091303_to_GSE100297_metadata_SampleID_coded_vsCONonly.csv", header=T, sep=',')
+colnames(metadata_coded)
+```
+
+```{r}
+#Order of metadata variable selection in WGCNA same as mod and then remaining variables
+#keep only variable we need
+metadata_1_coded=metadata_coded[,c("StudySRP027383","StudySRP091303","GenderM","DiseaseCON","DiseaseGrade_2","DiseaseGrade_3","DiseaseGrade_4","Age","Tissueprefrontal_cortex")]
+#metadata_1_coded=metadata_coded[,2:48]
+rownames(metadata_1_coded)=metadata_coded$Sample_Name
+pheno_coded=metadata_1_coded
+DT::datatable(metadata_coded)
+DT::datatable(pheno_coded)
+```
+
+```{r}
+#Human Expression data normalized by SVA lmY
+Expr_GeneHu=read.csv("./SVA_lmY/Step10_result_edata_lmY.csv", header =T, sep=',')
+colnames(Expr_GeneHu)
+```
+
+```{r}
+Expr_GeneHu_1=Expr_GeneHu[,-1]
+rownames(Expr_GeneHu_1)=Expr_GeneHu$X
+Expr_GeneHu_1=Expr_GeneHu_1[complete.cases(Expr_GeneHu_1), ]
+edata=Expr_GeneHu_1
+DT::datatable(head(Expr_GeneHu))
+DT::datatable(head(edata))
+```
+
+```{r}
+#expr data and metadata to be used for the WGCNA
+datExprA1g=edata
+metadataA1g=pheno
+metadataA1g_coded=pheno_coded
+```
+
+```{r}
+#Remove unused variables
+rm(metadata)
+rm(metadata_1)
+rm(pheno)
+rm(metadata_coded)
+rm(metadata_1_coded)
+rm(pheno_coded)
+rm(Expr_GeneHu)
+rm(Expr_GeneHu_1)
+rm(edata)
+```
+
+```{r}
+DT::datatable(datExprA1g[1:7,1:7])
+```
+
+```{r}
+dim(datExprA1g)
+```
+
+###Step14: Removal of outliers and missing values using WGCNA package function 'goodSamplesGenes'###
+```{r}
+#Before applying 'goodSamplesGenes'
+dim(datExprA1g)
+```
+
+```{r}
+#check and applying 'goodSamplesGenes' on data A1
+gsg = goodSamplesGenes(datExprA1g, verbose = 3)
+gsg$allOK
+if (!gsg$allOK)
+{
+if (sum(!gsg$goodGenes)>0)
+#printFlush(paste("Removing genes:", paste(names(datExprA1g)[!gsg$goodGenes], collapse = ", ")));
+if (sum(!gsg$goodSamples)>0)
+#printFlush(paste("Removing samples:", paste(rownames(datExprA1g)[!gsg$goodSamples], collapse = ", ")));
+# Removal step
+datExprA1g = datExprA1g[gsg$goodSamples, gsg$goodGenes]
+}
+```
+
+```{r}
+#After applying 'goodSamplesGenes'
+dim(datExprA1g)
+```
+
+###Step 15: Optional: This step allows selection of top ALL most variable genes, not most expressed genes (this minimizes noise and is compuationally efficient)### 
+#In the present analysis we have used ALL genes 
+```{r}
+#Transpose data
+datExprA1g1=as.data.frame(t(datExprA1g))
+names(datExprA1g1)=rownames(datExprA1g)
+rownames(datExprA1g1)=names(datExprA1g)
+DT::datatable(datExprA1g1[1:7,1:7])
+```
+
+```{r}
+#Calculate variance
+var = apply(datExprA1g1, 2, var)
+dat = rbind(datExprA1g1,var)
+rownames(dat) = c(rownames(datExprA1g1), "variance")
+#order columns by variance
+dat1 = dat[,order(dat["variance",], decreasing=T)]
+```
+
+```{r}
+#Remove row containing variance values
+#Here uncomment to select all genes
+dat2 = dat1[1:dim(datExprA1g1)[1],1:dim(datExprA1g1)[2]]
+#To select only a given number of top genes like top variable 16000 genes uncomment line below
+#dat2 = dat1[1:dim(datExprA1g1)[1],1:16000]
+
+datExprA1g2=as.data.frame(t(dat2))
+names(datExprA1g2)=rownames(dat2)
+rownames(datExprA1g2)=names(dat2)
+```
+
+```{r}
+#remove unused variables
+rm(var)
+
+rm(dat1)
+```
+
+```{r}
+#Comparison of data A1 after variance based selction
+dim(datExprA1g)
+DT::datatable(datExprA1g[1:7,1:7])
+
+dim(datExprA1g2)
+DT::datatable(datExprA1g2[1:7,1:7])
+```
+
+################################################here onwards will use datExprA1g2#############################################
+###Step16: Pick parameters and detect modules in data A1###
+```{r}
+#detect how many cores are available
+detectCores()
+```
+
+```{r}
+#input MEGENA parameters
+# input parameters
+n.cores <- 8; # 1 number of cores/threads to call for PCP increase to increase speed. Use same as available number of cores above
+doPar <- TRUE; # do we want to parallelize? use FALSE to reduce computation power need.
+method = "pearson" # method for correlation. either pearson or spearman. 
+FDR.cutoff = 0.05 # FDR threshold to define significant correlations upon shuffling samples. 
+module.pval = 0.05 # module significance p-value. Recommended is 0.05. 
+hub.pval = 0.05 # connectivity significance p-value based random tetrahedral networks
+cor.perm = 10; # number of permutations for calculating FDRs for all correlation pairs. 
+hub.perm = 10; # number of permutations for calculating connectivity significance p-value. Reduce this number 100 to reduce computation time. 
+
+# annotation to be done on the downstream
+annot.table=NULL
+id.col = 1
+symbol.col= 2
+###########
+```
+
+```{r}
+#Calculate correlation
+ijw <- calculate.correlation(datExprA1g2,doPerm = cor.perm)
+```
+
+```{r}
+#register multiple cores if needed.
+#ref: http://blog.aicry.com/r-parallel-computing-in-5-minutes/index.html
+registerDoParallel(cores= n.cores)
+if (doPar & getDoParWorkers() == n.cores)
+{
+   registerDoParallel(cores= n.cores)
+  # check how many workers are there
+  cat(paste("number of cores to use:",getDoParWorkers(),"\n",sep = ""))
+}
+getDoParWorkers()
+```
+
+```{r}
+#In this step, Planar Filtered Network (PFN) is calculated by taking significant correlation pairs, ijw. In the case of utilizing a different similarity measure, one can independently format the results into 3-column data frame with column names c(“row”,“col”,“weight”), and make sure the weight column ranges within 0 to 1. Using this as an input to calculate.PFN() will work just as fine.
+#calculate PFN
+el <- calculate.PFN(ijw[,1:3],doPar = doPar,num.cores = n.cores)
+```
+
+```{r}
+#save image
+save.image(file="MEGENA_upto_el_PFN_done.RData")
+```
+
+```{r}
+g <- graph.data.frame(el,directed = FALSE)
+g
+```
+
+```{r}
+#perform MCA clustering.
+#MCA clustering is performed to identify multiscale clustering analysis. “MEGENA.output”" is the core output to be used in the down-stream analyses for summarization and plotting.
+MEGENA.output <- do.MEGENA(g,
+ mod.pval = module.pval,hub.pval = hub.pval,remove.unsig = TRUE,
+ min.size = 100,#max.size = vcount(g)/2,
+ doPar = doPar,num.cores = n.cores,n.perm = hub.perm,
+ save.output = TRUE) 
+```
+
+```{r}
+#Summarize results
+summary.output <- MEGENA.ModuleSummary(MEGENA.output,
+    mod.pvalue = module.pval,hub.pvalue = hub.pval,
+    min.size = 100,#max.size = vcount(g)/2,
+    id.col = id.col,symbol.col = symbol.col,
+    output.sig = TRUE)
+names(summary.output)[1] <- "modules"
+```
+
+```{r}
+#Display the networks visually:
+#pdf("dendrogram.pdf",height=6,width=16)
+#par(mar=c(1,1,1,1))
+#par(mfrow=c(1,2))
+module.table=summary.output$module.table
+colnames(module.table)[1] <- "id"
+plot_module_hierarchy(module.table=module.table,plot.coord = NULL,
+edge.color = "grey",node.color = "black",node.label.color = "black",
+label.scaleFactor = 0.5,node.scaleFactor = 0.2,arrow.size = 0.015,
+data.col = NULL,low.color = "blue",mid.color = "white",
+high.color = "red",mid.value = 0.05)
+#dev.off() 
+dev.print(pdf,file="Step16_plot_dendrogram.pdf",height=5,width=10)
+```
+
+```{r}
+#convert the png files of the module construction to pdf
+cluster_stats <- image_read('./cluster_stats.png')
+image_info(cluster_stats)
+image_write(cluster_stats, path = "Step16_plot_cluster_state.pdf", format = "pdf")
+
+majority_vote <- image_read('./majority_vote.png')
+image_info(majority_vote)
+image_write(majority_vote, path = "Step16_plot_majority_vote.pdf", format = "pdf")
+
+pvalue_distributions <- image_read('./pvalue_distributions.png')
+image_info(pvalue_distributions)
+image_write(pvalue_distributions, path = "Step16_plot_pvalue_distributions.pdf", format = "pdf")
+
+scalecluster_heatmap <- image_read('./scalecluster_heatmap.png')
+image_info(scalecluster_heatmap)
+image_write(scalecluster_heatmap, path = "Step16_plot_scalecluster_heatmap.pdf", format = "pdf")
+
+scalewise_hub_tileplot <- image_read('./scalewise_hub_tileplot.png')
+image_info(scalewise_hub_tileplot)
+image_write(scalewise_hub_tileplot, path = "Step16_plot_scalewise_hub_tileplot.pdf", format = "pdf")
+
+#delete the original files png file formats
+#file.remove("cluster_stats.png")
+#file.remove("majority_vote.png")
+#file.remove("pvalue_distributions.png")
+#file.remove("scalecluster_heatmap.png")
+#file.remove("scalewise_hub_tileplot.png")
+```
+
+###Step17: Module membership for network comparison and identification of hub genes###
+```{r}
+#Save hub genes from significant modules
+#Uncommenting below is another way of getting the same output of significant modules "multiscale_significant.modules"
+#print(summary.output$modules,2)
+print(summary.output$module.table)
+write.csv(summary.output$module.table,"Step17_result_HubGenes_significant_modules.csv")
+```
+
+```{r}
+#import significant modules and their genes generated in Step16 to format and use below
+#If gene names appear in modules column then import the text file 'multiscale_significant.modules' into excel and save as Tab delimited txt file before importing into R
+#without fixing this one may get error in line 409 Error in `[.data.frame`(MS_node, , c("id", "KD.membership", "node.degree", : undefined columns selected
+
+MS_sigMods=read.delim("multiscale_significant.modulesTab.txt",header=F, sep='\t')
+#MS_sigMods=read.delim("multiscale_significant.modules.txt",header=F, sep='\t')
+MS_sigMods=as.data.frame(MS_sigMods)
+colnames(MS_sigMods)[colnames(MS_sigMods)=="V1"] <- "modules"
+#give module labels dataset specific name
+MS_sigMods$modules=sub("c1_", "c1_HuAgeGBsplitRnaseq_", MS_sigMods$modules)
+# This module assignment labels. Check column name and label appropriately
+DT::datatable(MS_sigMods)
+write.csv(MS_sigMods,"Step17_result_Genes_significant_modules.csv")
+```
+
+```{r}
+#transpose to put module name as column label and genes as row
+tMS_sigMods=t(MS_sigMods)
+tMS_sigMods_1=tMS_sigMods[-1,]
+colnames(tMS_sigMods_1)=tMS_sigMods[1,]
+tMS_sigMods[1:3,1:3]
+tMS_sigMods_1[1:3,1:3]
+tMS_sigMods_2=as.data.frame(tMS_sigMods_1)
+tMS_sigMods_2[1:3,1:3]
+```
+
+```{r}
+#Save gene module membership for significant modules
+MS_node=read.delim("multiscale_nodeSummary.txt",header=T, sep='\t')
+MS_node_1=MS_node[,c("id","KD.membership","node.degree","node.strength","node.weightedCF")]
+write.csv(MS_node_1,"Step17_result_KDtable1_significant_modules.csv")
+```
+
+###Step18: Generating individual txt files containing genes in a given module###
+```{r}
+#Make a folder first called 'ModuleGenesExprPerModListFiles' change full path below as per your system
+#GeneNames = rownames(datExprA1g2)
+dir.create("./ModuleGenesExprPerModListFiles")
+folder = "ModuleGenesExprPerModListFiles/"
+for (c in colnames(tMS_sigMods_2)){
+fn = paste(folder, c, ".txt",sep="");
+write.table(tMS_sigMods_2[,c],row.names = FALSE,quote=F, fn)
+};
+#write(GeneNames,paste(folder,"all.txt",sep=""))
+#The folder should now have files titled "<module>.txt" that contain the gene names of every gene in that module,as well as a file titled "all.txt" that has every gene in your data set.
+```
+
+```{r}
+#To create a merged file containg two columns only of genes, module and gene expression
+setwd("./ModuleGenesExprPerModListFiles")
+#make sure that the all.txt file is not in this directory
+GeneModfiles <- list.files(pattern = "*.txt")
+GeneModfiles
+setwd(wd)
+```
+
+```{r}
+setwd("./ModuleGenesExprPerModListFiles")
+for (fileName in GeneModfiles) {
+  # read data:
+  sample <- read.table(fileName, sep="\t",fill=TRUE)
+  sample$modulesA1L<-fileName
+  sample$modulesA1L<-gsub(".txt","",sample$modulesA1L)
+  colnames(sample)<-c("GeneL", "modulesA1L")
+  #merge with gene expression
+  sample<-merge(sample,datExprA1g2, by.x="GeneL", by.y="row.names")
+  # add more stuff here
+  #write.table(sample,row.names = FALSE,quote=F)
+  write.table(sample, fileName, row.names = FALSE,quote=F, sep="\t")
+}
+setwd(wd)
+```
+
+```{r}
+setwd("./ModuleGenesExprPerModListFiles")
+#Given that the above files were imported properly as shown above, lets read the entire list of files into a single object
+readGeneModfiles = lapply(GeneModfiles, read.table, sep="\t",header=T, fill=TRUE)
+geneListsModuleSummary<-list.rbind(readGeneModfiles)
+setwd(wd)
+```
+
+```{r}
+#make a summary file of all the genes in modules, similar to KD files but with only genes,module names and gene expression from datExprA1g2
+write.csv(geneListsModuleSummary,"Step18_result_geneListsModuleSummaryExpr_significant_modules.csv")
+
+#make a summary file of all the genes in modules, similar to KD files but with only genes and module names
+geneListsModuleSummary_1=geneListsModuleSummary[,c("GeneL","modulesA1L")]
+write.csv(geneListsModuleSummary_1,"Step18_result_geneListsModuleSummary_significant_modules.csv")
+```
+
+```{r}
+#restore the original stte of the module gene files
+#GeneNames = rownames(datExprA1g2)
+dir.create("./ModuleGenesOnlyPerModListFiles")
+folder = "ModuleGenesOnlyPerModListFiles/"
+for (c in colnames(tMS_sigMods_2)){
+fn = paste(folder, c, ".txt",sep="");
+write.table(tMS_sigMods_2[,c],row.names = FALSE,quote=F, fn)
+};
+#write(GeneNames,paste(folder,"all.txt",sep=""))
+#The folder should now have files titled "<module>.txt" that contain the gene names of every gene in that module,as well as a file titled "all.txt" that has every gene in your data set.
+```
+
+###Step19:trait module relatonships for data A1###
+#In this step we use the coded metadata files
+#Relating modules to physiological traits for A1
+#read.csv(geneListsModuleSummary,"Step18_result_geneListsModuleSummaryExpr_significant_modules.csv")
+
+```{r}
+#need to reimport the expression data with duplicate genes to match duplicate genes to match the modules which have same gene in multiple modules
+datExprA1g3<-geneListsModuleSummary[!names(geneListsModuleSummary) %in% c("modulesA1L")]
+colnames(datExprA1g3)[colnames(datExprA1g3)=="GeneL"] <- "X"
+tdatExprA1g3<-t(datExprA1g3[,-1])
+colnames(tdatExprA1g3)<-datExprA1g3[,1]
+View(datExprA1g3[1:3,1:3])
+View(tdatExprA1g3[1:3,1:3])
+```
+
+```{r}
+# For data A1
+# Define numbers of genes and samples
+nGenesA1L = length(datExprA1g3$X)
+nSamplesA1L = ncol(datExprA1g2)
+# Recalculate MEs with labels
+MEs0A1L= moduleEigengenes(tdatExprA1g3,geneListsModuleSummary$modulesA1L)$eigengenes
+MEsA1L= orderMEs(MEs0A1L)
+modTraitCorA1L = cor(MEsA1L, metadataA1g_coded, use = "p")
+#modTraitCorA1L = cor(MEsA1L, metadataA1g_coded, use = "complete.obs", method = c("pearson", "kendall", "spearman"))
+modTraitPA1L = corPvalueStudent(modTraitCorA1L, nSamplesA1L)
+textMatrixA1L = paste(signif(modTraitCorA1L, 2), "\n(",
+signif(modTraitPA1L, 1), ")", sep = "")
+dim(textMatrixA1L) = dim(modTraitCorA1L)
+par(mar = c(6, 8.5, 3, 3))
+# Display the correlation values within a heatmap plot
+labeledHeatmap(Matrix = modTraitCorA1L, xLabels = names(metadataA1g_coded),
+yLabels = names(MEsA1L), ySymbols = names(MEsA1L), 
+colorLabels =FALSE,colors=greenWhiteRed(50),textMatrix=textMatrixA1L,
+setStdMargins = FALSE, cex.text = 0.5, zlim = c(-1,1),
+main = paste("A1_Module-trait relationships labels"))
+dev.print(pdf,"Step19_plot_A1_relating modules to trait labels.pdf", width=5, height=5)
+
+#This is for label module trait table
+colnames(modTraitPA1L) = paste("p.value.", colnames(modTraitCorA1L), sep="");
+out3L<-cbind(Module=rownames(modTraitCorA1L), modTraitCorA1L, modTraitPA1L)
+dim(out3L)
+write.table(out3L, "Step19_result_A1_relating modules to trait labels.csv", sep=",",row.names=F)
+```
+
+```{r}
+nSamplesA1 = ncol(datExprA1g2)
+#Gene trait significance and correlation for entire gene set i.e. all genes from all modules
+geneTraitCorA1 = cor(t(datExprA1g2), metadataA1g_coded, use = "p")
+geneTraitPA1 = corPvalueStudent(geneTraitCorA1, nSamplesA1)
+#This is for color gene trait table
+colnames(geneTraitPA1) = paste("p.value.", colnames(geneTraitCorA1), sep="");
+out3gene<-cbind(GeneName=rownames(geneTraitCorA1), geneTraitCorA1, geneTraitPA1)
+dim(out3gene)
+write.table(out3gene, "Step19_result_A1_relating all genes to traits.csv", sep=",",row.names=F)
+```
+
+```{r}
+#save.image(file="temp.RData")
+#rm(list=ls())
+#gc()
+#To reload uncomment code below
+#load(file="temp.RData")
+```
+
+###Step20: Cross-pipeline preservation and hypergeometric test: Qualitatively and quantitatively measure cross-species, cross-pipeline and/or any cross-dataset network preservation at the module level###
+#Will export the files for preservation analysis and hypergeometric test 
+```{r}
+#Export expression file
+write.csv(datExprA1g2,"Step20_result_ForPres&Hyper_HuAgeGBsplitRnaseq_datExprA1g2.csv")
+#Export the module and gene names for use Preservation and hypergeometric test 
+geneListsModuleSummary_2=geneListsModuleSummary_1[,c("GeneL","GeneL","modulesA1L")]
+colnames(geneListsModuleSummary_2)=c("PSID","Gene","Module")
+write.csv(geneListsModuleSummary_2[,c("PSID","Gene","Module")],"Step20_result_ForPres&Hyper_HuAgeGBsplitRnaseq_GeneModule.csv")
+```
+
+```{r}
+GeneL=geneListsModuleSummary_1$GeneL
+modulesA1L=geneListsModuleSummary_1$modulesA1L
+```
+
+###Step21: Enrichment of cell types in modules###
+
+```{r}
+celltype=read.csv("./InputMetadata&Lists/StemCells_notCellTypeBrainImmune_Full_HuMsRatToHu.csv",sep=',')
+cellTypeGeneCount=as.data.frame(table(celltype$Category))
+cellTypeGeneCount
+write.csv(cellTypeGeneCount,"StemCells_notCellTypeBrainImmune_Full_HuMsRatToHu_GeneCount.csv")
+```
+
+```{r}
+enrichmentsCellTypeFullHumanL = userListEnrichment(GeneL, modulesA1L,"./InputMetadata&Lists/StemCells_notCellTypeBrainImmune_Full_HuMsRatToHu.csv", "", "enrichmentsCellTypeFullHuman_Sigificantlabels.csv")
+
+#List of genes that overlap between modules and CellTypeFullHuman
+enrichmentsCellTypeFullHuman_OvGenesL=enrichmentsCellTypeFullHumanL[[2]]
+dir.create("./enrichmentsCellTypeFullHuman_OvGenes")
+for (i in 1:length(enrichmentsCellTypeFullHuman_OvGenesL)) {
+  write.csv(enrichmentsCellTypeFullHuman_OvGenesL[i], file=paste0("enrichmentsCellTypeFullHuman_OvGenes/", names(enrichmentsCellTypeFullHuman_OvGenesL)[i], ".txt"))
+}
+
+#List of genes that overlap between modules and CellTypeFullHuman
+enrichmentsCellTypeFullHuman_NumOvGenes_pvalueL=enrichmentsCellTypeFullHumanL[[1]]
+write.csv(enrichmentsCellTypeFullHuman_NumOvGenes_pvalueL,"enrichmentsCellTypeFullHuman_NumOvGenes_pvalue_labels.csv")
+```
+
+```{r}
+geneListsModuleSummaryL=read.csv('Step18_result_geneListsModuleSummary_significant_modules.csv', sep=',')
+enrichmentsSummaryCellTypeFullHumanL=read.csv('enrichmentsCellTypeFullHuman_NumOvGenes_pvalue_labels.csv', sep=',')
+```
+
+```{r}
+geneListsModuleSummaryModL=table(geneListsModuleSummaryL$modulesA1L)
+geneListsModuleSummaryModL=as.data.frame(geneListsModuleSummaryModL)
+write.csv(geneListsModuleSummaryModL, "geneListsModuleSummarylabels_GeneCount.csv")
+
+colnames(geneListsModuleSummaryModL)=c("InputCategories", "Freq")
+enrichmentsSummaryCellTypeFullHumanmergeModL=merge(enrichmentsSummaryCellTypeFullHumanL,geneListsModuleSummaryModL, by="InputCategories")
+write.csv(enrichmentsSummaryCellTypeFullHumanmergeModL,"enrichmentsSummaryCellTypeFullHumanmergeModL_labels.csv")
+```
+
+```{r}
+# Basic barplot
+folder=getwd()
+pdf(paste0("Step21_plot_MEGENA_NumberOfModules_plot_", "red",".pdf"), height=25, width=5)
+p1<-ggplot(data=geneListsModuleSummaryModL, aes(x=InputCategories, y=Freq, fill="red"))+
+  geom_bar(position="stack", stat="identity")+
+  labs(title=paste0(folder,"_","MEGENA_NumberOfModules_plot"))+
+  labs(x="Module names")+
+  theme(axis.text.x=element_text(angle=90,hjust=1)) +
+  labs(y="Number of genes")+
+  coord_flip()
+  #labs(caption="based on enrichR database")+
+  #scale_fill_gradient(low="black",high="red")
+  #theme(plot.margin = margin(2,2,2,2, "cm"), plot.background = element_rect(fill = "white"))
+print(p1)
+dev.off
+```
+
+```{r}
+# Basic barplot for modules significantly associated with trait disease
+sig_mod_names<-c("c1_HuAgeGBsplitRnaseq_1513","c1_HuAgeGBsplitRnaseq_163","c1_HuAgeGBsplitRnaseq_24","c1_HuAgeGBsplitRnaseq_586","c1_HuAgeGBsplitRnaseq_1177","c1_HuAgeGBsplitRnaseq_388","c1_HuAgeGBsplitRnaseq_71","c1_HuAgeGBsplitRnaseq_8","c1_HuAgeGBsplitRnaseq_32","c1_HuAgeGBsplitRnaseq_475","c1_HuAgeGBsplitRnaseq_95","c1_HuAgeGBsplitRnaseq_1364","c1_HuAgeGBsplitRnaseq_2024","c1_HuAgeGBsplitRnaseq_79","c1_HuAgeGBsplitRnaseq_175","c1_HuAgeGBsplitRnaseq_193","c1_HuAgeGBsplitRnaseq_103","c1_HuAgeGBsplitRnaseq_25","c1_HuAgeGBsplitRnaseq_605","c1_HuAgeGBsplitRnaseq_361")
+geneListsModuleSummaryModLnew=geneListsModuleSummaryModL[geneListsModuleSummaryModL$InputCategories %in% sig_mod_names,]
+
+folder=getwd()
+pdf(paste0("Step21_plot_MEGENA_NumberOfModules_plot_significant_", "red",".pdf"), height=6, width=10)
+p1<-ggplot(data=geneListsModuleSummaryModLnew, aes(x=InputCategories, y=Freq, fill="red"))+
+  geom_bar(position="stack", stat="identity")+
+  labs(title=paste0(folder,"_","MEGENA_NumberOfModules_plot"))+
+  labs(x="Module names")+
+  theme(axis.text.x=element_text(angle=90,hjust=1, size=20),
+        axis.text.y=element_text(size=20),
+        axis.title.x=element_text(size=20),
+        axis.title.y=element_text(size=20)) +
+  labs(y="Number of genes")+
+  coord_flip()
+  #labs(caption="based on enrichR database")+
+  #scale_fill_gradient(low="black",high="red")
+  #theme(plot.margin = margin(2,2,2,2, "cm"), plot.background = element_rect(fill = "white"))
+print(p1)
+dev.off
+```
+
+#Step22: Organization and saving session (software version) information 
+```{r}
+sessionInfo()
+toLatex(sessionInfo())
+```
+
+```{r}
+#save image
+save.image(file="MEGENA_temp.RData")
+```
+
+```{r}
+#Organize of files
+#library(filesstrings)
+
+dir.create("Module_Trait_megenaRData")
+file.move(list.files(pattern = 'A1_dat*'), "Module_Trait_megenaRData")
+file.move(list.files(pattern = 'Step19_result_A1_relating*'), "Module_Trait_megenaRData")
+file.move(list.files(pattern = 'Step19_plot_A1_relating*'), "Module_Trait_megenaRData")
+file.move(list.files(pattern = 'SelectGeneListA1*'), "Module_Trait_megenaRData")
+file.move(list.files(pattern = 'Step18_result_geneListsModuleSummary*'), "Module_Trait_megenaRData")
+file.move(list.files(pattern = 'A1_datAge*'), "Module_Trait_megenaRData")
+file.move(list.files(pattern = 'MEGENA_temp.RData'), "Module_Trait_megenaRData")
+
+dir.create("Module_GenesKDHubs")
+file.move(list.files(pattern = "Step17_result_Genes*"), "Module_GenesKDHubs")
+file.move(list.files(pattern = "Step20_result_ForPres&Hyper*"), "Module_GenesKDHubs")
+file.move(list.files(pattern = "Step17_result_HubGenes*"), "Module_GenesKDHubs")
+file.move(list.files(pattern = "Step17_result_KDtable1*"), "Module_GenesKDHubs")
+file.move(list.files(pattern = "Step16_plot*"), "Module_GenesKDHubs")
+file.move(list.files(pattern = "*GeneCount.csv"), "Module_GenesKDHubs")
+
+#dir.create("Module_GenesRankskwithin")
+#file.move(list.files(pattern = "ForGenesInModule*"), #"Module_GenesRankskwithin")
+
+dir.create("enrichmentsCellTypeFullHuman_OvGenes")
+file.move(list.files(pattern = "enrichmentsCellTypeFullHuman_Num*"), "enrichmentsCellTypeFullHuman_OvGenes")
+file.move(list.files(pattern = "enrichmentsCellTypeFullHuman_Sig*"), "enrichmentsCellTypeFullHuman_OvGenes")
+file.move(list.files(pattern = "enrichmentsSummaryCellTypeFullHuman*"), "enrichmentsCellTypeFullHuman_OvGenes")
+file.move(list.files(pattern = "*Count.csv"), "Module_GenesKDHubs")
+
+dir.create("MEGENA_raw_output")
+file.move(list.files(pattern = "multiscale_clusters.RData"), "MEGENA_raw_output")
+file.move(list.files(pattern = "multiscale_hubAnalysis.RData"), "MEGENA_raw_output")
+file.move(list.files(pattern = "correlation_FDR_table.txt"), "MEGENA_raw_output")
+file.move(list.files(pattern = "Data_Correlation.txt"), "MEGENA_raw_output")
+file.move(list.files(pattern = "multiscale_nodeSummary.txt"), "MEGENA_raw_output")
+file.move(list.files(pattern = "multiscale_significant.modules.txt"), "MEGENA_raw_output")
+file.move(list.files(pattern = "multiscale_significant.modulesTab.txt"), "MEGENA_raw_output")
+file.move(list.files(pattern = "pfg_el.RData"), "MEGENA_raw_output")
+file.move(list.files(pattern = "PFN_step_ends_at_0qualified_edges.JPG"), "MEGENA_raw_output")
+```
+
+```{r}
+#Remove .RData and clear environment to free up memory
+rm(list=ls())
+file.remove("temp.RData")
+gc()
+```
+

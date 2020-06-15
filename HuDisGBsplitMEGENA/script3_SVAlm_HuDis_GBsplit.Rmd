@@ -1,0 +1,1104 @@
+---
+title: "script3_SVAlm_HuDis_GBsplit_v4"
+author: "Shradha Mukherjee"
+date: "Last updated January, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. Html_fragmented is quicker to load than html, hence for this pipeline which genenerated a large mount of data, we have used html_fragment to report Rmarkdown.
+
+#Checklist for this pipeline 
+  #1) The present analysis was done on MacOS, using knitToHtmlfragment.
+  
+To reuse this code for other datasets 
+  a) prepare mod_coded_metadata, mod, mod0 and pheno_sva variables relevant to the study of interst
+  b) in this pipeline human gene symbols are used
+
+
+####################################SVA+LM or SVA+lmY or none and DEG_Limma normalization for study or experiment or batch correction and removal of gender#######################################
+###Step6: Load libraries, set working directory and Import data###
+```{r}
+#save working directory location
+wd<-getwd()
+wd
+```
+
+```{r}
+#source("https://bioconductor.org/biocLite.R")
+#biocLite(c("sva","limma","bladderbatch","pamr"))
+library(limma)
+library(sva)
+library(pamr)
+library(ggplot2) # plot
+library(ggmap)#plots
+library(gplots)#plots
+library(RColorBrewer)#color pallet
+library(Hmisc)#for corelation plot
+library(viridis)#for corelation plot
+library(corrplot)#for corelation plot
+library(filesstrings)#for file organization
+```
+
+```{r}
+#Metadata
+metadata=read.csv("Step5D_result_merge_SRP091303_to_GSE100297_metadata_SampleID.csv", header=T, sep=',')
+
+#Expression data
+Expr_GeneHu=read.csv("Step5D_result_merge_SRP091303_to_GSE100297_Expr_Gene_SampleID.csv", header =T, sep=',')
+#Rename the gene symbol column from X to GeneHu
+colnames(Expr_GeneHu)[colnames(Expr_GeneHu) == 'X'] <- 'GeneHu'
+```
+
+```{r}
+dim(metadata)
+dim(Expr_GeneHu)
+```
+
+```{r}
+#Need to make sure that the Gene IDs column labeled as GeneHu are unique to specify rownames with Gene IDs
+Expr_GeneHu = Expr_GeneHu[!duplicated(Expr_GeneHu$GeneHu),]
+dim(metadata)
+dim(Expr_GeneHu)
+#We lost no Gene IDs as they are no duplicates in RNA-seq unline microarray
+```
+
+```{r}
+Expr_GeneHu_1=Expr_GeneHu[,-1] #get rid of extra column
+rownames(Expr_GeneHu_1)=Expr_GeneHu$GeneHu 
+Expr_GeneHu_1=Expr_GeneHu_1[complete.cases(Expr_GeneHu_1), ]
+edata=Expr_GeneHu_1
+```
+
+```{r}
+#Optional filter low counts or else svobj step compalins about missing values and all zero rows
+#Expr_GeneHu_2=Expr_GeneHu_1[rowSums(Expr_GeneHu_1)>0,]
+#edata=Expr_GeneHu_2
+```
+
+```{r}
+#From here identify column numbers of interest for next step
+colnames(metadata)
+```
+
+```{r}
+metadata_1=metadata[,c("Disease","Age","Study","Gender","Tissue")]
+#metadata_1=metadata[,4:8]
+rownames(metadata_1)=metadata$Sample_Name
+#View(metadata_1)
+colnames(metadata_1)
+```
+
+```{r}
+#only keep the variables that will be considered in the mod, mod null and linear regression
+#metadata_2=metadata_1[,1:5]
+metadata_2=metadata_1[,c("Disease","Age","Study","Gender","Tissue")]
+rownames(metadata_2)=rownames(metadata_1)
+#Optional way to drop metadata pheno trait column. Instead of dropping metadata pheno trait column in this pipeline we only provide traits of interest in the model.matrix steps
+#metadata_2=metadata_2[!names(metadata_2) %in% c("Tissue")]
+pheno=metadata_2
+#View(metadata_2)
+#View(pheno)
+colnames(pheno)
+```
+
+```{r}
+DT::datatable(pheno)
+```
+
+```{r}
+DT::datatable(edata[1:7,1:7])
+```
+
+```{r}
+dim(metadata)
+dim(pheno)
+dim(Expr_GeneHu) #dropped off 1 extra column
+dim(edata)
+```
+
+```{r}
+#Make sure we did not lose any samples in expression data
+#Here in the output the 1st two and the last two should be same i.e. the first and last samples are same
+colnames(Expr_GeneHu[2])
+colnames(edata[1])
+colnames(Expr_GeneHu[22])
+colnames(edata[21])
+```
+
+###Step7: Preparing aggregate data expr or edata from metadata by variables###
+```{r}
+t_edata<-t(edata)
+DT::datatable(t_edata[,1:7])
+```
+
+```{r}
+DT::datatable(pheno)
+```
+
+```{r}
+dim(t_edata)
+dim(pheno)
+```
+
+```{r}
+#bind the pheno and edata, this file can be used to predict trait based on a particular gene's gene expression
+pheno_t_edata<-cbind(pheno, t_edata)
+dim(pheno_t_edata)
+DT::datatable(pheno_t_edata[,1:10])
+write.csv(pheno_t_edata, "Step7_result_pheno_t_edata_All_Group_aggregate.csv")
+```
+
+#Aggregade by Disease
+```{r}
+#select the Disease pheno drop others
+pheno_t_edata_Disease=pheno_t_edata[!names(pheno_t_edata) %in% c("Age", "Study", "Gender", "Tissue")]
+dim(pheno_t_edata_Disease)
+DT::datatable(pheno_t_edata_Disease[,1:10])
+
+#aggregate edata or expression for the Disease pheno
+#https://campus.datacamp.com/courses/data-table-data-manipulation-r-tutorial/chapter-two-datatable-yeoman?ex=6
+library(data.table)
+setDT(pheno_t_edata_Disease)
+pheno_t_edata_Disease_avg=pheno_t_edata_Disease[, lapply(.SD, mean), by = .(Disease)]
+DT::datatable(pheno_t_edata_Disease_avg[,1:10])
+
+#transpose genes to rows and variable to column
+t_pheno_t_edata_Disease_avg=t(pheno_t_edata_Disease_avg[,-1])
+colnames(t_pheno_t_edata_Disease_avg)=pheno_t_edata_Disease_avg$Disease
+dim(t_pheno_t_edata_Disease_avg)
+DT::datatable(t_pheno_t_edata_Disease_avg[1:10,])
+write.csv(t_pheno_t_edata_Disease_avg, "Step7_result_edata_Disease_aggregate.csv")
+```
+
+#Aggregade by Gender
+```{r}
+#select the Gender pheno drop others
+pheno_t_edata_Gender=pheno_t_edata[!names(pheno_t_edata) %in% c("Age", "Study", "Disease", "Tissue")]
+dim(pheno_t_edata_Gender)
+DT::datatable(pheno_t_edata_Gender[,1:10])
+
+#aggregate edata or expression for the Gender pheno
+#https://campus.datacamp.com/courses/data-table-data-manipulation-r-tutorial/chapter-two-datatable-yeoman?ex=6
+library(data.table)
+setDT(pheno_t_edata_Gender)
+pheno_t_edata_Gender_avg=pheno_t_edata_Gender[, lapply(.SD, mean), by = .(Gender)]
+DT::datatable(pheno_t_edata_Gender_avg[,1:10])
+
+#transpose genes to rows and variable to column
+t_pheno_t_edata_Gender_avg=t(pheno_t_edata_Gender_avg[,-1])
+colnames(t_pheno_t_edata_Gender_avg)=pheno_t_edata_Gender_avg$Gender
+dim(t_pheno_t_edata_Gender_avg)
+DT::datatable(t_pheno_t_edata_Gender_avg[1:10,])
+write.csv(t_pheno_t_edata_Gender_avg, "Step7_result_edata_Gender_aggregate.csv")
+```
+
+#Aggregade by Age
+```{r}
+#select the Age pheno drop others
+pheno_t_edata_Age=pheno_t_edata[!names(pheno_t_edata) %in% c("Disease", "Study", "Gender", "Tissue")]
+dim(pheno_t_edata_Age)
+DT::datatable(pheno_t_edata_Age[,1:10])
+
+#aggregate edata or expression for the Age pheno
+#https://campus.datacamp.com/courses/data-table-data-manipulation-r-tutorial/chapter-two-datatable-yeoman?ex=6
+library(data.table)
+setDT(pheno_t_edata_Age)
+pheno_t_edata_Age_avg=pheno_t_edata_Age[, lapply(.SD, mean), by = .(Age)]
+DT::datatable(pheno_t_edata_Age_avg[,1:10])
+
+#transpose genes to rows and variable to column
+t_pheno_t_edata_Age_avg=t(pheno_t_edata_Age_avg[,-1])
+colnames(t_pheno_t_edata_Age_avg)=pheno_t_edata_Age_avg$Age
+dim(t_pheno_t_edata_Age_avg)
+DT::datatable(t_pheno_t_edata_Age_avg[1:10,])
+write.csv(t_pheno_t_edata_Age_avg, "Step7_result_edata_Age_aggregate.csv")
+```
+
+#Aggregade by Tissue
+```{r}
+#select the Tissue pheno drop others
+pheno_t_edata_Tissue=pheno_t_edata[!names(pheno_t_edata) %in% c("Disease", "Study", "Gender", "Age")]
+dim(pheno_t_edata_Tissue)
+DT::datatable(pheno_t_edata_Tissue[,1:10])
+
+#aggregate edata or expression for the Tissue pheno
+#https://campus.datacamp.com/courses/data-table-data-manipulation-r-tutorial/chapter-two-datatable-yeoman?ex=6
+library(data.table)
+setDT(pheno_t_edata_Tissue)
+pheno_t_edata_Tissue_avg=pheno_t_edata_Tissue[, lapply(.SD, mean), by = .(Tissue)]
+DT::datatable(pheno_t_edata_Tissue_avg[,1:10])
+
+#transpose genes to rows and variable to column
+t_pheno_t_edata_Tissue_avg=t(pheno_t_edata_Tissue_avg[,-1])
+colnames(t_pheno_t_edata_Tissue_avg)=pheno_t_edata_Tissue_avg$Tissue
+dim(t_pheno_t_edata_Tissue_avg)
+DT::datatable(t_pheno_t_edata_Tissue_avg[1:10,])
+write.csv(t_pheno_t_edata_Tissue_avg, "Step7_result_edata_Tissue_aggregate.csv")
+```
+
+#Aggregade all Groups
+```{r}
+t_pheno_t_edata_all_avg<-cbind(t_pheno_t_edata_Disease_avg, t_pheno_t_edata_Gender_avg, t_pheno_t_edata_Age_avg, t_pheno_t_edata_Tissue_avg)
+DT::datatable(head(t_pheno_t_edata_all_avg))
+write.csv(t_pheno_t_edata_all_avg, "Step7_result_edata_All_Group_aggregate.csv")
+```
+
+```{r}
+#save pheno_t_edata, t_pheno_t_edata_Disease_avg, t_pheno_t_edata_Gender_avg, t_pheno_t_edata_Age_avg, t_pheno_t_edata_Tissue_avg, t_pheno_t_edata_all_avg
+save(pheno_t_edata, t_pheno_t_edata_Disease_avg, t_pheno_t_edata_Gender_avg, t_pheno_t_edata_Age_avg, t_pheno_t_edata_Tissue_avg, t_pheno_t_edata_all_avg, file="edata_aggregate_data.RData")
+```
+
+###Step7: Visualization by heatmap and correlation of aggregate data expr or edata from metadata by variables###
+```{r}
+pdf(file="Step7_plot_boxplot_corr_plot_edata_aka_expr_aggregate.pdf",height=10,width=10)
+par(mfrow=c(2,1))
+
+                    #########boxplot Disease Gender Age Tissue and all ########
+#box plot on aggregate Disease
+boxplot(t_pheno_t_edata_Disease_avg, outline=FALSE, las=2, cex=0.25, main="t_pheno_t_edata_Disease_avg", col="yellow")
+
+#box plot on aggregate Gender
+boxplot(t_pheno_t_edata_Gender_avg, outline=FALSE, las=2, cex=0.25, main="t_pheno_t_edata_Gender_avg", col="yellow")
+
+#box plot on aggregate Age
+boxplot(t_pheno_t_edata_Age_avg, outline=FALSE, las=2, cex=0.25, main="t_pheno_t_edata_Age_avg", col="yellow")
+
+#box plot on aggregate Tissue
+boxplot(t_pheno_t_edata_Tissue_avg, outline=FALSE, las=2, cex=0.25, main="t_pheno_t_edata_Tissue_avg", col="yellow")
+
+#box plot on aggregate all
+boxplot(t_pheno_t_edata_all_avg, outline=FALSE, las=2, cex=0.25, main="t_pheno_t_edata_all_avg", col="yellow")
+
+
+                    #########corr plot Disease Gender Age Tissue and all ########
+#create cor matrix on aggregate Disease
+rel2 <- rcorr(as.matrix(t_pheno_t_edata_Disease_avg))
+# Extract the correlation coefficients
+rel2_r<-rel2$r
+# Extract p-values
+rel2_P<-rel2$P
+#plot corelations and p-value
+plot_corrdata<-corrplot(rel2$r, type="full", order="hclust", p.mat = rel2$P, sig.level = 0.01, insig = "blank")
+#export corr data
+write.csv(cbind(rel2_r, rel2_P),"Step7_result_edata_Disease_Group_corr_pval_aggregate.csv")
+
+#create cor matrix on aggregate Gender
+rel2 <- rcorr(as.matrix(t_pheno_t_edata_Gender_avg))
+# Extract the correlation coefficients
+rel2_r<-rel2$r
+# Extract p-values
+rel2_P<-rel2$P
+#plot corelations and p-value
+plot_corrdata<-corrplot(rel2$r, type="full", order="hclust", p.mat = rel2$P, sig.level = 0.01, insig = "blank")
+#export corr data
+write.csv(cbind(rel2_r, rel2_P),"Step7_result_edata_Gender_Group_corr_pval_aggregate.csv")
+
+#create cor matrix on aggregate Age
+rel2 <- rcorr(as.matrix(t_pheno_t_edata_Age_avg))
+# Extract the correlation coefficients
+rel2_r<-rel2$r
+# Extract p-values
+rel2_P<-rel2$P
+#plot corelations and p-value
+plot_corrdata<-corrplot(rel2$r, type="full", order="hclust", p.mat = rel2$P, sig.level = 0.01, insig = "blank")
+#export corr data
+write.csv(cbind(rel2_r, rel2_P),"Step7_result_edata_Age_Group_corr_pval_aggregate.csv")
+
+#create cor matrix on aggregate Tissue
+rel2 <- rcorr(as.matrix(t_pheno_t_edata_Tissue_avg))
+# Extract the correlation coefficients
+rel2_r<-rel2$r
+# Extract p-values
+rel2_P<-rel2$P
+#plot corelations and p-value
+plot_corrdata<-corrplot(rel2$r, type="full", order="hclust", p.mat = rel2$P, sig.level = 0.01, insig = "blank")
+#export corr data
+write.csv(cbind(rel2_r, rel2_P),"Step7_result_edata_Tissue_Group_corr_pval_aggregate.csv")
+
+#create cor matrix on aggregate all
+rel2 <- rcorr(as.matrix(t_pheno_t_edata_all_avg))
+# Extract the correlation coefficients
+rel2_r<-rel2$r
+# Extract p-values
+rel2_P<-rel2$P
+#plot corelations and p-value
+plot_corrdata<-corrplot(rel2$r, type="full", order="hclust", p.mat = rel2$P, sig.level = 0.01, insig = "blank")
+#export corr data
+write.csv(cbind(rel2_r, rel2_P),"Step7_result_edata_all_Group_corr_pval_aggregate.csv")
+
+dev.off()
+```
+
+```{r}
+pdf(file="Step7_plot_density_edata_aka_expr_aggregate.pdf",height=10,width=10)
+
+                    #########density plot Disease Gender Age Tissue and all ########
+#density plot on aggregate Disease
+df=as.data.frame(t_pheno_t_edata_Disease_avg)
+df.m <- melt(as.data.frame(t_pheno_t_edata_Disease_avg))
+library(ggplot2)
+ggplot(df.m, aes(fill=variable)) + 
+  geom_density(aes(x = value, colour = variable)) + labs(x = NULL)+
+  labs(title="gene expression density curve for Disease",x="t_pheno_t_edata_Disease_avg", y = "Density")
+
+
+#density plot on aggregate Gender
+df=as.data.frame(t_pheno_t_edata_Gender_avg)
+df.m <- melt(as.data.frame(t_pheno_t_edata_Gender_avg))
+library(ggplot2)
+ggplot(df.m, aes(fill=variable)) + 
+  geom_density(aes(x = value, colour = variable)) + labs(x = NULL)+
+  labs(title="gene expression density curve for Gender",x="t_pheno_t_edata_Gender_avg", y = "Density")
+  
+
+#density plot on aggregate Age
+df=as.data.frame(t_pheno_t_edata_Age_avg)
+df.m <- melt(as.data.frame(t_pheno_t_edata_Age_avg))
+library(ggplot2)
+ggplot(df.m, aes(fill=variable)) + 
+  geom_density(aes(x = value, colour = variable)) + labs(x = NULL)+
+  labs(title="gene expression density curve for Age",x="t_pheno_t_edata_Age_avg", y = "Density")
+
+#density plot on aggregate Tissue
+df=as.data.frame(t_pheno_t_edata_Tissue_avg)
+df.m <- melt(as.data.frame(t_pheno_t_edata_Tissue_avg))
+library(ggplot2)
+ggplot(df.m, aes(fill=variable)) + 
+  geom_density(aes(x = value, colour = variable)) + labs(x = NULL)+
+  labs(title="gene expression density curve for Tissue",x="t_pheno_t_edata_Tissue_avg", y = "Density")
+
+#density plot on aggregate all
+df=as.data.frame(t_pheno_t_edata_all_avg)
+df.m <- melt(as.data.frame(t_pheno_t_edata_all_avg))
+library(ggplot2)
+ggplot(df.m, aes(fill=variable)) + 
+  geom_density(aes(x = value, colour = variable)) + labs(x = NULL)+
+  labs(title="gene expression density curve for all",x="t_pheno_t_edata_all_avg", y = "Density") 
+
+dev.off()
+```
+
+```{r}
+save.image(file="done_pre_Step8.RData")
+```
+
+###Step8: Preparing models for SVA (Surrogate variable adjustment)###
+```{r}
+#From here identify column numbers of interest for next step
+colnames(metadata_1)
+```
+
+```{r}
+#create coded metadata file
+#For multilevel variables, R automatically can create multiple dummy variables here from the columns containing character metadata
+#http://jtleek.com/genstats/inst/doc/02_09_linear-regression.html#categorical-variables-with-multiple-levels
+#https://bioconductor.org/packages/release/bioc/vignettes/sva/inst/doc/sva.pdf
+#we will save this mod and use it as coded metadata file for WGCNA.Using 0 intercept splits Disease coded into 3 columns 
+
+mod_coded_metadata = model.matrix(~0+Disease+Study+Gender+Tissue+Age, data=metadata_1)
+
+write.csv(mod_coded_metadata, "Step8_result_merge_SRP091303_to_GSE100297_metadata_SampleID_coded.csv")
+```
+
+```{r}
+#From here identify column numbers of interest for mod and mod0  
+colnames(pheno)
+```
+
+```{r}
+#full model matrix, variable of interest and other variables
+#Put categorical variables ahead of numeric variables 
+#Put variable that will be used in DEG_Limma for contrast first
+#for combat requires variables in mod to be numeric
+
+mod = model.matrix(~as.numeric(Study)+as.numeric(Gender)+as.numeric(Tissue)+as.numeric(Disease)+as.numeric(Age), data=pheno)
+#mod = model.matrix(~Study+Gender+Tissue+Disease+Age, data=pheno)
+
+DT::datatable(mod)
+```
+
+```{r}
+#null model matrix all except the variable of interest 
+#Put categorical variables ahead of numeric variables if using model below
+
+mod0 = model.matrix(~as.numeric(Study)+as.numeric(Gender)+as.numeric(Tissue)+as.numeric(Age), data=pheno)
+#mod0 = model.matrix(~Study+Gender+Tissue, data=pheno) #did not use ~0+ as then Study will get split into two columns unlike Study in mod above where it is just one column 
+
+DT::datatable(mod0)
+```
+
+###Step9: Doing SVA (Surrogate variable adjustment)###
+```{r}
+#For SVA
+
+n.sv = num.sv(as.matrix(edata),mod,method="be") 
+svobj = sva(as.matrix(edata),mod,mod0,n.sv=n.sv, B=20)
+
+#But if sva gives the following errors then use combat as shown in the next code chunk
+#1) At least one covariate is confounded with batch! Please remove confounded covariates and reGEO_Accession ComBat
+#2) Error in solve.default(t(mod) %*% mod) : Lapack routine dgesv: system is exactly singular: U[10,10] = 0
+```
+
+sva function returns a list of 4 components: 
+1) sv= matrix with columns corrosponding to estimate of surrogate variables 
+2) pprob.gam=probability that each gene is associated with one or more latent variables 
+3) pprob.b=probability that each gene is associated with our variable of interest 
+4) n.sv=number of surrogate variables
+
+```{r}
+#if GEO_Accessionning SVA gave error as described above or even as an alternative to SVAlm can use ComBat which is part of the SVA package 
+
+#edata_combatY = ComBat(dat=as.matrix(edata), batch=pheno$Study, mod=mod, par.prior=TRUE, prior.plots=FALSE, mean.only=TRUE)
+
+#edata_combatY = ComBat(dat=as.matrix(edata), batch=pheno$Study, mod=mod, par.prior=TRUE, prior.plots=FALSE)
+```
+
+###Step10: Adjust edata based on SVA (using LM or cleanY)###
+#For WGCNA alternative 1: use edata or cleanY or lmY expression file 
+#For WGCNA alternative 2: use edata or cleanY or lmY expression file retaining only DEG_Limma for WGCNA. 
+#ComBat applies the adjustment directly to the edata so lmY steps are not required
+```{r}
+colnames(pheno)
+```
+
+```{r}
+#LM step 1 of 2
+#For multilevel variables, R automatically can create multiple dummy variables here from the columns containing character metadata
+#http://jtleek.com/genstats/inst/doc/02_09_linear-regression.html#categorical-variables-with-multiple-levels
+#Note here the column which we care about in the mod are NOT used pheno[c(-?)]
+#pheno_sva=cbind(pheno[-c(pheno$Disease, pheno$Age)],svobj$sv) #this does not work for the pheno vector type
+#pheno_sva=cbind(pheno[-c(pheno$Disease)],svobj$sv) #this does not work for the pheno vector type
+#pheno_sva=cbind(pheno[-c(1,2)],svobj$sv)
+
+pheno_sva=cbind(pheno[-c(1)],svobj$sv)
+
+reglm_sva<-lapply(1:nrow(edata), function(x){lm(unlist(edata[x,])~.,data=pheno_sva)})
+DT::datatable(pheno_sva)
+```
+
+```{r}
+#LM step 2 of 2
+#after fitting with variables other than variable of interest the residula that is left over is essentially the effect of the variable of interest
+
+residuals<-lapply(reglm_sva, function(x)residuals(summary(x)))
+residuals<-do.call(rbind, residuals)
+edata_lmY<-residuals+matrix(apply(edata, 1, mean), nrow=nrow(residuals), ncol=ncol(residuals))
+rownames(edata_lmY)=rownames(edata)
+rownames(residuals)=rownames(edata)
+DT::datatable(edata_lmY[1:7,1:7])
+dim(edata_lmY)
+write.csv(edata_lmY, "Step10_result_edata_lmY.csv")
+```
+
+#Clear up workspace and retain required dataframes
+```{r}
+#Save .RData and clear environment to free up memory
+save.image(file="temp.RData")
+rm(list=ls())
+gc()
+```
+
+```{r}
+#This 'reglm_sva' is a big object so we remove it as we have saved the other variables we need 
+load(file="temp.RData")
+rm(reglm_sva)
+gc() 
+```
+
+###Step10: Visualization of before and after SVA lmY ###
+Before SVA: edata
+After SVA and lmY: edata_lmY for lmY adjusted edata
+
+```{r}
+#Summary Statistics edata
+DT::datatable(summary(edata[1:7,1:7]))
+write.csv(summary(edata),"Step10_result_summary_stats_edata.csv")
+
+#Summary Statistics edata_lmY
+DT::datatable(summary(edata_lmY[1:7,1:7]))
+write.csv(summary(edata_lmY),"Step10_result_summary_stats_edata_lmY.csv")
+
+```
+
+```{r}
+pdf(file="Step10_plot_Visualization_boxplot_MDS_PC_edata_edata_lmY_edata_lmY.pdf",height=10,width=10)
+par(mfrow=c(2,1))
+
+							############set colors for chunk Study###############
+nconditions <- nlevels(as.factor(pheno$Study))
+npal <- colorRampPalette(brewer.pal(nconditions, "Set1"))(nconditions)
+condition_colors <- npal[as.integer(pheno$Study)]
+
+							############boxplot chunk###############
+#randomly select 16 samples to visualize change in exprssion data with normalization. Trying to visualiza all sample is too many and hard to see
+col_sel=sample(ncol(edata), 16) #use number less than 16 is total samples is less than 16
+
+#Before boxplot edata
+par(mai=c(1,0.8,1,0.8))
+boxplot(edata[,col_sel], outline=FALSE, las=2, cex=0.25, main="edata", col="yellow")
+
+#After boxplot edata_lmY
+par(mai=c(1,0.8,1,0.8))
+boxplot(edata_lmY[,col_sel], outline=FALSE, las=2, cex=0.25, main="edata_lmY", col="yellow")
+
+
+
+							############MDSplot chunk###############
+#Before MDSplot edata
+par(mai=c(1,0.8,1,0.8))
+plotMDS(edata[,col_sel], col=condition_colors, legend= "all", main="edata", cex=0.5)#like PCA plot
+
+#After MDSplot edata_lmY
+par(mai=c(1,0.8,1,0.8))
+plotMDS(edata_lmY[,col_sel], col=condition_colors, legend= "all", main="edata_lmY", cex=0.5)#like PCA plot
+
+
+
+					     #######PCAplot chunk Disease colored by Study or batch########
+#Before PCAplot edata, colored by Study or batch, labels Disease
+pca0=prcomp(t(edata), center=T, scale=T)
+names(pca0)
+#summary(pca0)
+pca0$x[1:3,1:3]
+
+plot(x=pca0$x[,1], y=pca0$x[,2],
+     cex=0,
+     xlab="PC1", ylab="PC2",
+     main="PC plot colored by Study edata",
+     font=2
+)
+text(x=pca0$x[,1], y=pca0$x[,2],
+     labels=metadata_1$Disease,
+     col=as.numeric(metadata_1$Study),
+     cex=0.7, font=2)
+legend("bottomright",
+       legend=c("SRP091303_to_GSE100297"),
+       text.col=c("red", "blue", "green")
+)
+
+#After PCAplot edata_lmY, colored by Study or batch, labels Disease
+pca0=prcomp(t(edata_lmY), center=T, scale=T)
+names(pca0)
+#summary(pca0)
+pca0$x[1:3,1:3]
+
+plot(x=pca0$x[,1], y=pca0$x[,2],
+     cex=0,
+     xlab="PC1", ylab="PC2",
+     main="PC plot colored by Study edata_lmY",
+     font=2
+)
+text(x=pca0$x[,1], y=pca0$x[,2],
+     labels=metadata_1$Disease,
+     col=as.numeric(metadata_1$Study),
+     cex=0.7, font=2)
+legend("bottomright",
+       legend=c("SRP091303_to_GSE100297"),
+       text.col=c("red", "blue", "green")
+)
+
+
+
+
+					         #########PCAplot chunk Gender colored by Study or batch######
+#Before PCAplot edata, colored by Study or batch, labels Gender
+pca0=prcomp(t(edata), center=T, scale=T)
+names(pca0)
+#summary(pca0)
+pca0$x[1:3,1:3]
+
+plot(x=pca0$x[,1], y=pca0$x[,2],
+     cex=0,
+     xlab="PC1", ylab="PC2",
+     main="PC plot colored by Study edata",
+     font=2
+)
+text(x=pca0$x[,1], y=pca0$x[,2],
+     labels=metadata_1$Gender,
+     col=as.numeric(metadata_1$Study),
+     cex=0.7, font=2)
+legend("bottomright",
+       legend=c("SRP091303_to_GSE100297"),
+       text.col=c("red", "blue", "green")
+)
+
+#After PCAplot edata_lmY, colored by Study or batch, labels Gender
+pca0=prcomp(t(edata_lmY), center=T, scale=T)
+names(pca0)
+#summary(pca0)
+pca0$x[1:3,1:3]
+
+plot(x=pca0$x[,1], y=pca0$x[,2],
+     cex=0,
+     xlab="PC1", ylab="PC2",
+     main="PC plot colored by Study edata_lmY",
+     font=2
+)
+text(x=pca0$x[,1], y=pca0$x[,2],
+     labels=metadata_1$Gender,
+     col=as.numeric(metadata_1$Study),
+     cex=0.7, font=2)
+legend("bottomright",
+       legend=c("SRP091303_to_GSE100297"),
+       text.col=c("red", "blue", "green")
+)
+
+
+
+							     #########PCAplot chunk Age colored by Study or batch########
+#Before PCAplot edata, colored by Study or batch, labels Age
+pca0=prcomp(t(edata), center=T, scale=T)
+names(pca0)
+#summary(pca0)
+pca0$x[1:3,1:3]
+
+plot(x=pca0$x[,1], y=pca0$x[,2],
+     cex=0,
+     xlab="PC1", ylab="PC2",
+     main="PC plot colored by Study edata",
+     font=2
+)
+text(x=pca0$x[,1], y=pca0$x[,2],
+     labels=metadata_1$Age,
+     col=as.numeric(metadata_1$Study),
+     cex=0.7, font=2)
+legend("bottomright",
+       legend=c("SRP091303_to_GSE100297"),
+       text.col=c("red", "blue", "green")
+)
+
+#After PCAplot edata_lmY, colored by Study or batch, labels Age
+pca0=prcomp(t(edata_lmY), center=T, scale=T)
+names(pca0)
+#summary(pca0)
+pca0$x[1:3,1:3]
+
+plot(x=pca0$x[,1], y=pca0$x[,2],
+     cex=0,
+     xlab="PC1", ylab="PC2",
+     main="PC plot colored by Study edata_lmY",
+     font=2
+)
+text(x=pca0$x[,1], y=pca0$x[,2],
+     labels=metadata_1$Age,
+     col=as.numeric(metadata_1$Study),
+     cex=0.7, font=2)
+legend("bottomright",
+       legend=c("SRP091303_to_GSE100297"),
+       text.col=c("red", "blue", "green")
+)
+
+
+								#########PCAplot chunk Tissue colored by Study or batch########
+#Before PCAplot edata, colored by Study or batch, labels Tissue
+pca0=prcomp(t(edata), center=T, scale=T)
+names(pca0)
+#summary(pca0)
+pca0$x[1:3,1:3]
+
+plot(x=pca0$x[,1], y=pca0$x[,2],
+     cex=0,
+     xlab="PC1", ylab="PC2",
+     main="PC plot colored by Study edata",
+     font=2
+)
+text(x=pca0$x[,1], y=pca0$x[,2],
+     labels=metadata_1$Tissue,
+     col=as.numeric(metadata_1$Study),
+     cex=0.7, font=2)
+legend("bottomright",
+       legend=c("SRP091303_to_GSE100297"),
+       text.col=c("red", "blue", "green")
+)
+
+#After PCAplot edata_lmY, colored by Study or batch, labels Tissue
+pca0=prcomp(t(edata_lmY), center=T, scale=T)
+names(pca0)
+#summary(pca0)
+pca0$x[1:3,1:3]
+
+plot(x=pca0$x[,1], y=pca0$x[,2],
+     cex=0,
+     xlab="PC1", ylab="PC2",
+     main="PC plot colored by Study edata_lmY",
+     font=2
+)
+text(x=pca0$x[,1], y=pca0$x[,2],
+     labels=metadata_1$Tissue,
+     col=as.numeric(metadata_1$Study),
+     cex=0.7, font=2)
+legend("bottomright",
+       legend=c("SRP091303_to_GSE100297"),
+       text.col=c("red", "blue", "green")
+)
+
+dev.off()
+```
+
+###Step11: Preparing aggregate data edata_lmY from metadata by variables###
+```{r}
+t_edata_lmY<-t(edata_lmY)
+DT::datatable(t_edata_lmY[,1:7])
+```
+
+```{r}
+DT::datatable(pheno)
+```
+
+```{r}
+dim(t_edata_lmY)
+dim(pheno)
+```
+
+```{r}
+#bind the pheno and edata_lmY, this file can be used to predict trait based on a particular gene's gene expression
+pheno_t_edata_lmY<-cbind(pheno, t_edata_lmY)
+dim(pheno_t_edata_lmY)
+DT::datatable(pheno_t_edata_lmY[,1:10])
+write.csv(pheno_t_edata_lmY, "Step11_result_pheno_t_edata_lmY_All_Group_aggregate.csv")
+```
+
+#Aggregade by Disease
+```{r}
+#select the Disease pheno drop others
+pheno_t_edata_lmY_Disease=pheno_t_edata_lmY[!names(pheno_t_edata_lmY) %in% c("Age", "Study", "Gender", "Tissue")]
+dim(pheno_t_edata_lmY_Disease)
+DT::datatable(pheno_t_edata_lmY_Disease[,1:10])
+
+#aggregate edata_lmY or expression for the Disease pheno
+#https://campus.datacamp.com/courses/data-table-data-manipulation-r-tutorial/chapter-two-datatable-yeoman?ex=6
+library(data.table)
+setDT(pheno_t_edata_lmY_Disease)
+pheno_t_edata_lmY_Disease_avg=pheno_t_edata_lmY_Disease[, lapply(.SD, mean), by = .(Disease)]
+DT::datatable(pheno_t_edata_lmY_Disease_avg[,1:10])
+
+#transpose genes to rows and variable to column
+t_pheno_t_edata_lmY_Disease_avg=t(pheno_t_edata_lmY_Disease_avg[,-1])
+colnames(t_pheno_t_edata_lmY_Disease_avg)=pheno_t_edata_lmY_Disease_avg$Disease
+dim(t_pheno_t_edata_lmY_Disease_avg)
+DT::datatable(t_pheno_t_edata_lmY_Disease_avg[1:10,])
+write.csv(t_pheno_t_edata_lmY_Disease_avg, "Step11_result_edata_lmY_Disease_aggregate.csv")
+```
+
+#Aggregade by Gender
+```{r}
+#select the Gender pheno drop others
+pheno_t_edata_lmY_Gender=pheno_t_edata_lmY[!names(pheno_t_edata_lmY) %in% c("Age", "Study", "Disease", "Tissue")]
+dim(pheno_t_edata_lmY_Gender)
+DT::datatable(pheno_t_edata_lmY_Gender[,1:10])
+
+#aggregate edata_lmY or expression for the Gender pheno
+#https://campus.datacamp.com/courses/data-table-data-manipulation-r-tutorial/chapter-two-datatable-yeoman?ex=6
+library(data.table)
+setDT(pheno_t_edata_lmY_Gender)
+pheno_t_edata_lmY_Gender_avg=pheno_t_edata_lmY_Gender[, lapply(.SD, mean), by = .(Gender)]
+DT::datatable(pheno_t_edata_lmY_Gender_avg[,1:10])
+
+#transpose genes to rows and variable to column
+t_pheno_t_edata_lmY_Gender_avg=t(pheno_t_edata_lmY_Gender_avg[,-1])
+colnames(t_pheno_t_edata_lmY_Gender_avg)=pheno_t_edata_lmY_Gender_avg$Gender
+dim(t_pheno_t_edata_lmY_Gender_avg)
+DT::datatable(t_pheno_t_edata_lmY_Gender_avg[1:10,])
+write.csv(t_pheno_t_edata_lmY_Gender_avg, "Step11_result_edata_lmY_Gender_aggregate.csv")
+```
+
+#Aggregade by Age
+```{r}
+#select the Age pheno drop others
+pheno_t_edata_lmY_Age=pheno_t_edata_lmY[!names(pheno_t_edata_lmY) %in% c("Disease", "Study", "Gender", "Tissue")]
+dim(pheno_t_edata_lmY_Age)
+DT::datatable(pheno_t_edata_lmY_Age[,1:10])
+
+#aggregate edata_lmY or expression for the Age pheno
+#https://campus.datacamp.com/courses/data-table-data-manipulation-r-tutorial/chapter-two-datatable-yeoman?ex=6
+library(data.table)
+setDT(pheno_t_edata_lmY_Age)
+pheno_t_edata_lmY_Age_avg=pheno_t_edata_lmY_Age[, lapply(.SD, mean), by = .(Age)]
+DT::datatable(pheno_t_edata_lmY_Age_avg[,1:10])
+
+#transpose genes to rows and variable to column
+t_pheno_t_edata_lmY_Age_avg=t(pheno_t_edata_lmY_Age_avg[,-1])
+colnames(t_pheno_t_edata_lmY_Age_avg)=pheno_t_edata_lmY_Age_avg$Age
+dim(t_pheno_t_edata_lmY_Age_avg)
+DT::datatable(t_pheno_t_edata_lmY_Age_avg[1:10,])
+write.csv(t_pheno_t_edata_lmY_Age_avg, "Step11_result_edata_lmY_Age_aggregate.csv")
+```
+
+#Aggregade by Tissue
+```{r}
+#select the Tissue pheno drop others
+pheno_t_edata_lmY_Tissue=pheno_t_edata_lmY[!names(pheno_t_edata_lmY) %in% c("Disease", "Study", "Gender", "Age")]
+dim(pheno_t_edata_lmY_Tissue)
+DT::datatable(pheno_t_edata_lmY_Tissue[,1:10])
+
+#aggregate edata_lmY or expression for the Tissue pheno
+#https://campus.datacamp.com/courses/data-table-data-manipulation-r-tutorial/chapter-two-datatable-yeoman?ex=6
+library(data.table)
+setDT(pheno_t_edata_lmY_Tissue)
+pheno_t_edata_lmY_Tissue_avg=pheno_t_edata_lmY_Tissue[, lapply(.SD, mean), by = .(Tissue)]
+DT::datatable(pheno_t_edata_lmY_Tissue_avg[,1:10])
+
+#transpose genes to rows and variable to column
+t_pheno_t_edata_lmY_Tissue_avg=t(pheno_t_edata_lmY_Tissue_avg[,-1])
+colnames(t_pheno_t_edata_lmY_Tissue_avg)=pheno_t_edata_lmY_Tissue_avg$Tissue
+dim(t_pheno_t_edata_lmY_Tissue_avg)
+DT::datatable(t_pheno_t_edata_lmY_Tissue_avg[1:10,])
+write.csv(t_pheno_t_edata_lmY_Tissue_avg, "Step11_result_edata_lmY_Tissue_aggregate.csv")
+```
+
+#Aggregade all Groups
+```{r}
+t_pheno_t_edata_lmY_all_avg<-cbind(t_pheno_t_edata_lmY_Disease_avg, t_pheno_t_edata_lmY_Gender_avg, t_pheno_t_edata_lmY_Age_avg, t_pheno_t_edata_lmY_Tissue_avg)
+DT::datatable(head(t_pheno_t_edata_lmY_all_avg))
+write.csv(t_pheno_t_edata_lmY_all_avg, "Step11_result_edata_lmY_All_Group_aggregate.csv")
+```
+
+```{r}
+#save pheno_t_edata_lmY, t_pheno_t_edata_lmY_Disease_avg, t_pheno_t_edata_lmY_Gender_avg, t_pheno_t_edata_lmY_Age_avg, t_pheno_t_edata_lmY_Tissue_avg, t_pheno_t_edata_lmY_all_avg
+save(pheno_t_edata_lmY, t_pheno_t_edata_lmY_Disease_avg, t_pheno_t_edata_lmY_Gender_avg, t_pheno_t_edata_lmY_Age_avg, t_pheno_t_edata_lmY_Tissue_avg, t_pheno_t_edata_lmY_all_avg, file="edata_lmY_aggregate_data.RData")
+```
+
+###Step11: Visualization by heatmap and correlation of aggregate data logtpm or edata_lmY from metadata by variables###
+```{r}
+pdf(file="Step11_plot_boxplot_corr_plot_edata_lmY_aka_expr_aggregate.pdf",height=10,width=10)
+par(mfrow=c(2,1))
+
+                    #########boxplot Disease Gender Age and all ########
+#box plot on aggregate Disease
+boxplot(t_pheno_t_edata_lmY_Disease_avg, outline=FALSE, las=2, cex=0.25, main="t_pheno_t_edata_lmY_Disease_avg", col="yellow")
+
+#box plot on aggregate Gender
+boxplot(t_pheno_t_edata_lmY_Gender_avg, outline=FALSE, las=2, cex=0.25, main="t_pheno_t_edata_lmY_Gender_avg", col="yellow")
+
+#box plot on aggregate Age
+boxplot(t_pheno_t_edata_lmY_Age_avg, outline=FALSE, las=2, cex=0.25, main="t_pheno_t_edata_lmY_Age_avg", col="yellow")
+
+#box plot on aggregate Tissue
+boxplot(t_pheno_t_edata_lmY_Tissue_avg, outline=FALSE, las=2, cex=0.25, main="t_pheno_t_edata_lmY_Tissue_avg", col="yellow")
+
+#box plot on aggregate all
+boxplot(t_pheno_t_edata_lmY_all_avg, outline=FALSE, las=2, cex=0.25, main="t_pheno_t_edata_lmY_all_avg", col="yellow")
+
+
+                    #########corr plot Disease Gender Age and all########
+#create cor matrix on aggregate Disease
+rel2 <- rcorr(as.matrix(t_pheno_t_edata_lmY_Disease_avg))
+# Extract the correlation coefficients
+rel2_r<-rel2$r
+# Extract p-values
+rel2_P<-rel2$P
+#plot corelations and p-value
+plot_corrdata<-corrplot(rel2$r, type="full", order="hclust", p.mat = rel2$P, sig.level = 0.01, insig = "blank")
+#export corr data
+write.csv(cbind(rel2_r, rel2_P),"Step11_result_edata_lmY_Disease_Group_corr_pval_aggregate.csv")
+
+#create cor matrix on aggregate Gender
+rel2 <- rcorr(as.matrix(t_pheno_t_edata_lmY_Gender_avg))
+# Extract the correlation coefficients
+rel2_r<-rel2$r
+# Extract p-values
+rel2_P<-rel2$P
+#plot corelations and p-value
+plot_corrdata<-corrplot(rel2$r, type="full", order="hclust", p.mat = rel2$P, sig.level = 0.01, insig = "blank")
+#export corr data
+write.csv(cbind(rel2_r, rel2_P),"Step11_result_edata_lmY_Gender_Group_corr_pval_aggregate.csv")
+
+#create cor matrix on aggregate Age
+rel2 <- rcorr(as.matrix(t_pheno_t_edata_lmY_Age_avg))
+# Extract the correlation coefficients
+rel2_r<-rel2$r
+# Extract p-values
+rel2_P<-rel2$P
+#plot corelations and p-value
+plot_corrdata<-corrplot(rel2$r, type="full", order="hclust", p.mat = rel2$P, sig.level = 0.01, insig = "blank")
+#export corr data
+write.csv(cbind(rel2_r, rel2_P),"Step11_result_edata_lmY_Age_Group_corr_pval_aggregate.csv")
+
+#create cor matrix on aggregate Tissue
+rel2 <- rcorr(as.matrix(t_pheno_t_edata_lmY_Tissue_avg))
+# Extract the correlation coefficients
+rel2_r<-rel2$r
+# Extract p-values
+rel2_P<-rel2$P
+#plot corelations and p-value
+plot_corrdata<-corrplot(rel2$r, type="full", order="hclust", p.mat = rel2$P, sig.level = 0.01, insig = "blank")
+#export corr data
+write.csv(cbind(rel2_r, rel2_P),"Step11_result_edata_lmY_Tissue_Group_corr_pval_aggregate.csv")
+
+#create cor matrix on aggregate all
+rel2 <- rcorr(as.matrix(t_pheno_t_edata_lmY_all_avg))
+# Extract the correlation coefficients
+rel2_r<-rel2$r
+# Extract p-values
+rel2_P<-rel2$P
+#plot corelations and p-value
+plot_corrdata<-corrplot(rel2$r, type="full", order="hclust", p.mat = rel2$P, sig.level = 0.01, insig = "blank")
+#export corr data
+write.csv(cbind(rel2_r, rel2_P),"Step11_result_edata_lmY_all_Group_corr_pval_aggregate.csv")
+
+dev.off()
+```
+
+```{r}
+pdf(file="Step11_plot_density_edata_lmY_aka_expr_aggregate.pdf",height=10,width=10)
+
+                    #########density plot Disease Gender Age and all ########
+#density plot on aggregate Disease
+df=as.data.frame(t_pheno_t_edata_lmY_Disease_avg)
+df.m <- melt(as.data.frame(t_pheno_t_edata_lmY_Disease_avg))
+library(ggplot2)
+ggplot(df.m, aes(fill=variable)) + 
+  geom_density(aes(x = value, colour = variable)) + labs(x = NULL)+
+  labs(title="gene expression density curve for Disease",x="t_pheno_t_edata_lmY_Disease_avg", y = "Density")
+
+
+#density plot on aggregate Gender
+df=as.data.frame(t_pheno_t_edata_lmY_Gender_avg)
+df.m <- melt(as.data.frame(t_pheno_t_edata_lmY_Gender_avg))
+library(ggplot2)
+ggplot(df.m, aes(fill=variable)) + 
+  geom_density(aes(x = value, colour = variable)) + labs(x = NULL)+
+  labs(title="gene expression density curve for Gender",x="t_pheno_t_edata_lmY_Gender_avg", y = "Density")
+  
+
+#density plot on aggregate Age
+df=as.data.frame(t_pheno_t_edata_lmY_Age_avg)
+df.m <- melt(as.data.frame(t_pheno_t_edata_lmY_Age_avg))
+library(ggplot2)
+ggplot(df.m, aes(fill=variable)) + 
+  geom_density(aes(x = value, colour = variable)) + labs(x = NULL)+
+  labs(title="gene expression density curve for Age",x="t_pheno_t_edata_lmY_Age_avg", y = "Density")
+  
+
+#density plot on aggregate Tissue
+df=as.data.frame(t_pheno_t_edata_lmY_Tissue_avg)
+df.m <- melt(as.data.frame(t_pheno_t_edata_lmY_Tissue_avg))
+library(ggplot2)
+ggplot(df.m, aes(fill=variable)) + 
+  geom_density(aes(x = value, colour = variable)) + labs(x = NULL)+
+  labs(title="gene expression density curve for Tissue",x="t_pheno_t_edata_lmY_Tissue_avg", y = "Density")
+
+
+#density plot on aggregate all
+df=as.data.frame(t_pheno_t_edata_lmY_all_avg)
+df.m <- melt(as.data.frame(t_pheno_t_edata_lmY_all_avg))
+library(ggplot2)
+ggplot(df.m, aes(fill=variable)) + 
+  geom_density(aes(x = value, colour = variable)) + labs(x = NULL)+
+  labs(title="gene expression density curve for all",x="t_pheno_t_edata_lmY_all_avg", y = "Density") 
+
+dev.off()
+```
+
+#Clear up workspace and retain required dataframes
+```{r}
+#save pheno, edata and edata_lmY required for steps below
+save(pheno, metadata_1, edata, edata_lmY, file="edata_lmY_data.RData")
+```
+
+```{r}
+#save image
+save.image(file="SVA_lmY_temp.RData")
+
+```
+
+###############################################See DEG pipeline, uses edata and modified metadata############################################################################
+###Step12: Differentially expressed genes DEG_Limma limma method###
+#See DEG pipelines
+###Step12: Visualization of differential gene expression results from DEG_Limma###
+#See DEG pipelines
+###Step13: Keep only DEG_Limma genes from the edata, edata_lmY for combat ###
+#See DEG pipelines
+###Step13: Visualization of before and after SVA with/without DEG_Limma filter###
+#See DEG pipelines
+###Step14: Differentially expressed genes DEG simple division of arithmetic means of expression data so easier to interpret like cuffdiff (published CGGA code)###
+#See DEG pipelines
+###Step14: Visualization of differential gene expression results from DEG_Simple###
+#See DEG pipelines
+###Step15: Keep only DEG_Simple genes from the edata and edata_lmY for combat ###
+#See DEG pipelines
+###Step15: Visualization of before and after SVA with/without DEG_Simple filter###
+#See DEG pipelines
+###Step16: Differentially expressed genes DEG_edgeR method###
+#See DEG pipelines
+###Step16: Visualization of differential gene expression results from DEG_edgeR###
+#See DEG pipelines
+###Step17: Keep only DEG_edgeR genes from the edata and edata_lmY for combat ###
+#See DEG pipelines
+###Step17: Visualization of before and after SVA with/without DEG_edgeR filter###
+#See DEG pipelines
+###Step18: Differentially expressed genes DEG_Cuff method###
+#See DEG pipelines
+###Step18: Visualization of differential gene expression results from DEG_Cuff###
+#See DEG pipelines
+###Step19: Keep only DEG_Cuff genes from the edata and edata_lmY for combat ###
+#See DEG pipelines
+###Step19: Visualization of before and after SVA with/without DEG_Cuff filter###
+#See DEG pipelines
+###Step20: Comparison of overlap between DEG_Limma DEG_Simple DEG_edgeR and (if available) DEG_cuff###
+#See DEG pipelines
+###Step20: Visualization of overlap between DEG_Limma DEG_Simple and DEG_edgeR###
+#See DEG pipelines
+###Step21: Keep only DEG_edgeRLimmaSimple genes from the edata and edata_lmY or combat ###
+#See DEG pipelines
+###Step21: Visualization of before and after SVA with/without DEG_AllDEGmethods filter###
+#See DEG pipelines
+###############################################End of DEG pipeline, uses edata and modified metadata############################################################################
+
+###Step12:Organization and saving session (software version) information### 
+```{r}
+sessionInfo()
+toLatex(sessionInfo())
+```
+
+```{r}
+#Organize of files
+#library(filesstrings)
+
+#raw, expr normalized and metadata 
+dir.create("merged_expr_metadata")
+file.move(list.files(pattern = '*rawdata_transformation_FewSamples.pdf'), "merged_expr_metadata")
+file.move(list.files(pattern = '*rawdata_transformation.pdf'), "merged_expr_metadata")
+file.move(list.files(pattern = '*SampleID.csv'), "merged_expr_metadata")
+file.move(list.files(pattern = '*SampleID_coded.csv'), "merged_expr_metadata")
+file.move(list.files(pattern = 'preSVA_Merging.RData'), "merged_expr_metadata")
+file.move(list.files(pattern = 'done_pre_Step8.RData'), "merged_expr_metadata")
+file.move(list.files(pattern = 'GPL*'), "merged_expr_metadata")
+file.move(list.files(pattern = '*data_non-log'), "merged_expr_metadata")
+file.move(list.files(pattern = '*data_originalfromGEO'), "merged_expr_metadata")
+file.move(list.files(pattern = '*Annotation_Expr_GeneHu.csv'), "merged_expr_metadata")
+file.move(list.files(pattern = '*metadata.csv'), "merged_expr_metadata")
+file.move(list.files(pattern = '*SampleID_coded.csv'), "merged_expr_metadata")
+file.move(list.files(pattern = 'preSVA*'), "merged_expr_metadata")
+
+#Aggregate expression by variable  and plots
+dir.create("Aggregate_csv_plots")
+file.move(list.files(pattern = '*aggregate.csv'), "Aggregate_csv_plots")
+file.move(list.files(pattern = '*aggregate.pdf'), "Aggregate_csv_plots")
+file.move(list.files(pattern = 'edata_aggregate_data.RData'), "Aggregate_csv_plots")
+file.move(list.files(pattern = 'edata_lmY_aggregate_data.RData'), "Aggregate_csv_plots")
+
+#SVA_lmY results and plots
+dir.create("SVA_lmY")
+file.move(list.files(pattern = '*edata_lmY.csv'), "SVA_lmY")
+file.move(list.files(pattern = '*edata.csv'), "SVA_lmY")
+file.move(list.files(pattern = 'Step10_plot*'), "SVA_lmY")
+file.move(list.files(pattern = 'edata_lmY_data.RData'), "SVA_lmY")
+file.move(list.files(pattern = 'SVA_lmY_temp.RData'), "SVA_lmY")
+
+#remove extra files
+file.remove(list.files(pattern ='VennDiagram*'))
+file.remove(list.files(pattern ='temp.RData'))
+
+```
+
+```{r}
+#Remove .RData and clear environment to free up memory
+rm(list=ls())
+gc()
+```
