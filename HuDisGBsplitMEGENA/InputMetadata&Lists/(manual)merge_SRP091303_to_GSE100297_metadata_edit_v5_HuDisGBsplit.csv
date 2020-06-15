@@ -1,0 +1,392 @@
+Sample_Name,HuGroup_Name,GEO_Accession,Disease,Age,Study,Gender,Tissue,Overall_Survival,Censor_1dead_0alive,Histology,TCGA_subtype,Epi_0notherapy_1therapy_NAnodata,Radio_0notherapy_1therapy_NAnodata,Chemo_0notherapy_1therapy_NAnodata,Epilepsytherapy,Chemoradiotherapy_description,history,Resection
+M_12_Grade_4_SRR4407798,CGGA_1001,SRR4407798_1,Grade_4,12,SRP091303,M,brain_tumor,968,0,GBM,Mesenchymal,NA,NA,NA,No data,No data for chemoradiotherapy,gliomas,Total resection
+F_65_Grade_2_SRR934857,CGGA_1004,SRR934857_1,Grade_2,65,SRP027383,F,brain_tumor,585,0,A,Mesenchymal,0,1,0,No therapy,Radiotherapy alone,astrocytomas,Partial resection
+F_42_Grade_2_SRR934858,CGGA_1005,SRR934858_1,Grade_2,42,SRP027383,F,brain_tumor,776,0,A,Proneural,0,1,0,No therapy,Radiotherapy alone,astrocytomas,No data
+M_44_Grade_4_SRR934859,CGGA_1006,SRR934859_1,Grade_4,44,SRP027383,M,brain_tumor,254,1,GBM,Classical,0,1,1,No therapy,Radiotherapy plus with unknown drug,primary Glioblastomas,Partial resection
+F_59_Grade_4_SRR934860,CGGA_1007,SRR934860_1,Grade_4,59,SRP027383,F,brain_tumor,345,1,GBM,Classical,0,1,1,No therapy,Radiotherapy plus with unknown drug,primary Glioblastomas,Total resection
+F_56_Grade_4_SRR934861,CGGA_1008,SRR934861_1,Grade_4,56,SRP027383,F,brain_tumor,315,1,GBM,Classical,0,1,1,No therapy,Radiotherapy plus with unknown drug,primary Glioblastomas,No data
+F_48_Grade_4_SRR934862,CGGA_1011,SRR934862_1,Grade_4,48,SRP027383,F,brain_tumor,109,1,GBM,Mesenchymal,NA,1,0,No data,Radiotherapy alone,primary Glioblastomas,Partial resection
+F_40_Grade_2_SRR934863,CGGA_1013,SRR934863_1,Grade_2,40,SRP027383,F,brain_tumor,560,0,A,Proneural,0,1,0,No therapy,Radiotherapy alone,astrocytomas,Total resection
+M_64_Grade_4_SRR934864,CGGA_1015,SRR934864_1,Grade_4,64,SRP027383,M,brain_tumor,164,1,GBM,Mesenchymal,0,1,0,No therapy,Radiotherapy alone,primary Glioblastomas,Partial resection
+M_62_Grade_4_SRR4407799,CGGA_1019,SRR4407799_1,Grade_4,62,SRP091303,M,brain_tumor,212,1,GBM,Mesenchymal,NA,NA,NA,No data,No data for chemoradiotherapy,gliomas,Partial resection
+F_39_Grade_2_SRR934865,CGGA_1020,SRR934865_1,Grade_2,39,SRP027383,F,brain_tumor,532,0,A,Proneural,0,1,0,No therapy,Radiotherapy alone,astrocytomas,Partial resection
+F_64_Grade_3_SRR934866,CGGA_1022,SRR934866_1,Grade_3,64,SRP027383,F,brain_tumor,191,1,rAA,Mesenchymal,0,0,1,No therapy,Chemotherapy with unknown drug alone,recurrent anaplastic astrocytomas,No data
+F_58_Grade_4_SRR4407810,CGGA_1023,SRR4407810_1,Grade_4,58,SRP091303,F,brain_tumor,681,1,GBM,Classical,NA,NA,NA,No data,No data for chemoradiotherapy,gliomas,No data
+M_66_Grade_4_SRR934867,CGGA_1024,SRR934867_1,Grade_4,66,SRP027383,M,brain_tumor,890,0,GBM,Classical,0,0,0,No therapy,No therapy,primary Glioblastomas,Total resection
+M_59_Grade_4_SRR934868,CGGA_1026,SRR934868_1,Grade_4,59,SRP027383,M,brain_tumor,875,0,GBM,Classical,1,1,1,Anti-epileptic,Radiotherapy plus temozolomide,primary Glioblastomas,Total resection
+M_38_Grade_3_SRR934869,CGGA_1027,SRR934869_1,Grade_3,38,SRP027383,M,brain_tumor,1233,0,AOA,Proneural,1,1,1,Anti-epileptic,Radiotherapy plus temozolomide,anaplastic oligodendroastrocytomas,Partial resection
+F_33_Grade_2_SRR934870,CGGA_1031,SRR934870_1,Grade_2,33,SRP027383,F,brain_tumor,415,0,A,Proneural,1,0,0,Anti-epileptic,No therapy,astrocytomas,No data
+M_24_Grade_3_SRR934871,CGGA_1034,SRR934871_1,Grade_3,24,SRP027383,M,brain_tumor,753,1,AA,Classical,NA,NA,NA,No data,No data for chemoradiotherapy,anaplastic astrocytomas,No data
+F_62_Grade_4_SRR934872,CGGA_1035,SRR934872_1,Grade_4,62,SRP027383,F,brain_tumor,567,1,GBM,Mesenchymal,NA,1,1,No data,Radiotherapy plus with unknown drug,primary Glioblastomas,No data
+M_42_Grade_4_SRR934873,CGGA_1039,SRR934873_1,Grade_4,42,SRP027383,M,brain_tumor,681,0,GBM,Classical,1,1,1,Anti-epileptic,Radiotherapy plus temozolomide,primary Glioblastomas,Total resection
+M_81_Grade_4_SRR934874,CGGA_1045,SRR934874_1,Grade_4,81,SRP027383,M,brain_tumor,347,1,GBM,Mesenchymal,1,1,1,Anti-epileptic,Radiotherapy plus temozolomide,primary Glioblastomas,Total resection
+M_23_Grade_2_SRR934947,CGGA_1046,SRR934947_1,Grade_2,23,SRP027383,M,brain_tumor,520,0,A,Classical,0,0,1,No therapy,Chemotherapy with temozolomide alone,astrocytomas,No data
+M_60_Grade_4_SRR934875,CGGA_1049,SRR934875_1,Grade_4,60,SRP027383,M,brain_tumor,595,0,GBM,Mesenchymal,1,1,1,Anti-epileptic,Radiotherapy plus with unknown drug,primary Glioblastomas,Total resection
+M_41_Grade_2_SRR934876,CGGA_1050,SRR934876_1,Grade_2,41,SRP027383,M,brain_tumor,295,0,OA,Proneural,0,1,1,No therapy,Radiotherapy plus with unknown drug,oligodendroastrocytomas,Total resection
+M_41_Grade_2_SRR934877,CGGA_1052,SRR934877_1,Grade_2,41,SRP027383,M,brain_tumor,NA,NA,OA,Neural,NA,NA,NA,No data,No data for chemoradiotherapy,oligodendroastrocytomas,Total resection
+F_63_Grade_4_SRR4407821,CGGA_1053,SRR4407821_1,Grade_4,63,SRP091303,F,brain_tumor,369,1,GBM,Mesenchymal,NA,NA,NA,No data,No data for chemoradiotherapy,gliomas,No data
+F_54_Grade_2_SRR934878,CGGA_1059,SRR934878_1,Grade_2,54,SRP027383,F,brain_tumor,21,1,rA,Proneural,0,NA,NA,No therapy,No data for chemoradiotherapy,recurrent astrocytomas,No data
+M_42_Grade_4_SRR934879,CGGA_1060,SRR934879_1,Grade_4,42,SRP027383,M,brain_tumor,227,1,rGBM,Proneural,NA,0,1,No data,Chemotherapy with temozolomide alone,recurrent Glioblastomas,Total resection
+F_43_Grade_3_SRR934880,CGGA_1061,SRR934880_1,Grade_3,43,SRP027383,F,brain_tumor,472,0,rAOA,Proneural,NA,NA,1,No data,No data for radiotherapy plus temozolomide,recurrent anaplastic oligodendroastrocytomas,À©´óÇÐ³ý
+M_29_Grade_4_SRR934881,CGGA_1068,SRR934881_1,Grade_4,29,SRP027383,M,brain_tumor,95,1,sGBM,Classical,0,0,0,No therapy,No therapy,secondary Glioblastomas,No data
+M_38_Grade_4_SRR4407832,CGGA_1070,SRR4407832_1,Grade_4,38,SRP091303,M,brain_tumor,333,1,GBM,Classical,NA,NA,NA,No data,No data for chemoradiotherapy,gliomas,No data
+M_42_Grade_2_SRR4407843,CGGA_1071,SRR4407843_1,Grade_2,42,SRP091303,M,brain_tumor,552,0,A,Classical,0,NA,NA,No therapy,No data for chemoradiotherapy,gliomas,Total resection
+M_26_Grade_4_SRR934882,CGGA_1072,SRR934882_1,Grade_4,26,SRP027383,M,brain_tumor,84,1,GBM,Classical,0,1,1,No therapy,Radiotherapy plus temozolomide,primary Glioblastomas,No data
+F_42_Grade_4_SRR4407845,CGGA_1073,SRR4407845_1,Grade_4,42,SRP091303,F,brain_tumor,270,1,GBM,Classical,NA,NA,NA,No data,No data for chemoradiotherapy,gliomas,Total resection
+M_50_Grade_4_SRR4407846,CGGA_1074,SRR4407846_1,Grade_4,50,SRP091303,M,brain_tumor,86,1,GBM,Mesenchymal,NA,NA,NA,No data,No data for chemoradiotherapy,gliomas,No data
+M_47_Grade_4_SRR934883,CGGA_1077,SRR934883_1,Grade_4,47,SRP027383,M,brain_tumor,157,1,GBM,Mesenchymal,0,1,0,No therapy,Radiotherapy alone,primary Glioblastomas,Total resection
+F_61_Grade_4_SRR934884,CGGA_1078,SRR934884_1,Grade_4,61,SRP027383,F,brain_tumor,315,1,rGBM,Classical,NA,NA,NA,No data,No data for chemoradiotherapy,recurrent Glioblastomas,Total resection
+M_38_Grade_3_SRR934885,CGGA_1079,SRR934885_1,Grade_3,38,SRP027383,M,brain_tumor,NA,NA,AOA,Classical,NA,NA,NA,No data,No data for chemoradiotherapy,anaplastic oligodendroastrocytomas,No data
+F_30_Grade_3_SRR934886,CGGA_1081,SRR934886_1,Grade_3,30,SRP027383,F,brain_tumor,216,1,rAA,Classical,NA,1,1,No data,Radiotherapy plus temozolomide,recurrent anaplastic astrocytomas,No data
+M_60_Grade_4_SRR4407847,CGGA_1083,SRR4407847_1,Grade_4,60,SRP091303,M,brain_tumor,143,0,GBM,Mesenchymal,NA,1,1,No data,Radiotherapy plus temozolomide,gliomas,Partial resection
+F_51_Grade_4_SRR4407848,CGGA_1091,SRR4407848_1,Grade_4,51,SRP091303,F,brain_tumor,864,0,GBM,Classical,1,1,1,Anti-epileptic,Radiotherapy plus temozolomide,gliomas,Total resection
+F_40_Grade_3_SRR934887,CGGA_1094,SRR934887_1,Grade_3,40,SRP027383,F,brain_tumor,94,0,rAOA,Classical,NA,0,1,No data,Chemotherapy with temozolomide alone,recurrent anaplastic oligodendroastrocytomas,No data
+M_29_Grade_4_SRR4407800,CGGA_1095,SRR4407800_1,Grade_4,29,SRP091303,M,brain_tumor,667,0,GBM,Proneural,0,1,1,No therapy,Radiotherapy plus temozolomide,gliomas,No data
+M_8_Grade_4_SRR934888,CGGA_1099,SRR934888_1,Grade_4,8,SRP027383,M,brain_tumor,122,1,sGBM,Classical,0,0,1,No therapy,Chemotherapy with unknown drug alone,secondary Glioblastomas,Total resection
+M_29_Grade_4_SRR4407801,CGGA_1105,SRR4407801_1,Grade_4,29,SRP091303,M,brain_tumor,330,0,sGBM,Mesenchymal,0,0,1,No therapy,Radiotherapy plus temozolomide,gliomas,No data
+M_42_Grade_4_SRR934889,CGGA_1109,SRR934889_1,Grade_4,42,SRP027383,M,brain_tumor,NA,NA,GBM,Classical,NA,NA,NA,No data,No data for chemoradiotherapy,primary Glioblastomas,No data
+M_34_Grade_3_SRR934890,CGGA_1113,SRR934890_1,Grade_3,34,SRP027383,M,brain_tumor,862,0,AO,Proneural,0,0,1,No therapy,Chemotherapy with temozolomide alone,anaplastic oligodendrogliomas,Partial resection
+M_53_Grade_4_SRR4407802,CGGA_1114,SRR4407802_1,Grade_4,53,SRP091303,M,brain_tumor,460,0,GBM,Mesenchymal,0,1,1,No therapy,Radiotherapy plus temozolomide,gliomas,Total resection
+F_43_Grade_4_SRR934891,CGGA_1116,SRR934891_1,Grade_4,43,SRP027383,F,brain_tumor,248,1,GBM,Proneural,0,0,1,No therapy,Radiotherapy plus temozolomide,primary Glioblastomas,Total resection
+M_31_Grade_3_SRR934892,CGGA_1118,SRR934892_1,Grade_3,31,SRP027383,M,brain_tumor,412,1,rAA,Proneural,0,0,0,No therapy,No therapy,recurrent anaplastic astrocytomas,No data
+M_52_Grade_3_SRR934893,CGGA_1119,SRR934893_1,Grade_3,52,SRP027383,M,brain_tumor,436,1,AO,Proneural,0,1,1,No therapy,Radiotherapy plus temozolomide,anaplastic oligodendrogliomas,Total resection
+M_49_Grade_4_SRR934894,CGGA_1124,SRR934894_1,Grade_4,49,SRP027383,M,brain_tumor,352,0,rGBM,Mesenchymal,NA,1,1,No data,Radiotherapy plus temozolomide,recurrent Glioblastomas,Total resection
+M_36_Grade_4_SRR4407803,CGGA_1129,SRR4407803_1,Grade_4,36,SRP091303,M,brain_tumor,168,1,sGBM,Proneural,NA,1,0,No data,Radiotherapy alone,gliomas,Total resection
+F_40_Grade_4_SRR934895,CGGA_1136,SRR934895_1,Grade_4,40,SRP027383,F,brain_tumor,236,1,sGBM,Mesenchymal,NA,0,0,No data,Chemotherapy with unknown drug alone,secondary Glioblastomas,No data
+F_54_Grade_4_SRR4407804,CGGA_1139,SRR4407804_1,Grade_4,54,SRP091303,F,brain_tumor,563,0,GBM,Neural,1,1,1,Anti-epileptic,Radiotherapy plus temozolomide,gliomas,No data
+F_50_Grade_3_SRR934896,CGGA_1140,SRR934896_1,Grade_3,50,SRP027383,F,brain_tumor,791,0,rAA,Neural,NA,0,1,No data,Chemotherapy with temozolomide alone,recurrent anaplastic astrocytomas,Total resection
+M_42_Grade_3_SRR934897,CGGA_1145,SRR934897_1,Grade_3,42,SRP027383,M,brain_tumor,239,1,rAA,Mesenchymal,1,1,1,Anti-epileptic,Radiotherapy plus with unknown drug,recurrent anaplastic astrocytomas,Total resection
+M_36_Grade_3_SRR934898,CGGA_1146,SRR934898_1,Grade_3,36,SRP027383,M,brain_tumor,779,0,AA,Proneural,NA,1,1,No data,Radiotherapy plus with other drugs,anaplastic astrocytomas,Total resection
+F_43_Grade_3_SRR934899,CGGA_1160,SRR934899_1,Grade_3,43,SRP027383,F,brain_tumor,NA,NA,AOA,Neural,NA,NA,NA,No data,No data for chemoradiotherapy,anaplastic oligodendroastrocytomas,Total resection
+M_27_Grade_4_SRR934900,CGGA_1170,SRR934900_1,Grade_4,27,SRP027383,M,brain_tumor,346,1,sGBM,Proneural,NA,0,1,No data,Radiotherapy plus temozolomide,secondary Glioblastomas,Total resection
+M_42_Grade_4_SRR934901,CGGA_1171,SRR934901_1,Grade_4,42,SRP027383,M,brain_tumor,412,1,GBM,Mesenchymal,0,0,1,No therapy,Radiotherapy plus temozolomide,primary Glioblastomas,Total resection
+F_37_Grade_4_SRR934902,CGGA_1175,SRR934902_1,Grade_4,37,SRP027383,F,brain_tumor,441,1,sGBM,Classical,NA,0,1,No data,Radiotherapy plus temozolomide,secondary Glioblastomas,Total resection
+M_42_Grade_4_SRR934903,CGGA_1177,SRR934903_1,Grade_4,42,SRP027383,M,brain_tumor,449,1,rGBM,Mesenchymal,NA,1,1,No data,Radiotherapy plus temozolomide,recurrent Glioblastomas,Total resection
+F_49_Grade_4_SRR4407805,CGGA_1180,SRR4407805_1,Grade_4,49,SRP091303,F,brain_tumor,318,0,GBM,Mesenchymal,NA,1,1,No data,Radiotherapy plus temozolomide,gliomas,Total resection
+F_31_Grade_4_SRR4407806,CGGA_1188,SRR4407806_1,Grade_4,31,SRP091303,F,brain_tumor,256,1,sGBM,Neural,NA,0,0,No data,Radiotherapy plus temozolomide,gliomas,Total resection
+F_35_Grade_3_SRR934904,CGGA_1189,SRR934904_1,Grade_3,35,SRP027383,F,brain_tumor,645,0,AOA,Proneural,1,1,1,Anti-epileptic,Radiotherapy plus with unknown drug,anaplastic oligodendroastrocytomas,Total resection
+F_46_Grade_3_SRR934905,CGGA_1190,SRR934905_1,Grade_3,46,SRP027383,F,brain_tumor,645,0,AOA,Proneural,0,0,1,No therapy,Chemotherapy with unknown drug alone,anaplastic oligodendroastrocytomas,Total resection
+M_45_Grade_4_SRR934906,CGGA_1197,SRR934906_1,Grade_4,45,SRP027383,M,brain_tumor,118,0,sGBM,Proneural,NA,0,1,No data,Radiotherapy plus temozolomide,secondary Glioblastomas,Total resection
+F_50_Grade_4_SRR4407807,CGGA_1214,SRR4407807_1,Grade_4,50,SRP091303,F,brain_tumor,388,0,GBM,Classical,1,1,1,Anti-epileptic,Radiotherapy plus temozolomide,gliomas,Total resection
+M_38_Grade_3_SRR934907,CGGA_1215,SRR934907_1,Grade_3,38,SRP027383,M,brain_tumor,29,1,rAOA,Mesenchymal,NA,1,1,No data,Chemotherapy with temozolomide alone,recurrent anaplastic oligodendroastrocytomas,Partial resection
+M_45_Grade_4_SRR4407808,CGGA_1216,SRR4407808_1,Grade_4,45,SRP091303,M,brain_tumor,381,0,GBM,Classical,1,1,1,Anti-epileptic,Radiotherapy plus with unknown drug,gliomas,Total resection
+M_54_Grade_4_SRR934908,CGGA_1218,SRR934908_1,Grade_4,54,SRP027383,M,brain_tumor,240,0,sGBM,Mesenchymal,1,1,1,Anti-epileptic,Radiotherapy plus temozolomide,secondary Glioblastomas,No data
+F_58_Grade_4_SRR4407809,CGGA_1219,SRR4407809_1,Grade_4,58,SRP091303,F,brain_tumor,374,0,GBM,Proneural,0,1,1,No therapy,Radiotherapy plus with unknown drug,gliomas,Total resection
+M_58_Grade_4_SRR4407811,CGGA_1224,SRR4407811_1,Grade_4,58,SRP091303,M,brain_tumor,271,1,GBM,Mesenchymal,0,1,1,No therapy,Radiotherapy plus temozolomide,gliomas,Total resection
+F_47_Grade_4_SRR934909,CGGA_1227,SRR934909_1,Grade_4,47,SRP027383,F,brain_tumor,370,0,sGBM,Classical,1,1,1,Anti-epileptic,Chemotherapy with temozolomide alone,secondary Glioblastomas,No data
+F_32_Grade_2_SRR934910,CGGA_1231,SRR934910_1,Grade_2,32,SRP027383,F,brain_tumor,362,0,rA,Mesenchymal,1,1,1,Anti-epileptic,Radiotherapy plus temozolomide,recurrent astrocytomas,No data
+M_33_Grade_4_SRR934911,CGGA_1234,SRR934911_1,Grade_4,33,SRP027383,M,brain_tumor,423,0,GBM,Mesenchymal,0,1,1,No therapy,Radiotherapy plus temozolomide,primary Glioblastomas,Total resection
+M_63_Grade_4_SRR934912,CGGA_1237,SRR934912_1,Grade_4,63,SRP027383,M,brain_tumor,249,1,GBM,Classical,0,1,1,No therapy,Radiotherapy plus temozolomide,primary Glioblastomas,No data
+M_34_Grade_4_SRR934913,CGGA_1240,SRR934913_1,Grade_4,34,SRP027383,M,brain_tumor,33,1,GBM,Mesenchymal,NA,0,0,No data,No therapy,primary Glioblastomas,Total resection
+M_54_Grade_3_SRR934914,CGGA_1246,SRR934914_1,Grade_3,54,SRP027383,M,brain_tumor,211,0,AO,Proneural,0,1,1,No therapy,Radiotherapy plus temozolomide,anaplastic oligodendrogliomas,No data
+F_42_Grade_4_SRR934915,CGGA_1251,SRR934915_1,Grade_4,42,SRP027383,F,brain_tumor,202,0,GBM,Proneural,0,1,1,No therapy,Radiotherapy plus temozolomide,recurrent anaplastic oligodendroastrocytomas,Total resection
+M_43_Grade_4_SRR4407812,CGGA_1258,SRR4407812_1,Grade_4,43,SRP091303,M,brain_tumor,128,1,GBM,Classical,0,0,0,No therapy,No therapy,gliomas,No data
+M_51_Grade_2_SRR934916,CGGA_1263,SRR934916_1,Grade_2,51,SRP027383,M,brain_tumor,178,0,A,Neural,1,1,0,Anti-epileptic,Radiotherapy alone,astrocytomas,No data
+F_61_Grade_4_SRR4407813,CGGA_1270,SRR4407813_1,Grade_4,61,SRP091303,F,brain_tumor,202,1,GBM,Neural,NA,0,NA,No data,No data for chemoradiotherapy,gliomas,Total resection
+M_18_Grade_4_SRR934917,CGGA_1271,SRR934917_1,Grade_4,18,SRP027383,M,brain_tumor,175,0,sGBM,Classical,NA,0,1,No data,Radiotherapy plus temozolomide,secondary Glioblastomas,Total resection
+M_33_Grade_4_SRR934918,CGGA_1272,SRR934918_1,Grade_4,33,SRP027383,M,brain_tumor,169,1,sGBM,Proneural,1,0,1,Anti-epileptic,Chemotherapy with temozolomide alone,secondary Glioblastomas,Total resection
+M_71_Grade_4_SRR4407814,CGGA_1275,SRR4407814_1,Grade_4,71,SRP091303,M,brain_tumor,183,1,GBM,Mesenchymal,0,0,0,No therapy,No therapy,gliomas,Total resection
+M_75_Grade_3_SRR934919,CGGA_1280,SRR934919_1,Grade_3,75,SRP027383,M,brain_tumor,329,0,AA,Classical,1,1,1,Anti-epileptic,Radiotherapy plus temozolomide,anaplastic astrocytomas,No data
+M_46_Grade_3_SRR934920,CGGA_1281,SRR934920_1,Grade_3,46,SRP027383,M,brain_tumor,NA,NA,AO,Neural,1,NA,NA,Anti-epileptic,No data for chemoradiotherapy,anaplastic oligodendrogliomas,No data
+M_18_Grade_4_SRR4407815,CGGA_1283,SRR4407815_1,Grade_4,18,SRP091303,M,brain_tumor,34,1,sGBM,Classical,NA,0,0,No data,Radiotherapy plus temozolomide,gliomas,No data
+M_74_Grade_3_SRR934921,CGGA_1284,SRR934921_1,Grade_3,74,SRP027383,M,brain_tumor,97,1,AA,Mesenchymal,0,0,1,No therapy,Chemotherapy with temozolomide alone,anaplastic astrocytomas,Total resection
+F_59_Grade_4_SRR4407816,CGGA_1285,SRR4407816_1,Grade_4,59,SRP091303,F,brain_tumor,93,1,sGBM,Mesenchymal,0,0,0,No therapy,No therapy,gliomas,No data
+M_30_Grade_4_SRR934922,CGGA_1287,SRR934922_1,Grade_4,30,SRP027383,M,brain_tumor,190,0,GBM,Proneural,0,1,1,No therapy,Radiotherapy plus temozolomide,primary Glioblastomas,No data
+M_18_Grade_3_SRR934923,CGGA_1292,SRR934923_1,Grade_3,18,SRP027383,M,brain_tumor,161,0,AO,Neural,NA,1,0,No data,Radiotherapy alone,anaplastic oligodendrogliomas,Total resection
+M_54_Grade_4_SRR4407817,CGGA_1299,SRR4407817_1,Grade_4,54,SRP091303,M,brain_tumor,206,0,GBM,Classical,0,1,1,No therapy,Radiotherapy plus temozolomide,gliomas,No data
+M_49_Grade_4_SRR934924,CGGA_1301,SRR934924_1,Grade_4,49,SRP027383,M,brain_tumor,NA,NA,rGBM,Neural,NA,1,1,No data,Radiotherapy plus temozolomide,primary Glioblastomas,No data
+F_26_Grade_3_SRR934925,CGGA_1307,SRR934925_1,Grade_3,26,SRP027383,F,brain_tumor,371,0,AOA,Classical,0,1,1,No therapy,Radiotherapy plus temozolomide,anaplastic oligodendroastrocytomas,Total resection
+M_43_Grade_4_SRR934926,CGGA_1313,SRR934926_1,Grade_4,43,SRP027383,M,brain_tumor,NA,NA,GBM,Mesenchymal,NA,0,0,No data,No therapy,primary Glioblastomas,Total resection
+F_28_Grade_4_SRR934927,CGGA_1314,SRR934927_1,Grade_4,28,SRP027383,F,brain_tumor,172,1,GBM,Classical,0,0,0,No therapy,No therapy,primary Glioblastomas,Total resection
+M_19_Grade_4_SRR4407818,CGGA_1320,SRR4407818_1,Grade_4,19,SRP091303,M,brain_tumor,59,1,GBM,Classical,0,0,1,No therapy,Chemotherapy with temozolomide alone,gliomas,Partial resection
+M_10_Grade_2_SRR934928,CGGA_1322,SRR934928_1,Grade_2,10,SRP027383,M,brain_tumor,178,0,OA,Proneural,0,1,1,No therapy,Radiotherapy plus temozolomide,oligodendroastrocytomas,No data
+M_42_Grade_4_SRR934929,CGGA_1324,SRR934929_1,Grade_4,42,SRP027383,M,brain_tumor,174,0,sGBM,Neural,1,0,1,Anti-epileptic,Radiotherapy plus temozolomide,secondary Glioblastomas,Total resection
+F_44_Grade_3_SRR934930,CGGA_1329,SRR934930_1,Grade_3,44,SRP027383,F,brain_tumor,167,0,rAOA,Proneural,1,0,1,Anti-epileptic,Radiotherapy plus temozolomide,recurrent anaplastic oligodendroastrocytomas,No data
+M_48_Grade_2_SRR934931,CGGA_1330,SRR934931_1,Grade_2,48,SRP027383,M,brain_tumor,167,0,A,Neural,0,1,1,No therapy,Radiotherapy plus temozolomide,astrocytomas,No data
+F_55_Grade_4_SRR4407819,CGGA_1332,SRR4407819_1,Grade_4,55,SRP091303,F,brain_tumor,168,0,GBM,Classical,NA,0,1,No data,Chemotherapy with temozolomide alone,gliomas,No data
+F_62_Grade_4_SRR934932,CGGA_1338,SRR934932_1,Grade_4,62,SRP027383,F,brain_tumor,255,0,GBM,Mesenchymal,0,0,0,No therapy,No therapy,primary Glioblastomas,No data
+M_36_Grade_3_SRR934933,CGGA_1340,SRR934933_1,Grade_3,36,SRP027383,M,brain_tumor,254,0,AOA,Proneural,0,0,0,No therapy,No therapy,anaplastic oligodendroastrocytomas,No data
+M_48_Grade_4_SRR934934,CGGA_1342,SRR934934_1,Grade_4,48,SRP027383,M,brain_tumor,200,1,GBM,Mesenchymal,0,0,0,No therapy,No therapy,primary Glioblastomas,Total resection
+M_34_Grade_4_SRR934935,CGGA_1343,SRR934935_1,Grade_4,34,SRP027383,M,brain_tumor,108,1,rGBM,Classical,1,0,1,Anti-epileptic,Radiotherapy plus temozolomide,recurrent Glioblastomas,Partial resection
+F_58_Grade_4_SRR4407820,CGGA_1346,SRR4407820_1,Grade_4,58,SRP091303,F,brain_tumor,284,1,sGBM,Classical,NA,NA,NA,No data,Radiotherapy plus with other drugs,gliomas,No data
+M_44_Grade_4_SRR4407822,CGGA_1370,SRR4407822_1,Grade_4,44,SRP091303,M,brain_tumor,325,0,sGBM,Classical,NA,0,1,No data,Radiotherapy plus with other drugs,gliomas,Total resection
+M_22_Grade_2_SRR934936,CGGA_1374,SRR934936_1,Grade_2,22,SRP027383,M,brain_tumor,NA,NA,rOA,Classical,NA,1,0,No data,Radiotherapy plus with unknown drug,recurrent oligodendroastrocytomas,No data
+F_51_Grade_4_SRR934937,CGGA_1375,SRR934937_1,Grade_4,51,SRP027383,F,brain_tumor,NA,NA,sGBM,Proneural,NA,0,0,No data,Radiotherapy plus with unknown drug,secondary Glioblastomas,No data
+F_37_Grade_4_SRR934938,CGGA_1381,SRR934938_1,Grade_4,37,SRP027383,F,brain_tumor,46,1,rGBM,Proneural,1,0,0,Anti-epileptic,Radiotherapy plus temozolomide,recurrent Glioblastomas,No data
+F_40_Grade_4_SRR934939,CGGA_1384,SRR934939_1,Grade_4,40,SRP027383,F,brain_tumor,NA,NA,GBM,Proneural,NA,NA,NA,No data,No data for chemoradiotherapy,primary Glioblastomas,No data
+M_38_Grade_2_SRR934940,CGGA_1388,SRR934940_1,Grade_2,38,SRP027383,M,brain_tumor,188,0,rA,Mesenchymal,NA,0,1,No data,Radiotherapy plus temozolomide,recurrent astrocytomas,No data
+M_42_Grade_4_SRR4407823,CGGA_1393,SRR4407823_1,Grade_4,42,SRP091303,M,brain_tumor,233,0,sGBM,Classical,NA,1,0,No data,Radiotherapy alone,gliomas,No data
+M_38_Grade_4_SRR934941,CGGA_1394,SRR934941_1,Grade_4,38,SRP027383,M,brain_tumor,89,0,rGBM,Proneural,0,1,0,No therapy,Radiotherapy plus temozolomide,recurrent Glioblastomas,No data
+M_34_Grade_2_SRR934942,CGGA_1406,SRR934942_1,Grade_2,34,SRP027383,M,brain_tumor,281,0,A,Mesenchymal,0,0,0,No therapy,No therapy,astrocytomas,No data
+F_65_Grade_3_SRR934943,CGGA_1408,SRR934943_1,Grade_3,65,SRP027383,F,brain_tumor,NA,NA,AOA,Classical,0,1,1,No therapy,Radiotherapy plus with unknown drug,anaplastic oligodendroastrocytomas,No data
+F_24_Grade_4_SRR934944,CGGA_1409,SRR934944_1,Grade_4,24,SRP027383,F,brain_tumor,NA,NA,GBM,Proneural,0,0,0,No therapy,No therapy,primary Glioblastomas,No data
+F_41_Grade_2_SRR934945,CGGA_1411,SRR934945_1,Grade_2,41,SRP027383,F,brain_tumor,NA,NA,rA,Mesenchymal,NA,1,NA,No data,Radiotherapy plus with unknown drug,recurrent astrocytomas,No data
+F_49_Grade_4_SRR934946,CGGA_1412,SRR934946_1,Grade_4,49,SRP027383,F,brain_tumor,280,0,sGBM,Classical,0,0,1,No therapy,Radiotherapy plus temozolomide,secondary Glioblastomas,No data
+M_37_Grade_4_SRR4407824,CGGA_1450,SRR4407824_1,Grade_4,37,SRP091303,M,brain_tumor,218,0,sGBM,Proneural,1,NA,1,Anti-epileptic,Radiotherapy plus temozolomide,gliomas,Total resection
+M_51_Grade_4_SRR4407825,CGGA_1460,SRR4407825_1,Grade_4,51,SRP091303,M,brain_tumor,172,0,sGBM,Classical,NA,1,1,No data,Radiotherapy plus temozolomide,gliomas,No data
+M_38_Grade_4_SRR4407826,CGGA_1475,SRR4407826_1,Grade_4,38,SRP091303,M,brain_tumor,127,0,sGBM,Proneural,NA,0,0,No data,Radiotherapy plus no data for chemotherapy,gliomas,No data
+F_37_Grade_2_SRR934717,CGGA_171,SRR934717_1,Grade_2,37,SRP027383,F,brain_tumor,NA,NA,OA,Neural,NA,0,NA,No data,Chemotherapy with unknown drug alone,oligodendroastrocytomas,Total resection
+M_25_Grade_2_SRR934718,CGGA_235,SRR934718_1,Grade_2,25,SRP027383,M,brain_tumor,2340,1,OA,Neural,1,1,0,Anti-epileptic,Radiotherapy alone,oligodendroastrocytomas,No data
+M_47_Grade_2_SRR934719,CGGA_236,SRR934719_1,Grade_2,47,SRP027383,M,brain_tumor,706,0,O,Proneural,NA,1,1,No data,Radiotherapy plus temozolomide,oligodendrogliomas,Total resection
+M_34_Grade_2_SRR934720,CGGA_241,SRR934720_1,Grade_2,34,SRP027383,M,brain_tumor,2491,0,OA,Neural,1,1,0,Anti-epileptic,Radiotherapy alone,oligodendroastrocytomas,Total resection
+F_31_Grade_2_SRR934721,CGGA_243,SRR934721_1,Grade_2,31,SRP027383,F,brain_tumor,2486,0,OA,Proneural,1,1,0,Anti-epileptic,Radiotherapy alone,oligodendroastrocytomas,Total resection
+F_39_Grade_2_SRR934722,CGGA_245,SRR934722_1,Grade_2,39,SRP027383,F,brain_tumor,332,1,rA,Mesenchymal,0,0,1,No therapy,Radiotherapy plus with unknown drug,recurrent astrocytomas,Total resection
+M_60_Grade_3_SRR934948,CGGA_247,SRR934948_1,Grade_3,60,SRP027383,M,brain_tumor,609,1,AA,Proneural,0,1,1,No therapy,Radiotherapy plus with unknown drug,anaplastic astrocytomas,Total resection
+M_46_Grade_2_SRR934723,CGGA_251,SRR934723_1,Grade_2,46,SRP027383,M,brain_tumor,1299,0,OA,Neural,1,1,0,Anti-epileptic,Radiotherapy alone,oligodendroastrocytomas,Total resection
+F_25_Grade_2_SRR934724,CGGA_252,SRR934724_1,Grade_2,25,SRP027383,F,brain_tumor,165,0,A,Proneural,0,1,0,No therapy,Radiotherapy alone,astrocytomas,No data
+M_38_Grade_2_SRR934725,CGGA_254,SRR934725_1,Grade_2,38,SRP027383,M,brain_tumor,2490,0,OA,Neural,0,1,1,No therapy,Radiotherapy plus with unknown drug,oligodendroastrocytomas,Total resection
+M_39_Grade_2_SRR934726,CGGA_256,SRR934726_1,Grade_2,39,SRP027383,M,brain_tumor,158,0,A,Classical,0,1,1,No therapy,Radiotherapy plus with unknown drug,astrocytomas,Total resection
+M_28_Grade_2_SRR934727,CGGA_261,SRR934727_1,Grade_2,28,SRP027383,M,brain_tumor,2458,0,A,Neural,1,1,0,Anti-epileptic,Radiotherapy alone,astrocytomas,Total resection
+M_37_Grade_2_SRR934728,CGGA_267,SRR934728_1,Grade_2,37,SRP027383,M,brain_tumor,1374,1,A,Classical,1,0,0,Anti-epileptic,No therapy,astrocytomas,Total resection
+F_45_Grade_2_SRR934729,CGGA_269,SRR934729_1,Grade_2,45,SRP027383,F,brain_tumor,132,0,A,Mesenchymal,0,1,0,No therapy,Radiotherapy alone,astrocytomas,Total resection
+M_51_Grade_4_SRR934730,CGGA_272,SRR934730_1,Grade_4,51,SRP027383,M,brain_tumor,235,1,sGBM,Mesenchymal,NA,1,0,No data,Radiotherapy alone,secondary Glioblastomas,Total resection
+F_35_Grade_2_SRR934731,CGGA_273,SRR934731_1,Grade_2,35,SRP027383,F,brain_tumor,2431,0,OA,Proneural,0,1,0,No therapy,Radiotherapy alone,oligodendroastrocytomas,Total resection
+F_55_Grade_4_SRR934732,CGGA_274,SRR934732_1,Grade_4,55,SRP027383,F,brain_tumor,610,0,GBM,Classical,0,1,1,No therapy,Radiotherapy plus temozolomide,primary Glioblastomas,Total resection
+M_44_Grade_2_SRR934733,CGGA_276,SRR934733_1,Grade_2,44,SRP027383,M,brain_tumor,529,0,O,Neural,1,0,0,Anti-epileptic,No therapy,oligodendrogliomas,Total resection
+F_48_Grade_2_SRR934735,CGGA_283,SRR934735_1,Grade_2,48,SRP027383,F,brain_tumor,2410,0,O,Neural,1,1,1,Anti-epileptic,Radiotherapy plus with unknown drug,oligodendrogliomas,Total resection
+F_36_Grade_2_SRR934736,CGGA_300,SRR934736_1,Grade_2,36,SRP027383,F,brain_tumor,2199,1,A,Neural,1,1,1,Anti-epileptic,Radiotherapy plus with unknown drug,astrocytomas,Total resection
+M_44_Grade_4_SRR934737,CGGA_309,SRR934737_1,Grade_4,44,SRP027383,M,brain_tumor,153,1,rGBM,Mesenchymal,0,1,1,No therapy,Radiotherapy plus temozolomide,recurrent Glioblastomas,Total resection
+M_39_Grade_3_SRR934738,CGGA_314,SRR934738_1,Grade_3,39,SRP027383,M,brain_tumor,2257,0,rAO,Neural,1,1,1,Anti-epileptic,Radiotherapy plus temozolomide,recurrent anaplastic oligodendrogliomas,Total resection
+F_42_Grade_4_SRR934739,CGGA_318,SRR934739_1,Grade_4,42,SRP027383,F,brain_tumor,222,1,rGBM,Mesenchymal,1,NA,1,Anti-epileptic,Chemotherapy with unknown drug alone,recurrent Glioblastomas,No data
+F_49_Grade_2_SRR934740,CGGA_323,SRR934740_1,Grade_2,49,SRP027383,F,brain_tumor,2351,0,O,Neural,0,0,0,No therapy,No therapy,oligodendrogliomas,Total resection
+M_46_Grade_3_SRR934741,CGGA_330,SRR934741_1,Grade_3,46,SRP027383,M,brain_tumor,1121,1,AOA,Mesenchymal,1,1,1,Anti-epileptic,Radiotherapy plus with unknown drug,anaplastic oligodendroastrocytomas,Total resection
+M_41_Grade_2_SRR934742,CGGA_333,SRR934742_1,Grade_2,41,SRP027383,M,brain_tumor,1783,0,OA,Neural,1,1,0,Anti-epileptic,Radiotherapy alone,oligodendroastrocytomas,Total resection
+F_50_Grade_3_SRR934743,CGGA_337,SRR934743_1,Grade_3,50,SRP027383,F,brain_tumor,1008,1,AOA,Neural,NA,NA,NA,No data,No data for chemoradiotherapy,anaplastic oligodendroastrocytomas,Total resection
+M_38_Grade_4_SRR934744,CGGA_374,SRR934744_1,Grade_4,38,SRP027383,M,brain_tumor,493,1,sGBM,Proneural,1,0,1,Anti-epileptic,Radiotherapy plus with unknown drug,secondary Glioblastomas,No data
+F_39_Grade_3_SRR934745,CGGA_400,SRR934745_1,Grade_3,39,SRP027383,F,brain_tumor,1321,1,rAA,Neural,0,0,0,No therapy,Radiotherapy alone,recurrent anaplastic astrocytomas,Total resection
+M_54_Grade_4_SRR934746,CGGA_413,SRR934746_1,Grade_4,54,SRP027383,M,brain_tumor,183,0,GBM,Classical,1,1,1,Anti-epileptic,Radiotherapy plus with unknown drug,primary Glioblastomas,Total resection
+M_51_Grade_3_SRR934747,CGGA_426,SRR934747_1,Grade_3,51,SRP027383,M,brain_tumor,1560,1,AA,Mesenchymal,1,1,1,Anti-epileptic,Radiotherapy plus with unknown drug,anaplastic astrocytomas,Total resection
+M_42_Grade_3_SRR934748,CGGA_431,SRR934748_1,Grade_3,42,SRP027383,M,brain_tumor,2227,0,rAOA,Proneural,1,0,1,Anti-epileptic,Radiotherapy plus temozolomide,recurrent anaplastic oligodendroastrocytomas,No data
+F_35_Grade_2_SRR934749,CGGA_446,SRR934749_1,Grade_2,35,SRP027383,F,brain_tumor,1410,0,O,Proneural,0,1,0,No therapy,Radiotherapy alone,oligodendrogliomas,Total resection
+M_65_Grade_3_SRR934750,CGGA_448,SRR934750_1,Grade_3,65,SRP027383,M,brain_tumor,354,1,AOA,Mesenchymal,0,1,1,No therapy,Radiotherapy plus with unknown drug,anaplastic oligodendroastrocytomas,Total resection
+M_51_Grade_2_SRR934751,CGGA_458,SRR934751_1,Grade_2,51,SRP027383,M,brain_tumor,419,1,rOA,Neural,0,0,1,No therapy,Radiotherapy plus with unknown drug,recurrent oligodendroastrocytomas,Total resection
+F_37_Grade_2_SRR934752,CGGA_479,SRR934752_1,Grade_2,37,SRP027383,F,brain_tumor,2072,0,OA,Neural,1,1,0,Anti-epileptic,Radiotherapy alone,oligodendroastrocytomas,Total resection
+F_60_Grade_4_SRR934753,CGGA_483,SRR934753_1,Grade_4,60,SRP027383,F,brain_tumor,271,1,GBM,Mesenchymal,0,1,1,No therapy,Radiotherapy plus with unknown drug,primary Glioblastomas,Total resection
+M_32_Grade_2_SRR934754,CGGA_485,SRR934754_1,Grade_2,32,SRP027383,M,brain_tumor,2058,0,O,Neural,0,1,1,No therapy,Radiotherapy plus with unknown drug,oligodendrogliomas,Total resection
+M_24_Grade_3_SRR934755,CGGA_488,SRR934755_1,Grade_3,24,SRP027383,M,brain_tumor,435,1,AOA,Classical,0,1,1,No therapy,Radiotherapy plus with unknown drug,anaplastic oligodendroastrocytomas,Total resection
+F_38_Grade_3_SRR934756,CGGA_490,SRR934756_1,Grade_3,38,SRP027383,F,brain_tumor,2014,0,AO,Neural,0,1,1,No therapy,Radiotherapy plus with unknown drug,anaplastic oligodendrogliomas,Total resection
+F_37_Grade_4_SRR934757,CGGA_491,SRR934757_1,Grade_4,37,SRP027383,F,brain_tumor,1074,1,GBM,Proneural,0,1,1,No therapy,Radiotherapy plus with unknown drug,primary Glioblastomas,Total resection
+F_33_Grade_2_SRR934758,CGGA_493,SRR934758_1,Grade_2,33,SRP027383,F,brain_tumor,2056,0,A,Neural,1,1,1,Anti-epileptic,Radiotherapy plus temozolomide,astrocytomas,Total resection
+F_59_Grade_4_SRR934759,CGGA_494,SRR934759_1,Grade_4,59,SRP027383,F,brain_tumor,2072,0,GBM,Neural,NA,1,1,No data,Radiotherapy plus with other drugs,primary Glioblastomas,Total resection
+M_54_Grade_4_SRR934760,CGGA_495,SRR934760_1,Grade_4,54,SRP027383,M,brain_tumor,295,1,GBM,Mesenchymal,0,0,0,No therapy,No therapy,primary Glioblastomas,Total resection
+M_52_Grade_4_SRR934761,CGGA_499,SRR934761_1,Grade_4,52,SRP027383,M,brain_tumor,136,1,GBM,Proneural,0,1,0,No therapy,Radiotherapy alone,primary Glioblastomas,Total resection
+M_40_Grade_2_SRR934762,CGGA_501,SRR934762_1,Grade_2,40,SRP027383,M,brain_tumor,2124,0,O,Neural,0,1,0,No therapy,Radiotherapy alone,oligodendrogliomas,Total resection
+M_40_Grade_2_SRR934763,CGGA_502,SRR934763_1,Grade_2,40,SRP027383,M,brain_tumor,1489,0,A,Proneural,0,1,0,No therapy,Radiotherapy alone,astrocytomas,Total resection
+M_42_Grade_3_SRR934764,CGGA_510,SRR934764_1,Grade_3,42,SRP027383,M,brain_tumor,1980,0,AO,Proneural,1,1,1,Anti-epileptic,Radiotherapy plus temozolomide,anaplastic oligodendrogliomas,Total resection
+M_61_Grade_4_SRR4407827,CGGA_525,SRR4407827_1,Grade_4,61,SRP091303,M,brain_tumor,138,1,GBM,Mesenchymal,NA,1,0,No data,Radiotherapy alone,gliomas,Total resection
+F_43_Grade_2_SRR934766,CGGA_538,SRR934766_1,Grade_2,43,SRP027383,F,brain_tumor,1451,0,O,Proneural,0,0,NA,No therapy,Chemotherapy with unknown drug alone,oligodendrogliomas,Total resection
+F_36_Grade_2_SRR934767,CGGA_541,SRR934767_1,Grade_2,36,SRP027383,F,brain_tumor,2008,0,OA,Neural,0,1,1,No therapy,Radiotherapy plus temozolomide,oligodendroastrocytomas,Total resection
+M_43_Grade_2_SRR934768,CGGA_543,SRR934768_1,Grade_2,43,SRP027383,M,brain_tumor,1995,0,O,Neural,0,1,0,No therapy,Radiotherapy alone,oligodendrogliomas,Total resection
+F_39_Grade_4_SRR934769,CGGA_545,SRR934769_1,Grade_4,39,SRP027383,F,brain_tumor,555,1,rGBM,Mesenchymal,0,1,1,No therapy,Radiotherapy plus with unknown drug,recurrent Glioblastomas,Total resection
+M_45_Grade_2_SRR934770,CGGA_551,SRR934770_1,Grade_2,45,SRP027383,M,brain_tumor,1987,0,O,Neural,0,1,0,No therapy,Radiotherapy alone,oligodendrogliomas,Total resection
+M_44_Grade_3_SRR934771,CGGA_560,SRR934771_1,Grade_3,44,SRP027383,M,brain_tumor,1928,0,AOA,Proneural,1,1,0,Anti-epileptic,Radiotherapy alone,anaplastic oligodendroastrocytomas,Total resection
+M_48_Grade_3_SRR934772,CGGA_564,SRR934772_1,Grade_3,48,SRP027383,M,brain_tumor,679,1,AA,Classical,0,1,1,No therapy,Radiotherapy plus with unknown drug,anaplastic astrocytomas,Total resection
+M_51_Grade_3_SRR934773,CGGA_565,SRR934773_1,Grade_3,51,SRP027383,M,brain_tumor,336,0,AOA,Neural,NA,1,1,No data,Radiotherapy plus with other drugs,anaplastic oligodendroastrocytomas,Total resection
+F_62_Grade_3_SRR934774,CGGA_578,SRR934774_1,Grade_3,62,SRP027383,F,brain_tumor,376,1,AOA,Proneural,1,1,1,Anti-epileptic,Radiotherapy plus temozolomide,anaplastic oligodendroastrocytomas,Total resection
+M_43_Grade_2_SRR934775,CGGA_580,SRR934775_1,Grade_2,43,SRP027383,M,brain_tumor,1394,1,OA,Proneural,NA,1,0,No data,Radiotherapy alone,oligodendroastrocytomas,Total resection
+F_34_Grade_3_SRR934776,CGGA_591,SRR934776_1,Grade_3,34,SRP027383,F,brain_tumor,1654,1,AOA,Classical,0,1,1,No therapy,Radiotherapy plus with other drugs,anaplastic oligodendroastrocytomas,Total resection
+F_62_Grade_3_SRR934777,CGGA_598,SRR934777_1,Grade_3,62,SRP027383,F,brain_tumor,1884,0,AO,Proneural,NA,1,1,No data,Radiotherapy plus with unknown drug,anaplastic oligodendrogliomas,Total resection
+F_67_Grade_3_SRR934778,CGGA_599,SRR934778_1,Grade_3,67,SRP027383,F,brain_tumor,418,1,AOA,Neural,1,1,0,Anti-epileptic,Radiotherapy alone,anaplastic oligodendroastrocytomas,Total resection
+M_36_Grade_2_SRR934779,CGGA_601,SRR934779_1,Grade_2,36,SRP027383,M,brain_tumor,1133,1,A,Neural,1,1,0,Anti-epileptic,Radiotherapy alone,astrocytomas,Total resection
+M_32_Grade_3_SRR934780,CGGA_603,SRR934780_1,Grade_3,32,SRP027383,M,brain_tumor,168,0,rAA,Proneural,0,1,0,No therapy,Radiotherapy alone,recurrent anaplastic astrocytomas,Total resection
+M_46_Grade_4_SRR934781,CGGA_604,SRR934781_1,Grade_4,46,SRP027383,M,brain_tumor,381,1,GBM,Mesenchymal,0,1,1,No therapy,Radiotherapy plus with unknown drug,primary Glioblastomas,Total resection
+M_41_Grade_3_SRR934782,CGGA_605,SRR934782_1,Grade_3,41,SRP027383,M,brain_tumor,1872,0,rAO,Mesenchymal,0,1,1,No therapy,Radiotherapy plus with unknown drug,recurrent anaplastic oligodendrogliomas,No data
+M_26_Grade_2_SRR934783,CGGA_607,SRR934783_1,Grade_2,26,SRP027383,M,brain_tumor,1389,0,A,Proneural,0,1,0,No therapy,Radiotherapy alone,astrocytomas,Total resection
+M_43_Grade_3_SRR934784,CGGA_616,SRR934784_1,Grade_3,43,SRP027383,M,brain_tumor,952,1,AA,Classical,0,1,1,No therapy,Radiotherapy plus with unknown drug,anaplastic astrocytomas,Total resection
+F_49_Grade_4_SRR934785,CGGA_624,SRR934785_1,Grade_4,49,SRP027383,F,brain_tumor,136,1,rGBM,Mesenchymal,0,NA,NA,No therapy,No data for chemoradiotherapy,recurrent Glioblastomas,No data
+F_30_Grade_2_SRR934786,CGGA_630,SRR934786_1,Grade_2,30,SRP027383,F,brain_tumor,1895,0,OA,Neural,0,1,0,No therapy,Radiotherapy alone,oligodendroastrocytomas,No data
+M_30_Grade_4_SRR4407828,CGGA_632,SRR4407828_1,Grade_4,30,SRP091303,M,brain_tumor,572,1,sGBM,Proneural,NA,1,1,No data,Radiotherapy plus temozolomide,gliomas,No data
+F_57_Grade_2_SRR934787,CGGA_633,SRR934787_1,Grade_2,57,SRP027383,F,brain_tumor,1890,0,O,Proneural,0,1,1,No therapy,Radiotherapy plus temozolomide,oligodendrogliomas,Total resection
+M_45_Grade_2_SRR934788,CGGA_635,SRR934788_1,Grade_2,45,SRP027383,M,brain_tumor,1888,0,OA,Neural,1,1,1,Anti-epileptic,Radiotherapy plus with unknown drug,oligodendroastrocytomas,Total resection
+M_42_Grade_2_SRR4407829,CGGA_638,SRR4407829_1,Grade_2,42,SRP091303,M,brain_tumor,1881,0,O,Proneural,0,1,0,No therapy,Radiotherapy alone,gliomas,Total resection
+F_52_Grade_2_SRR4407830,CGGA_641,SRR4407830_1,Grade_2,52,SRP091303,F,brain_tumor,1876,0,O,Proneural,NA,1,1,No data,Radiotherapy plus temozolomide,gliomas,Total resection
+M_30_Grade_2_SRR934789,CGGA_642,SRR934789_1,Grade_2,30,SRP027383,M,brain_tumor,1874,0,A,Proneural,0,1,0,No therapy,Radiotherapy alone,astrocytomas,Total resection
+M_57_Grade_3_SRR934790,CGGA_643,SRR934790_1,Grade_3,57,SRP027383,M,brain_tumor,331,1,AOA,Proneural,1,1,1,Anti-epileptic,Radiotherapy plus with unknown drug,anaplastic oligodendroastrocytomas,Total resection
+M_36_Grade_2_SRR934791,CGGA_655,SRR934791_1,Grade_2,36,SRP027383,M,brain_tumor,1856,0,O,Proneural,0,1,0,No therapy,Radiotherapy alone,oligodendrogliomas,Total resection
+M_56_Grade_4_SRR934792,CGGA_658,SRR934792_1,Grade_4,56,SRP027383,M,brain_tumor,372,1,GBM,Proneural,0,1,1,No therapy,Radiotherapy plus with unknown drug,primary Glioblastomas,Total resection
+F_51_Grade_2_SRR934793,CGGA_659,SRR934793_1,Grade_2,51,SRP027383,F,brain_tumor,730,0,O,Neural,0,1,1,No therapy,Radiotherapy plus with unknown drug,oligodendrogliomas,Total resection
+M_42_Grade_3_SRR934794,CGGA_661,SRR934794_1,Grade_3,42,SRP027383,M,brain_tumor,NA,NA,AA,Mesenchymal,1,1,1,Anti-epileptic,Radiotherapy plus temozolomide,anaplastic astrocytomas,Total resection
+F_59_Grade_2_SRR934795,CGGA_662,SRR934795_1,Grade_2,59,SRP027383,F,brain_tumor,300,1,OA,Neural,0,0,0,No therapy,No therapy,oligodendroastrocytomas,Total resection
+F_45_Grade_2_SRR934796,CGGA_666,SRR934796_1,Grade_2,45,SRP027383,F,brain_tumor,1847,0,OA,Neural,0,1,0,No therapy,Radiotherapy alone,oligodendroastrocytomas,Total resection
+F_56_Grade_4_SRR934797,CGGA_669,SRR934797_1,Grade_4,56,SRP027383,F,brain_tumor,607,1,rGBM,Neural,0,1,1,No therapy,Radiotherapy plus with unknown drug,recurrent Glioblastomas,Total resection
+F_37_Grade_2_SRR934798,CGGA_671,SRR934798_1,Grade_2,37,SRP027383,F,brain_tumor,1848,0,OA,Neural,0,1,0,No therapy,Radiotherapy alone,oligodendroastrocytomas,Total resection
+F_23_Grade_2_SRR934799,CGGA_675,SRR934799_1,Grade_2,23,SRP027383,F,brain_tumor,1835,0,OA,Proneural,0,1,0,No therapy,Radiotherapy alone,oligodendroastrocytomas,Total resection
+M_60_Grade_4_SRR934800,CGGA_676,SRR934800_1,Grade_4,60,SRP027383,M,brain_tumor,376,1,GBM,Classical,0,1,1,No therapy,Radiotherapy plus with unknown drug,primary Glioblastomas,Total resection
+M_56_Grade_3_SRR934801,CGGA_678,SRR934801_1,Grade_3,56,SRP027383,M,brain_tumor,386,1,rAA,Classical,0,1,1,No therapy,Radiotherapy plus with unknown drug,recurrent anaplastic astrocytomas,Total resection
+F_63_Grade_4_SRR934802,CGGA_679,SRR934802_1,Grade_4,63,SRP027383,F,brain_tumor,263,1,GBM,Mesenchymal,1,1,0,Anti-epileptic,Radiotherapy alone,primary Glioblastomas,Total resection
+M_44_Grade_4_SRR934803,CGGA_680,SRR934803_1,Grade_4,44,SRP027383,M,brain_tumor,1832,0,GBM,Neural,0,1,1,No therapy,Radiotherapy plus with other drugs,primary Glioblastomas,Total resection
+M_43_Grade_4_SRR934804,CGGA_681,SRR934804_1,Grade_4,43,SRP027383,M,brain_tumor,110,1,rGBM,Proneural,0,0,0,No therapy,No therapy,recurrent Glioblastomas,Total resection
+F_21_Grade_2_SRR934805,CGGA_685,SRR934805_1,Grade_2,21,SRP027383,F,brain_tumor,1825,0,A,Proneural,1,1,0,Anti-epileptic,Radiotherapy alone,astrocytomas,Total resection
+F_37_Grade_2_SRR934806,CGGA_689,SRR934806_1,Grade_2,37,SRP027383,F,brain_tumor,1827,0,O,Proneural,0,1,0,No therapy,Radiotherapy alone,oligodendrogliomas,Total resection
+M_34_Grade_2_SRR934807,CGGA_694,SRR934807_1,Grade_2,34,SRP027383,M,brain_tumor,1194,1,rA,Neural,NA,1,1,No data,Radiotherapy plus with other drugs,recurrent astrocytomas,No data
+F_62_Grade_2_SRR934808,CGGA_698,SRR934808_1,Grade_2,62,SRP027383,F,brain_tumor,1798,0,A,Proneural,1,1,1,Anti-epileptic,Radiotherapy plus temozolomide,astrocytomas,Total resection
+F_25_Grade_4_SRR934809,CGGA_700,SRR934809_1,Grade_4,25,SRP027383,F,brain_tumor,669,0,GBM,Proneural,0,1,1,No therapy,Radiotherapy plus temozolomide,primary Glioblastomas,Total resection
+M_37_Grade_3_SRR934810,CGGA_704,SRR934810_1,Grade_3,37,SRP027383,M,brain_tumor,1745,0,rAOA,Proneural,0,1,1,No therapy,Radiotherapy plus temozolomide,recurrent anaplastic oligodendroastrocytomas,No data
+M_42_Grade_4_SRR934811,CGGA_710,SRR934811_1,Grade_4,42,SRP027383,M,brain_tumor,660,1,GBM,Mesenchymal,0,0,1,No therapy,Chemotherapy with unknown drug alone,primary Glioblastomas,Total resection
+M_44_Grade_2_SRR934812,CGGA_715,SRR934812_1,Grade_2,44,SRP027383,M,brain_tumor,1792,0,O,Neural,1,1,0,Anti-epileptic,Radiotherapy alone,oligodendrogliomas,Total resection
+M_43_Grade_2_SRR934814,CGGA_725,SRR934814_1,Grade_2,43,SRP027383,M,brain_tumor,1779,0,OA,Neural,1,1,0,Anti-epileptic,Radiotherapy alone,oligodendroastrocytomas,Total resection
+M_45_Grade_3_SRR934815,CGGA_727,SRR934815_1,Grade_3,45,SRP027383,M,brain_tumor,1023,1,AA,Classical,0,1,1,No therapy,Radiotherapy plus with unknown drug,anaplastic astrocytomas,No data
+M_51_Grade_4_SRR934816,CGGA_731,SRR934816_1,Grade_4,51,SRP027383,M,brain_tumor,447,1,rGBM,Classical,0,1,0,No therapy,Radiotherapy alone,primary Glioblastomas,Total resection
+F_35_Grade_3_SRR934817,CGGA_732,SRR934817_1,Grade_3,35,SRP027383,F,brain_tumor,1226,0,AA,Classical,NA,0,NA,No data,Radiotherapy plus no data for chemotherapy,anaplastic astrocytomas,Total resection
+M_44_Grade_2_SRR934818,CGGA_738,SRR934818_1,Grade_2,44,SRP027383,M,brain_tumor,1764,0,A,Proneural,0,1,0,No therapy,Radiotherapy alone,astrocytomas,No data
+M_29_Grade_4_SRR4407831,CGGA_747,SRR4407831_1,Grade_4,29,SRP091303,M,brain_tumor,970,1,GBM,Proneural,1,1,1,Anti-epileptic,Radiotherapy plus with unknown drug,gliomas,Total resection
+M_40_Grade_2_SRR934819,CGGA_752,SRR934819_1,Grade_2,40,SRP027383,M,brain_tumor,1749,0,OA,Neural,0,1,0,No therapy,Radiotherapy alone,oligodendroastrocytomas,Total resection
+M_46_Grade_2_SRR934820,CGGA_757,SRR934820_1,Grade_2,46,SRP027383,M,brain_tumor,1047,1,A,Proneural,0,1,1,No therapy,Radiotherapy plus temozolomide,astrocytomas,Total resection
+M_30_Grade_4_SRR4407833,CGGA_759,SRR4407833_1,Grade_4,30,SRP091303,M,brain_tumor,1263,1,GBM,Classical,1,1,1,Anti-epileptic,Radiotherapy plus temozolomide,gliomas,Total resection
+F_34_Grade_2_SRR4407834,CGGA_760,SRR4407834_1,Grade_2,34,SRP091303,F,brain_tumor,1742,0,O,Neural,0,1,0,No therapy,Radiotherapy alone,gliomas,Total resection
+M_45_Grade_4_SRR934821,CGGA_761,SRR934821_1,Grade_4,45,SRP027383,M,brain_tumor,1744,0,GBM,Proneural,NA,1,0,No data,Radiotherapy alone,primary Glioblastomas,No data
+F_40_Grade_2_SRR934822,CGGA_762,SRR934822_1,Grade_2,40,SRP027383,F,brain_tumor,1255,0,OA,Neural,1,1,0,Anti-epileptic,Radiotherapy alone,oligodendroastrocytomas,Total resection
+M_32_Grade_2_SRR934823,CGGA_766,SRR934823_1,Grade_2,32,SRP027383,M,brain_tumor,1735,0,OA,Proneural,1,1,0,Anti-epileptic,Radiotherapy alone,oligodendroastrocytomas,Total resection
+F_50_Grade_4_SRR934824,CGGA_773,SRR934824_1,Grade_4,50,SRP027383,F,brain_tumor,443,1,sGBM,Neural,0,0,1,No therapy,Chemotherapy with unknown drug alone,secondary Glioblastomas,No data
+M_61_Grade_4_SRR934825,CGGA_782,SRR934825_1,Grade_4,61,SRP027383,M,brain_tumor,289,1,GBM,Mesenchymal,0,1,0,No therapy,Radiotherapy alone,primary Glioblastomas,Total resection
+M_43_Grade_2_SRR934826,CGGA_785,SRR934826_1,Grade_2,43,SRP027383,M,brain_tumor,1715,0,O,Neural,0,1,NA,No therapy,Radiotherapy plus with unknown drug,oligodendrogliomas,Total resection
+M_51_Grade_4_SRR4407835,CGGA_789,SRR4407835_1,Grade_4,51,SRP091303,M,brain_tumor,345,1,GBM,Mesenchymal,0,1,0,No therapy,Radiotherapy alone,gliomas,Total resection
+M_56_Grade_3_SRR934827,CGGA_791,SRR934827_1,Grade_3,56,SRP027383,M,brain_tumor,252,1,AA,Classical,1,1,0,Anti-epileptic,Radiotherapy alone,anaplastic astrocytomas,Total resection
+M_61_Grade_2_SRR934828,CGGA_796,SRR934828_1,Grade_2,61,SRP027383,M,brain_tumor,720,1,A,Classical,0,1,1,No therapy,Radiotherapy plus temozolomide,astrocytomas,No data
+M_43_Grade_4_SRR934829,CGGA_802,SRR934829_1,Grade_4,43,SRP027383,M,brain_tumor,681,1,GBM,Mesenchymal,0,1,1,No therapy,Radiotherapy plus with unknown drug,primary Glioblastomas,Total resection
+F_54_Grade_4_SRR934830,CGGA_804,SRR934830_1,Grade_4,54,SRP027383,F,brain_tumor,614,0,GBM,Neural,NA,1,1,No data,Radiotherapy plus with unknown drug,primary Glioblastomas,Total resection
+M_43_Grade_2_SRR934831,CGGA_807,SRR934831_1,Grade_2,43,SRP027383,M,brain_tumor,1692,0,A,Neural,0,1,1,No therapy,Radiotherapy plus temozolomide,astrocytomas,Total resection
+M_39_Grade_4_SRR934832,CGGA_808,SRR934832_1,Grade_4,39,SRP027383,M,brain_tumor,309,1,GBM,Neural,0,1,1,No therapy,Radiotherapy plus with unknown drug,primary Glioblastomas,Total resection
+M_27_Grade_2_SRR4407836,CGGA_812,SRR4407836_1,Grade_2,27,SRP091303,M,brain_tumor,1163,0,O,Neural,0,0,NA,No therapy,Chemotherapy with unknown drug alone,gliomas,Total resection
+F_53_Grade_2_SRR934833,CGGA_815,SRR934833_1,Grade_2,53,SRP027383,F,brain_tumor,1161,0,OA,Neural,NA,1,0,No data,Radiotherapy alone,oligodendroastrocytomas,Total resection
+M_46_Grade_2_SRR934834,CGGA_818,SRR934834_1,Grade_2,46,SRP027383,M,brain_tumor,1155,0,A,Neural,1,1,0,Anti-epileptic,Radiotherapy alone,astrocytomas,Total resection
+M_46_Grade_4_SRR4407837,CGGA_822,SRR4407837_1,Grade_4,46,SRP091303,M,brain_tumor,1324,0,sGBM,Proneural,NA,1,1,No data,Radiotherapy plus with unknown drug,gliomas,Total resection
+M_25_Grade_2_SRR4407838,CGGA_834,SRR4407838_1,Grade_2,25,SRP091303,M,brain_tumor,1151,0,OA,Classical,0,1,0,No therapy,Radiotherapy alone,gliomas,Total resection
+M_31_Grade_2_SRR4407839,CGGA_835,SRR4407839_1,Grade_2,31,SRP091303,M,brain_tumor,517,0,O,Neural,NA,1,NA,No data,Radiotherapy plus with unknown drug,gliomas,Total resection
+M_57_Grade_4_SRR934835,CGGA_837,SRR934835_1,Grade_4,57,SRP027383,M,brain_tumor,432,1,GBM,Classical,0,1,1,No therapy,Radiotherapy plus with unknown drug,primary Glioblastomas,Total resection
+F_36_Grade_2_SRR934836,CGGA_838,SRR934836_1,Grade_2,36,SRP027383,F,brain_tumor,1629,0,OA,Neural,1,1,1,Anti-epileptic,Radiotherapy plus temozolomide,oligodendroastrocytomas,Total resection
+F_64_Grade_4_SRR934837,CGGA_842,SRR934837_1,Grade_4,64,SRP027383,F,brain_tumor,234,1,GBM,Mesenchymal,0,1,1,No therapy,Radiotherapy plus temozolomide,primary Glioblastomas,Total resection
+M_29_Grade_2_SRR934838,CGGA_843,SRR934838_1,Grade_2,29,SRP027383,M,brain_tumor,1143,0,OA,Proneural,1,1,0,Anti-epileptic,Radiotherapy alone,oligodendroastrocytomas,Total resection
+F_55_Grade_4_SRR934839,CGGA_848,SRR934839_1,Grade_4,55,SRP027383,F,brain_tumor,204,0,GBM,Classical,0,1,1,No therapy,Radiotherapy plus with unknown drug,primary Glioblastomas,Total resection
+F_52_Grade_4_SRR934840,CGGA_850,SRR934840_1,Grade_4,52,SRP027383,F,brain_tumor,564,0,GBM,Classical,NA,0,0,No data,No therapy,primary Glioblastomas,Total resection
+M_54_Grade_2_SRR4407840,CGGA_856,SRR4407840_1,Grade_2,54,SRP091303,M,brain_tumor,1297,0,O,Proneural,1,1,NA,Anti-epileptic,Radiotherapy plus with unknown drug,gliomas,Total resection
+M_43_Grade_2_SRR934841,CGGA_858,SRR934841_1,Grade_2,43,SRP027383,M,brain_tumor,1125,0,O,Neural,1,1,0,Anti-epileptic,Radiotherapy alone,oligodendrogliomas,Total resection
+M_57_Grade_4_SRR934842,CGGA_859,SRR934842_1,Grade_4,57,SRP027383,M,brain_tumor,387,1,GBM,Mesenchymal,0,1,0,No therapy,Radiotherapy alone,primary Glioblastomas,Total resection
+M_34_Grade_2_SRR934843,CGGA_864,SRR934843_1,Grade_2,34,SRP027383,M,brain_tumor,1120,0,OA,Neural,1,1,0,Anti-epileptic,Radiotherapy alone,oligodendroastrocytomas,Total resection
+M_37_Grade_2_SRR934844,CGGA_871,SRR934844_1,Grade_2,37,SRP027383,M,brain_tumor,1107,0,O,Proneural,0,1,0,No therapy,Radiotherapy alone,oligodendrogliomas,Total resection
+F_60_Grade_4_SRR934845,CGGA_876,SRR934845_1,Grade_4,60,SRP027383,F,brain_tumor,159,1,GBM,Mesenchymal,NA,NA,NA,No data,No data for chemoradiotherapy,primary Glioblastomas,Total resection
+M_42_Grade_4_SRR934846,CGGA_878,SRR934846_1,Grade_4,42,SRP027383,M,brain_tumor,863,1,GBM,Classical,NA,0,1,No data,Chemotherapy with temozolomide alone,primary Glioblastomas,Total resection
+F_48_Grade_2_SRR934847,CGGA_884,SRR934847_1,Grade_2,48,SRP027383,F,brain_tumor,1131,1,A,Proneural,1,1,1,Anti-epileptic,Radiotherapy plus temozolomide,astrocytomas,No data
+M_35_Grade_2_SRR934848,CGGA_892,SRR934848_1,Grade_2,35,SRP027383,M,brain_tumor,448,0,O,Proneural,NA,1,NA,No data,Radiotherapy plus with unknown drug,oligodendrogliomas,Total resection
+F_37_Grade_2_SRR934849,CGGA_893,SRR934849_1,Grade_2,37,SRP027383,F,brain_tumor,1082,0,OA,Neural,0,1,0,No therapy,Radiotherapy alone,oligodendroastrocytomas,Total resection
+M_38_Grade_2_SRR934850,CGGA_898,SRR934850_1,Grade_2,38,SRP027383,M,brain_tumor,441,0,A,Neural,NA,1,NA,No data,Radiotherapy plus with unknown drug,astrocytomas,Total resection
+M_46_Grade_4_SRR934851,CGGA_899,SRR934851_1,Grade_4,46,SRP027383,M,brain_tumor,231,1,sGBM,Proneural,0,0,1,No therapy,Chemotherapy with unknown drug alone,secondary Glioblastomas,No data
+M_55_Grade_4_SRR934852,CGGA_902,SRR934852_1,Grade_4,55,SRP027383,M,brain_tumor,193,1,GBM,Mesenchymal,NA,NA,NA,No data,No data for chemoradiotherapy,primary Glioblastomas,Total resection
+M_33_Grade_2_SRR934853,CGGA_904,SRR934853_1,Grade_2,33,SRP027383,M,brain_tumor,774,1,A,Proneural,0,1,0,No therapy,Radiotherapy alone,astrocytomas,Total resection
+M_46_Grade_2_SRR934854,CGGA_905,SRR934854_1,Grade_2,46,SRP027383,M,brain_tumor,1068,0,A,Classical,0,1,0,No therapy,Radiotherapy alone,astrocytomas,Total resection
+M_36_Grade_2_SRR934855,CGGA_908,SRR934855_1,Grade_2,36,SRP027383,M,brain_tumor,427,0,A,Proneural,NA,1,NA,No data,Radiotherapy plus with unknown drug,astrocytomas,No data
+F_40_Grade_2_SRR934856,CGGA_909,SRR934856_1,Grade_2,40,SRP027383,F,brain_tumor,1065,0,OA,Proneural,0,0,0,No therapy,No therapy,oligodendroastrocytomas,Total resection
+M_44_Grade_4_SRR934954,CGGA_D02,SRR934954_1,Grade_4,44,SRP027383,M,brain_tumor,484,1,rGBM,Mesenchymal,NA,1,1,No data,Radiotherapy plus with unknown drug,recurrent Glioblastomas,Total resection
+M_44_Grade_4_SRR934961,CGGA_D03,SRR934961_1,Grade_4,44,SRP027383,M,brain_tumor,423,1,GBM,Classical,0,1,1,No therapy,Radiotherapy plus with unknown drug,primary Glioblastomas,Total resection
+M_37_Grade_2_SRR934969,CGGA_D04,SRR934969_1,Grade_2,37,SRP027383,M,brain_tumor,1351,0,A,Neural,0,0,0,No therapy,No therapy,astrocytomas,Total resection
+F_46_Grade_3_SRR934982,CGGA_D06,SRR934982_1,Grade_3,46,SRP027383,F,brain_tumor,1016,0,rAOA,Neural,NA,NA,NA,No data,No data for chemoradiotherapy,recurrent anaplastic oligodendroastrocytomas,No data
+M_36_Grade_2_SRR934983,CGGA_D07,SRR934983_1,Grade_2,36,SRP027383,M,brain_tumor,994,0,O,Neural,1,1,0,Anti-epileptic,Radiotherapy alone,oligodendrogliomas,Total resection
+M_57_Grade_4_SRR934984,CGGA_D09,SRR934984_1,Grade_4,57,SRP027383,M,brain_tumor,233,1,GBM,Classical,0,1,0,No therapy,Radiotherapy alone,primary Glioblastomas,Total resection
+F_53_Grade_3_SRR934949,CGGA_D11,SRR934949_1,Grade_3,53,SRP027383,F,brain_tumor,827,1,AOA,Classical,1,1,1,Anti-epileptic,Radiotherapy plus temozolomide,anaplastic oligodendroastrocytomas,No data
+M_27_Grade_3_SRR934950,CGGA_D14,SRR934950_1,Grade_3,27,SRP027383,M,brain_tumor,459,0,rAOA,Proneural,NA,NA,NA,No data,No data for chemoradiotherapy,recurrent anaplastic oligodendroastrocytomas,Total resection
+F_38_Grade_2_SRR934951,CGGA_D15,SRR934951_1,Grade_2,38,SRP027383,F,brain_tumor,1323,0,OA,Proneural,0,1,0,No therapy,Radiotherapy alone,oligodendroastrocytomas,Total resection
+F_59_Grade_3_SRR934952,CGGA_D16,SRR934952_1,Grade_3,59,SRP027383,F,brain_tumor,261,1,AOA,Mesenchymal,1,1,0,Anti-epileptic,Radiotherapy alone,anaplastic oligodendroastrocytomas,Total resection
+M_20_Grade_3_SRR934953,CGGA_D18,SRR934953_1,Grade_3,20,SRP027383,M,brain_tumor,452,0,AOA,Neural,NA,NA,NA,No data,No data for chemoradiotherapy,anaplastic oligodendroastrocytomas,No data
+F_40_Grade_2_SRR934955,CGGA_D20,SRR934955_1,Grade_2,40,SRP027383,F,brain_tumor,1316,0,A,Neural,1,0,0,Anti-epileptic,No therapy,astrocytomas,Total resection
+F_37_Grade_3_SRR934956,CGGA_D21,SRR934956_1,Grade_3,37,SRP027383,F,brain_tumor,1208,1,AA,Proneural,1,1,0,Anti-epileptic,Radiotherapy alone,anaplastic astrocytomas,Total resection
+F_37_Grade_3_SRR934957,CGGA_D24,SRR934957_1,Grade_3,37,SRP027383,F,brain_tumor,837,1,AOA,Proneural,1,1,0,Anti-epileptic,Radiotherapy alone,anaplastic oligodendroastrocytomas,Total resection
+M_55_Grade_4_SRR934958,CGGA_D26,SRR934958_1,Grade_4,55,SRP027383,M,brain_tumor,263,1,rGBM,Mesenchymal,0,1,0,No therapy,Radiotherapy alone,recurrent Glioblastomas,Total resection
+M_33_Grade_3_SRR934959,CGGA_D27,SRR934959_1,Grade_3,33,SRP027383,M,brain_tumor,1304,0,rAOA,Proneural,1,1,0,Anti-epileptic,Radiotherapy alone,recurrent anaplastic oligodendroastrocytomas,Total resection
+M_36_Grade_2_SRR934960,CGGA_D29,SRR934960_1,Grade_2,36,SRP027383,M,brain_tumor,1297,0,O,Neural,1,1,0,Anti-epileptic,Radiotherapy alone,oligodendrogliomas,Total resection
+M_70_Grade_4_SRR4407841,CGGA_D30,SRR4407841_1,Grade_4,70,SRP091303,M,brain_tumor,215,1,GBM,Neural,0,1,0,No therapy,Radiotherapy alone,gliomas,Total resection
+M_61_Grade_4_SRR934962,CGGA_D32,SRR934962_1,Grade_4,61,SRP027383,M,brain_tumor,358,1,rGBM,Classical,0,0,1,No therapy,Chemotherapy with unknown drug alone,recurrent Glioblastomas,No data
+M_38_Grade_3_SRR934963,CGGA_D33,SRR934963_1,Grade_3,38,SRP027383,M,brain_tumor,116,1,rAA,Neural,0,0,0,No therapy,No therapy,recurrent anaplastic astrocytomas,No data
+M_45_Grade_4_SRR934964,CGGA_D34,SRR934964_1,Grade_4,45,SRP027383,M,brain_tumor,147,1,sGBM,Proneural,0,0,1,No therapy,Chemotherapy with unknown drug alone,secondary Glioblastomas,No data
+F_68_Grade_4_SRR4407842,CGGA_D35,SRR4407842_1,Grade_4,68,SRP091303,F,brain_tumor,661,1,GBM,Mesenchymal,1,1,0,Anti-epileptic,Radiotherapy alone,gliomas,Total resection
+M_58_Grade_4_SRR934965,CGGA_D36,SRR934965_1,Grade_4,58,SRP027383,M,brain_tumor,34,1,rGBM,Mesenchymal,0,0,0,No therapy,No therapy,recurrent Glioblastomas,Total resection
+M_55_Grade_4_SRR934966,CGGA_D37,SRR934966_1,Grade_4,55,SRP027383,M,brain_tumor,965,1,GBM,Mesenchymal,0,1,1,No therapy,Radiotherapy plus temozolomide,primary Glioblastomas,Total resection
+F_41_Grade_4_SRR934967,CGGA_D38,SRR934967_1,Grade_4,41,SRP027383,F,brain_tumor,689,1,rGBM,Classical,NA,1,0,No data,Radiotherapy alone,recurrent Glioblastomas,Total resection
+F_25_Grade_2_SRR934968,CGGA_D39,SRR934968_1,Grade_2,25,SRP027383,F,brain_tumor,355,0,rA,Proneural,NA,NA,NA,No data,No data for chemoradiotherapy,recurrent astrocytomas,No data
+M_44_Grade_2_SRR934970,CGGA_D40,SRR934970_1,Grade_2,44,SRP027383,M,brain_tumor,1211,0,rOA,Neural,1,0,0,Anti-epileptic,No therapy,recurrent oligodendroastrocytomas,No data
+F_18_Grade_3_SRR934971,CGGA_D44,SRR934971_1,Grade_3,18,SRP027383,F,brain_tumor,313,1,AOA,Classical,0,1,0,No therapy,Radiotherapy alone,anaplastic oligodendroastrocytomas,Total resection
+M_28_Grade_3_SRR934972,CGGA_D45,SRR934972_1,Grade_3,28,SRP027383,M,brain_tumor,856,0,rAOA,Proneural,1,0,1,Anti-epileptic,Radiotherapy plus with unknown drug,recurrent anaplastic oligodendroastrocytomas,No data
+F_36_Grade_3_SRR934973,CGGA_D46,SRR934973_1,Grade_3,36,SRP027383,F,brain_tumor,300,1,rAA,Proneural,0,0,1,No therapy,Chemotherapy with unknown drug alone,recurrent anaplastic astrocytomas,Total resection
+M_36_Grade_2_SRR934974,CGGA_D47,SRR934974_1,Grade_2,36,SRP027383,M,brain_tumor,1048,1,OA,Proneural,1,1,1,Anti-epileptic,Radiotherapy plus temozolomide,oligodendroastrocytomas,Total resection
+F_18_Grade_3_SRR934975,CGGA_D48,SRR934975_1,Grade_3,18,SRP027383,F,brain_tumor,221,1,rAOA,Proneural,1,0,1,Anti-epileptic,Radiotherapy plus with unknown drug,recurrent anaplastic oligodendroastrocytomas,No data
+F_60_Grade_4_SRR934976,CGGA_D51,SRR934976_1,Grade_4,60,SRP027383,F,brain_tumor,135,1,rGBM,Mesenchymal,0,1,0,No therapy,Radiotherapy alone,recurrent Glioblastomas,Total resection
+M_46_Grade_3_SRR934977,CGGA_D52,SRR934977_1,Grade_3,46,SRP027383,M,brain_tumor,1103,0,AO,Proneural,1,1,0,Anti-epileptic,Radiotherapy plus temozolomide,anaplastic oligodendrogliomas,Total resection
+M_45_Grade_3_SRR934978,CGGA_D56,SRR934978_1,Grade_3,45,SRP027383,M,brain_tumor,64,1,rAOA,Proneural,0,1,0,No therapy,Radiotherapy alone,recurrent anaplastic oligodendroastrocytomas,No data
+M_40_Grade_4_SRR934979,CGGA_D57,SRR934979_1,Grade_4,40,SRP027383,M,brain_tumor,766,1,GBM,Classical,NA,1,1,No data,Radiotherapy plus with unknown drug,primary Glioblastomas,Total resection
+M_24_Grade_3_SRR934980,CGGA_D58,SRR934980_1,Grade_3,24,SRP027383,M,brain_tumor,181,1,rAA,Neural,0,0,0,No therapy,No therapy,recurrent anaplastic astrocytomas,Total resection
+F_30_Grade_4_SRR934981,CGGA_D59,SRR934981_1,Grade_4,30,SRP027383,F,brain_tumor,1156,0,sGBM,Proneural,0,1,1,No therapy,Radiotherapy plus temozolomide,secondary Glioblastomas,No data
+M_40_Grade_3_SRR934734,CGGA_D61,SRR934734_1,Grade_3,40,SRP027383,M,brain_tumor,2417,0,AO,Neural,0,1,1,No therapy,Radiotherapy plus temozolomide,anaplastic oligodendrogliomas,No data
+F_49_Grade_4_SRR4407844,CGGA_D62,SRR4407844_1,Grade_4,49,SRP091303,F,brain_tumor,514,1,GBM,Classical,0,1,1,No therapy,Radiotherapy plus with unknown drug,gliomas,No data
+M_25_Grade_4_SRR934765,CGGA_D63,SRR934765_1,Grade_4,25,SRP027383,M,brain_tumor,212,1,sGBM,Proneural,0,1,0,No therapy,Radiotherapy alone,secondary Glioblastomas,No data
+M_51_Grade_4_SRR934813,CGGA_D64,SRR934813_1,Grade_4,51,SRP027383,M,brain_tumor,101,1,sGBM,Proneural,0,0,0,No therapy,No therapy,secondary Glioblastomas,No data
+M_36_Grade_3_SRR934990,CGGA_J023,SRR934990_1,Grade_3,36,SRP027383,M,brain_tumor,1028,1,AO,Proneural,0,1,1,No therapy,Radiotherapy plus temozolomide,anaplastic oligodendrogliomas,No data
+F_29_Grade_2_SRR934985,CGGA_J024,SRR934985_1,Grade_2,29,SRP027383,F,brain_tumor,800,0,rA,Neural,0,0,0,No therapy,No therapy,recurrent astrocytomas,No data
+M_38_Grade_2_SRR934986,CGGA_J030,SRR934986_1,Grade_2,38,SRP027383,M,brain_tumor,1065,0,rOA,Neural,1,1,0,Anti-epileptic,Radiotherapy alone,oligodendroastrocytomas,No data
+M_38_Grade_2_SRR934987,CGGA_J042,SRR934987_1,Grade_2,38,SRP027383,M,brain_tumor,767,0,rOA,Classical,1,0,0,Anti-epileptic,No therapy,recurrent oligodendroastrocytomas,No data
+M_55_Grade_4_SRR934988,CGGA_J100,SRR934988_1,Grade_4,55,SRP027383,M,brain_tumor,610,0,rGBM,Proneural,NA,0,NA,No data,No data for chemoradiotherapy,recurrent Glioblastomas,No data
+M_40_Grade_2_SRR934989,CGGA_J130,SRR934989_1,Grade_2,40,SRP027383,M,brain_tumor,792,0,rA,Neural,1,0,0,Anti-epileptic,Radiotherapy alone,recurrent astrocytomas,No data
+MF_85_CON_SRR2422918,MF_85_CON_1,SRR2422918_1,CON,85,GSE53697,F,prefrontal_cortex,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+MF_80_CON_SRR2422919,MF_80_CON_2,SRR2422919_1,CON,80,GSE53697,M,prefrontal_cortex,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+MF_90_CON_SRR2422920,MF_90_CON_3,SRR2422920_1,CON,90,GSE53697,F,prefrontal_cortex,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+MF_79_CON_SRR2422921,MF_79_CON_4,SRR2422921_1,CON,79,GSE53697,F,prefrontal_cortex,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+MF_72_CON_SRR2422922,MF_72_CON_5,SRR2422922_1,CON,72,GSE53697,M,prefrontal_cortex,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+MF_89_CON_SRR2422923,MF_89_CON_6,SRR2422923_1,CON,89,GSE53697,F,prefrontal_cortex,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+MF_62_CON_SRR2422924,MF_62_CON_7,SRR2422924_1,CON,62,GSE53697,F,prefrontal_cortex,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+MF_70_CON_SRR2422925,MF_70_CON_8,SRR2422925_1,CON,70,GSE53697,M,prefrontal_cortex,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+MF_73_CON_SRR1747143,MF_73_CON_18,SRR1747143_1,CON,73,GSE64810,M,prefrontal_cortex,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+MF_91_CON_SRR1747144,MF_91_CON_19,SRR1747144_1,CON,91,GSE64810,M,prefrontal_cortex,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+MF_82_CON_SRR1747145,MF_82_CON_20,SRR1747145_1,CON,82,GSE64810,M,prefrontal_cortex,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+MF_97_CON_SRR1747146,MF_97_CON_21,SRR1747146_1,CON,97,GSE64810,M,prefrontal_cortex,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+MF_91_CON_SRR1747148,MF_91_CON_22,SRR1747148_1,CON,91,GSE64810,M,prefrontal_cortex,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+MF_86_CON_SRR1747147,MF_86_CON_23,SRR1747147_1,CON,86,GSE64810,M,prefrontal_cortex,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+MF_81_CON_SRR1747149,MF_81_CON_24,SRR1747149_1,CON,81,GSE64810,M,prefrontal_cortex,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+MF_79_CON_SRR1747150,MF_79_CON_25,SRR1747150_1,CON,79,GSE64810,M,prefrontal_cortex,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+MF_63_CON_SRR1747151,MF_63_CON_26,SRR1747151_1,CON,63,GSE64810,M,prefrontal_cortex,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+MF_66_CON_SRR1747152,MF_66_CON_27,SRR1747152_1,CON,66,GSE64810,M,prefrontal_cortex,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+MF_69_CON_SRR1747153,MF_69_CON_28,SRR1747153_1,CON,69,GSE64810,M,prefrontal_cortex,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+MF_79_CON_SRR1747154,MF_79_CON_29,SRR1747154_1,CON,79,GSE64810,M,prefrontal_cortex,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+MF_61_CON_SRR1747155,MF_61_CON_30,SRR1747155_1,CON,61,GSE64810,M,prefrontal_cortex,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+MF_58_CON_SRR1747156,MF_58_CON_31,SRR1747156_1,CON,58,GSE64810,M,prefrontal_cortex,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+MF_70_CON_SRR1747157,MF_70_CON_32,SRR1747157_1,CON,70,GSE64810,M,prefrontal_cortex,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+MF_73_CON_SRR1747159,MF_73_CON_33,SRR1747159_1,CON,73,GSE64810,M,prefrontal_cortex,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+MF_66_CON_SRR1747158,MF_66_CON_34,SRR1747158_1,CON,66,GSE64810,M,prefrontal_cortex,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+MF_60_CON_SRR1747160,MF_60_CON_35,SRR1747160_1,CON,60,GSE64810,M,prefrontal_cortex,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+MF_76_CON_SRR1747161,MF_76_CON_36,SRR1747161_1,CON,76,GSE64810,M,prefrontal_cortex,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+MF_61_CON_SRR1747162,MF_61_CON_37,SRR1747162_1,CON,61,GSE64810,M,prefrontal_cortex,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+MF_62_CON_SRR1747163,MF_62_CON_38,SRR1747163_1,CON,62,GSE64810,M,prefrontal_cortex,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+MF_69_CON_SRR1747164,MF_69_CON_39,SRR1747164_1,CON,69,GSE64810,M,prefrontal_cortex,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+MF_61_CON_SRR1747165,MF_61_CON_40,SRR1747165_1,CON,61,GSE64810,M,prefrontal_cortex,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+MF_93_CON_SRR1747167,MF_93_CON_41,SRR1747167_1,CON,93,GSE64810,M,prefrontal_cortex,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+MF_88_CON_SRR1747166,MF_88_CON_42,SRR1747166_1,CON,88,GSE64810,M,prefrontal_cortex,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+MF_53_CON_SRR1747168,MF_53_CON_43,SRR1747168_1,CON,53,GSE64810,M,prefrontal_cortex,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+MF_57_CON_SRR1747169,MF_57_CON_44,SRR1747169_1,CON,57,GSE64810,M,prefrontal_cortex,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+MF_43_CON_SRR1747170,MF_43_CON_45,SRR1747170_1,CON,43,GSE64810,M,prefrontal_cortex,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+MF_40_CON_SRR1747172,MF_40_CON_46,SRR1747172_1,CON,40,GSE64810,M,prefrontal_cortex,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+MF_46_CON_SRR1747171,MF_46_CON_47,SRR1747171_1,CON,46,GSE64810,M,prefrontal_cortex,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+MF_44_CON_SRR1747173,MF_44_CON_48,SRR1747173_1,CON,44,GSE64810,M,prefrontal_cortex,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+MF_57_CON_SRR1747174,MF_57_CON_49,SRR1747174_1,CON,57,GSE64810,M,prefrontal_cortex,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+MF_80_CON_SRR1747175,MF_80_CON_50,SRR1747175_1,CON,80,GSE64810,M,prefrontal_cortex,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+MF_74_CON_SRR1747176,MF_74_CON_51,SRR1747176_1,CON,74,GSE64810,M,prefrontal_cortex,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+MF_69_CON_SRR1747177,MF_69_CON_52,SRR1747177_1,CON,69,GSE64810,M,prefrontal_cortex,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+MF_76_CON_SRR1747178,MF_76_CON_53,SRR1747178_1,CON,76,GSE64810,M,prefrontal_cortex,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+MF_78_CON_SRR1747179,MF_78_CON_54,SRR1747179_1,CON,78,GSE64810,M,prefrontal_cortex,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+MF_87_CON_SRR1747180,MF_87_CON_55,SRR1747180_1,CON,87,GSE64810,M,prefrontal_cortex,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+MF_86_CON_SRR1747181,MF_86_CON_56,SRR1747181_1,CON,86,GSE64810,M,prefrontal_cortex,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+MF_68_CON_SRR1747183,MF_68_CON_57,SRR1747183_1,CON,68,GSE64810,M,prefrontal_cortex,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+MF_54_CON_SRR1747182,MF_54_CON_58,SRR1747182_1,CON,54,GSE64810,M,prefrontal_cortex,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+MF_106_CON_SRR1747184,MF_106_CON_59,SRR1747184_1,CON,106,GSE64810,M,prefrontal_cortex,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+MF_52_CON_SRR1747185,MF_52_CON_60,SRR1747185_1,CON,52,GSE64810,M,prefrontal_cortex,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+MF_46_CON_SRR1747186,MF_46_CON_61,SRR1747186_1,CON,46,GSE64810,M,prefrontal_cortex,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+MF_36_CON_SRR1747187,MF_36_CON_62,SRR1747187_1,CON,36,GSE64810,M,prefrontal_cortex,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+MF_55_CON_SRR1747188,MF_55_CON_63,SRR1747188_1,CON,55,GSE64810,M,prefrontal_cortex,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+MF_57_CON_SRR1747189,MF_57_CON_64,SRR1747189_1,CON,57,GSE64810,M,prefrontal_cortex,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+MF_64_CON_SRR1747191,MF_64_CON_65,SRR1747191_1,CON,64,GSE64810,M,prefrontal_cortex,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+MF_66_CON_SRR1747190,MF_66_CON_66,SRR1747190_1,CON,66,GSE64810,M,prefrontal_cortex,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+MF_57_CON_SRR5724998,MF_57_CON_165,SRR5724998_1,CON,57,GSE100297,F,optic_chiasm,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+MF_57_CON_SRR5724999,MF_57_CON_166,SRR5724999_1,CON,57,GSE100297,F,optic_chiasm,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+MF_57_CON_SRR5725000,MF_57_CON_167,SRR5725000_1,CON,57,GSE100297,F,optic_chiasm,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+MF_57_CON_SRR5725001,MF_57_CON_168,SRR5725001_1,CON,57,GSE100297,F,optic_chiasm,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+MF_57_CON_SRR5725002,MF_57_CON_169,SRR5725002_1,CON,57,GSE100297,F,optic_chiasm,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+F_85_CON_SRR1931819,F_85_CON_63,SRR1931819_1,CON,85,GSE67333,F,hippocampus,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+M_90_CON_SRR1931818,M_90_CON_64,SRR1931818_1,CON,90,GSE67333,M,hippocampus,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+M_83_CON_SRR1931817,M_83_CON_65,SRR1931817_1,CON,83,GSE67333,M,hippocampus,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+F_77_CON_SRR1931816,F_77_CON_66,SRR1931816_1,CON,77,GSE67333,F,hippocampus,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
