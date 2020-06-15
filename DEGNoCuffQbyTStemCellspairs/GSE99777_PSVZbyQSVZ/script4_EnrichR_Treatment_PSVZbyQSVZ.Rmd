@@ -1,0 +1,991 @@
+---
+title: "script4_EnrichR_Treatment_PSVZbyQSVZ"
+author: "Shradha Mukherjee"
+date: "Last updated January, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+1) This pipeline does a global miRNA target scan using enrichR as follows:
+a) miRNAs target analysis (not just miR142 but other miRNAs too), using "TargetScan_microRNA_2017", "miRTarBase_2017", 
+b) Gene ontology "GO_Biological_Process_2018". 
+c) Pathway analysis "KEGG_2018"
+d) Curated "OMIM_Disease", "OMIM_Expanded", all diseases 
+e) Tissue type enrichment form human "Human_Gene_Atlas" and mouse "Mouse_Gene_Atlas", 
+f) Potential drugs that can target the module genes "DrugMatrix" and "DSigDB" .
+g) Transcription factor regulation "ChEA 2016" and "ENCODE TF ChIP-seq 2015"
+h) Epigenetic regulation "Epigenomics Roadmap HM ChIP-seq" and "ENCODE Histone Modifications 2015"
+i) cancer cell lines "Cancer Cell Line Encyclopedia" and "NCI-60 Cancer Cell Lines"
+
+2)To use this code for different DEG list of genes change the genes in mygenes
+
+
+Select color module of interest
+###Step24: Load libraries and save working directory
+```{r}
+library(WGCNA)
+library(ggmap)#plots
+library(gplots)#plots
+library(RColorBrewer)#color pallet
+library(Hmisc)#for corelation plot
+library(enrichR)#GO analysis and pathway analysis
+library(dplyr)
+library(plyr)
+library(qpcR)
+options(stringsAsFactors = FALSE)
+```
+
+```{r}
+wd<-getwd()
+```
+
+###Step25: Import test dataset
+#Import the test dataset (your new dataset) with genes 
+```{r}
+#Import new DEG data we got from our analysis containing genes
+load(file="./DEG_AllDEGmethods_results/DEG_AllDEGmethodsnames.RData")
+#DEG_AllDEGmethodsnames=as.data.frame(DEG_AllDEGmethodsnames)
+```
+
+```{r}
+mygenes=c(DEG_AllDEGmethodsnames[,1],DEG_AllDEGmethodsnames[,2], DEG_AllDEGmethodsnames[,3],DEG_AllDEGmethodsnames[,4])
+mygenes=as.data.frame(mygenes)
+mygenes$Category="PSVZbyQSVZ"
+colnames(mygenes)=c("Gene", "Category")
+mygenes=mygenes[!duplicated(mygenes$Gene),]
+dim(mygenes)
+head(mygenes)
+```
+
+```{r}
+#Export for use in WGCNA enrichment test
+write.csv(mygenes, "ForWGCNA_DEGup_PSVZbyQSVZ.csv")
+```
+
+###########################################################################################Comparison with enrichR database STARTs here#########################################################################################
+
+###Step26: Get enrichR databases of interest and perform enrichment analysis
+```{r}
+dbs <- listEnrichrDbs()
+dbs
+```
+
+```{r}
+#select GO process and KEGG pathway of choice
+dbs_select<-c("GO_Biological_Process_2018", "KEGG_2016", "TargetScan_microRNA_2017", "miRTarBase_2017", "OMIM_Disease", "OMIM_Expanded", "Human_Gene_Atlas", "Mouse_Gene_Atlas", "DrugMatrix", "DSigDB","Epigenomics_Roadmap_HM_ChIP-seq", "ENCODE_and_ChEA_Consensus_TFs_from_ChIP-X")
+dbs_select
+```
+
+```{r}
+#compare our genes from PSVZbyQSVZ to selected GO process and KEGG pathway
+enriched <- enrichr(mygenes$Gene, dbs_select)
+```
+
+###########################################################################################GO analysis############################################################################################################
+
+###Step27: GO Biological Process results
+
+```{r}
+#Export GO Biological Process result
+my_genes_GO_BP<-as.data.frame(enriched[["GO_Biological_Process_2018"]])
+my_genes_GO_BP_sig0.05<-my_genes_GO_BP[my_genes_GO_BP$Adjusted.P.value <0.05,]
+head(my_genes_GO_BP_sig0.05)
+head(my_genes_GO_BP)
+```
+
+```{r}
+#Creating a new column with number of genes that overlapped
+my_genes_GO_BP_sig0.05_new<-my_genes_GO_BP_sig0.05
+
+my_genes_GO_BP_sig0.05_new$Overlap_Number<-my_genes_GO_BP_sig0.05$Overlap
+
+my_genes_GO_BP_sig0.05_new$Overlap_Number<-gsub("/.*","",my_genes_GO_BP_sig0.05_new$Overlap_Number)
+
+my_genes_GO_BP_sig0.05_new$Overlap_Number<-as.integer(my_genes_GO_BP_sig0.05_new$Overlap_Number)
+
+write.csv(my_genes_GO_BP_sig0.05_new,file="Step27_result_GO_Biological_Process_2018_sig0.05_PSVZbyQSVZ.csv")
+```
+
+```{r}
+# Basic barplot
+folder=getwd()
+pdf(paste0("Step27_plot_Sig0.05-GO_Biological_Process_plot_", "PSVZbyQSVZ",".pdf"), height=10, width=5)
+p1<-ggplot(data=my_genes_GO_BP_sig0.05_new, aes(x=Term, y=Overlap_Number, fill=Adjusted.P.value))+
+  geom_bar(position="stack", stat="identity")+
+  labs(title=paste0(folder,"_","GO_Biological_Process_Comparison"))+
+  labs(x="Module names")+
+  theme(axis.text.x=element_text(angle=90,hjust=1)) +
+  labs(y="Number of genes overlap")+
+  labs(caption="based on enrichR database")+
+  scale_fill_gradient(low="black",high="red")
+  #theme(plot.margin = margin(2,2,2,2, "cm"), plot.background = element_rect(fill = "white"))
+print(p1)
+dev.off()
+```
+
+```{r}
+#Creating a new column with number of genes that overlapped
+my_genes_GO_BP_new<-my_genes_GO_BP
+
+my_genes_GO_BP_new$Overlap_Number<-my_genes_GO_BP$Overlap
+
+my_genes_GO_BP_new$Overlap_Number<-gsub("/.*","",my_genes_GO_BP_new$Overlap_Number)
+
+my_genes_GO_BP_new$Overlap_Number<-as.integer(my_genes_GO_BP_new$Overlap_Number)
+
+write.csv(my_genes_GO_BP_new,file="Step27_result_GO_Biological_Process_2018_PSVZbyQSVZ.csv")
+```
+
+```{r}
+# Basic barplot
+folder=getwd()
+pdf(paste0("Step27_plot_GO_Biological_Process_plot_", "PSVZbyQSVZ",".pdf"), height=10, width=5)
+p2<-ggplot(data=my_genes_GO_BP_new, aes(x=Term, y=Overlap_Number, fill=Adjusted.P.value))+
+  geom_bar(position="stack", stat="identity")+
+  labs(title=paste0(folder,"_","GO_Biological_Process_Comparison"))+
+  labs(x="Module names")+
+  theme(axis.text.x=element_text(angle=90,hjust=1)) +
+  labs(y="Number of genes overlap")+
+  labs(caption="based on enrichR database")+
+  scale_fill_gradient(low="black",high="red")
+  #theme(plot.margin = margin(2,2,2,2, "cm"), plot.background = element_rect(fill = "white"))
+print(p2)
+dev.off()
+```
+
+###########################################################################################KEEG pathway analysis############################################################################################################
+
+###Step28: KEGG pathway results
+
+```{r}
+#Export KEGG pathway result
+my_genes_KEGG<-as.data.frame(enriched[["KEGG_2016"]])
+my_genes_KEGG_sig0.05<-my_genes_KEGG[my_genes_KEGG$Adjusted.P.value <0.05,]
+head(my_genes_KEGG_sig0.05)
+head(my_genes_KEGG)
+```
+
+```{r}
+#Creating a new column with number of genes that overlapped
+my_genes_KEGG_sig0.05_new<-my_genes_KEGG_sig0.05
+
+my_genes_KEGG_sig0.05_new$Overlap_Number<-my_genes_KEGG_sig0.05$Overlap
+
+my_genes_KEGG_sig0.05_new$Overlap_Number<-gsub("/.*","",my_genes_KEGG_sig0.05_new$Overlap_Number)
+
+my_genes_KEGG_sig0.05_new$Overlap_Number<-as.integer(my_genes_KEGG_sig0.05_new$Overlap_Number)
+
+write.csv(my_genes_KEGG_sig0.05_new,file="Step28_result_KEGG_Pathway_2016_sig0.05_PSVZbyQSVZ.csv")
+```
+
+```{r}
+# Basic barplot
+folder=getwd()
+pdf(paste0("Step28_plot_Sig0.05-KEGG_Pathway_plot_", "PSVZbyQSVZ",".pdf"), height=10, width=5)
+p3<-ggplot(data=my_genes_KEGG_sig0.05_new, aes(x=Term, y=Overlap_Number, fill=Adjusted.P.value))+
+  geom_bar(position="stack", stat="identity")+
+  labs(title=paste0(folder,"_","KEGG_Pathway_Comparison"))+
+  labs(x="Module names")+
+  theme(axis.text.x=element_text(angle=90,hjust=1)) +
+  labs(y="Number of genes overlap")+
+  labs(caption="based on enrichR database")+
+  scale_fill_gradient(low="black",high="red")
+  #theme(plot.margin = margin(2,2,2,2, "cm"), plot.background = element_rect(fill = "white"))
+print(p3)
+dev.off()
+```
+
+```{r}
+#Creating a new column with number of genes that overlapped
+my_genes_KEGG_new<-my_genes_KEGG
+
+my_genes_KEGG_new$Overlap_Number<-my_genes_KEGG$Overlap
+
+my_genes_KEGG_new$Overlap_Number<-gsub("/.*","",my_genes_KEGG_new$Overlap_Number)
+
+my_genes_KEGG_new$Overlap_Number<-as.integer(my_genes_KEGG_new$Overlap_Number)
+
+write.csv(my_genes_KEGG_new,file="Step28_result_KEGG_Pathway_2016_PSVZbyQSVZ.csv")
+```
+
+```{r}
+# Basic barplot
+folder=getwd()
+pdf(paste0("Step28_plot_KEGG_Pathway_plot_", "PSVZbyQSVZ",".pdf"), height=10, width=5)
+p4<-ggplot(data=my_genes_KEGG_new, aes(x=Term, y=Overlap_Number, fill=Adjusted.P.value))+
+  geom_bar(position="stack", stat="identity")+
+  labs(title=paste0(folder,"_","KEGG_Pathway_Comparison"))+
+  labs(x="Module names")+
+  theme(axis.text.x=element_text(angle=90,hjust=1)) +
+  labs(y="Number of genes overlap")+
+  labs(caption="based on enrichR database")+
+  scale_fill_gradient(low="black",high="red")
+  #theme(plot.margin = margin(2,2,2,2, "cm"), plot.background = element_rect(fill = "white"))
+print(p4)
+dev.off()
+```
+
+###########################################################################################TargetScan base analysis############################################################################################################
+
+###Step29: TargetScan target genes analysis results
+
+```{r}
+#Export TargetScan pathway result
+my_genes_TargetScan<-as.data.frame(enriched[["TargetScan_microRNA_2017"]])
+my_genes_TargetScan_sig0.05<-my_genes_TargetScan[my_genes_TargetScan$Adjusted.P.value <0.05,]
+head(my_genes_TargetScan_sig0.05)
+head(my_genes_TargetScan)
+```
+
+```{r}
+#Creating a new column with number of genes that overlapped
+my_genes_TargetScan_sig0.05_new<-my_genes_TargetScan_sig0.05
+
+my_genes_TargetScan_sig0.05_new$Overlap_Number<-my_genes_TargetScan_sig0.05$Overlap
+
+my_genes_TargetScan_sig0.05_new$Overlap_Number<-gsub("/.*","",my_genes_TargetScan_sig0.05_new$Overlap_Number)
+
+my_genes_TargetScan_sig0.05_new$Overlap_Number<-as.integer(my_genes_TargetScan_sig0.05_new$Overlap_Number)
+
+write.csv(my_genes_TargetScan_sig0.05_new,file="Step29_result_TargetScan_microRNA_2017_sig0.05_PSVZbyQSVZ.csv")
+```
+
+```{r}
+# Basic barplot
+folder=getwd()
+pdf(paste0("Step29_plot_sig0.05-TargetScan_Pathway_plot_", "PSVZbyQSVZ",".pdf"), height=10, width=5)
+p5<-ggplot(data=my_genes_TargetScan_sig0.05_new, aes(x=Term, y=Overlap_Number, fill=Adjusted.P.value))+
+  geom_bar(position="stack", stat="identity")+
+  labs(title=paste0(folder,"_","TargetScan_Gene_Targets_Comparison"))+
+  labs(x="Module names")+
+  theme(axis.text.x=element_text(angle=90,hjust=1)) +
+  labs(y="Number of genes overlap")+
+  labs(caption="based on data from enrichR")+
+  scale_fill_gradient(low="black",high="red")
+  #theme(plot.margin = margin(2,2,2,2, "cm"), plot.background = element_rect(fill = "white"))
+print(p5)
+dev.off()
+```
+
+```{r}
+#Creating a new column with number of genes that overlapped
+my_genes_TargetScan_new<-my_genes_TargetScan
+
+my_genes_TargetScan_new$Overlap_Number<-my_genes_TargetScan$Overlap
+
+my_genes_TargetScan_new$Overlap_Number<-gsub("/.*","",my_genes_TargetScan_new$Overlap_Number)
+
+my_genes_TargetScan_new$Overlap_Number<-as.integer(my_genes_TargetScan_new$Overlap_Number)
+
+write.csv(my_genes_TargetScan_new,file="Step29_result_TargetScan_microRNA_2017_PSVZbyQSVZ.csv")
+```
+
+```{r}
+# Basic barplot
+folder=getwd()
+pdf(paste0("Step29_plot_TargetScan_Pathway_plot_", "PSVZbyQSVZ",".pdf"), height=10, width=5)
+p6<-ggplot(data=my_genes_TargetScan_new, aes(x=Term, y=Overlap_Number, fill=Adjusted.P.value))+
+  geom_bar(position="stack", stat="identity")+
+  labs(title=paste0(folder,"_","TargetScan_Gene_Targets_Comparison"))+
+  labs(x="Module names")+
+  theme(axis.text.x=element_text(angle=90,hjust=1)) +
+  labs(y="Number of genes overlap")+
+  labs(caption="based on data from enrichR")+
+  scale_fill_gradient(low="black",high="red")
+  #theme(plot.margin = margin(2,2,2,2, "cm"), plot.background = element_rect(fill = "white"))
+print(p6)
+dev.off()
+```
+
+###########################################################################################miRTarBase base analysis############################################################################################################
+
+###Step30: miRTarBase target genes analysis results
+
+```{r}
+#Export miRTarBase pathway result
+my_genes_miRTarBase<-as.data.frame(enriched[["miRTarBase_2017"]])
+my_genes_miRTarBase_sig0.05<-my_genes_miRTarBase[my_genes_miRTarBase$Adjusted.P.value <0.05,]
+head(my_genes_miRTarBase_sig0.05)
+head(my_genes_miRTarBase)
+```
+
+```{r}
+#Creating a new column with number of genes that overlapped
+my_genes_miRTarBase_sig0.05_new<-my_genes_miRTarBase_sig0.05
+
+my_genes_miRTarBase_sig0.05_new$Overlap_Number<-my_genes_miRTarBase_sig0.05$Overlap
+
+my_genes_miRTarBase_sig0.05_new$Overlap_Number<-gsub("/.*","",my_genes_miRTarBase_sig0.05_new$Overlap_Number)
+
+my_genes_miRTarBase_sig0.05_new$Overlap_Number<-as.integer(my_genes_miRTarBase_sig0.05_new$Overlap_Number)
+
+write.csv(my_genes_miRTarBase_sig0.05_new,file="Step30_result_miRTarBase_2017_sig0.05_PSVZbyQSVZ.csv")
+```
+
+```{r}
+# Basic barplot
+folder=getwd()
+pdf(paste0("Step30_plot_sig0.05-miRTarBase_Pathway_plot_", "PSVZbyQSVZ",".pdf"), height=10, width=5)
+p7<-ggplot(data=my_genes_miRTarBase_sig0.05_new, aes(x=Term, y=Overlap_Number, fill=Adjusted.P.value))+
+  geom_bar(position="stack", stat="identity")+
+  labs(title=paste0(folder,"_","miRTarBase_Gene_Targets_Comparison"))+
+  labs(x="Module names")+
+  theme(axis.text.x=element_text(angle=90,hjust=1)) +
+  labs(y="Number of genes overlap")+
+  labs(caption="based on data from enrichR")+
+  scale_fill_gradient(low="black",high="red")
+  #theme(plot.margin = margin(2,2,2,2, "cm"), plot.background = element_rect(fill = "white"))
+print(p7)
+dev.off()
+```
+
+```{r}
+#Creating a new column with number of genes that overlapped
+my_genes_miRTarBase_new<-my_genes_miRTarBase
+
+my_genes_miRTarBase_new$Overlap_Number<-my_genes_miRTarBase$Overlap
+
+my_genes_miRTarBase_new$Overlap_Number<-gsub("/.*","",my_genes_miRTarBase_new$Overlap_Number)
+
+my_genes_miRTarBase_new$Overlap_Number<-as.integer(my_genes_miRTarBase_new$Overlap_Number)
+
+write.csv(my_genes_miRTarBase_new,file="Step30_result_miRTarBase_2017_PSVZbyQSVZ.csv")
+```
+
+```{r}
+# Basic barplot
+folder=getwd()
+pdf(paste0("Step30_plot_miRTarBase_Pathway_plot_", "PSVZbyQSVZ",".pdf"), height=10, width=5)
+p8<-ggplot(data=my_genes_miRTarBase_new, aes(x=Term, y=Overlap_Number, fill=Adjusted.P.value))+
+  geom_bar(position="stack", stat="identity")+
+  labs(title=paste0(folder,"_","miRTarBase_Gene_Targets_Comparison"))+
+  labs(x="Module names")+
+  theme(axis.text.x=element_text(angle=90,hjust=1)) +
+  labs(y="Number of genes overlap")+
+  labs(caption="based on data from enrichR")+
+  scale_fill_gradient(low="black",high="red")
+  #theme(plot.margin = margin(2,2,2,2, "cm"), plot.background = element_rect(fill = "white"))
+print(p8)
+dev.off()
+```
+
+###########################################################################################OMIM_Disease base analysis############################################################################################################
+
+###Step31: OMIM_Disease target genes analysis results
+
+```{r}
+#Export OMIM_Disease pathway result
+my_genes_OMIM_Disease<-as.data.frame(enriched[["OMIM_Disease"]])
+my_genes_OMIM_Disease_sig0.05<-my_genes_OMIM_Disease[my_genes_OMIM_Disease$Adjusted.P.value <0.05,]
+head(my_genes_OMIM_Disease_sig0.05)
+head(my_genes_OMIM_Disease)
+```
+
+```{r}
+#Creating a new column with number of genes that overlapped
+my_genes_OMIM_Disease_sig0.05_new<-my_genes_OMIM_Disease_sig0.05
+
+my_genes_OMIM_Disease_sig0.05_new$Overlap_Number<-my_genes_OMIM_Disease_sig0.05$Overlap
+
+my_genes_OMIM_Disease_sig0.05_new$Overlap_Number<-gsub("/.*","",my_genes_OMIM_Disease_sig0.05_new$Overlap_Number)
+
+my_genes_OMIM_Disease_sig0.05_new$Overlap_Number<-as.integer(my_genes_OMIM_Disease_sig0.05_new$Overlap_Number)
+
+write.csv(my_genes_OMIM_Disease_sig0.05_new,file="Step31_result_OMIM_Disease_sig0.05_PSVZbyQSVZ.csv")
+```
+
+```{r}
+# Basic barplot
+folder=getwd()
+pdf(paste0("Step31_plot_sig0.05-OMIM_Disease_Pathway_plot_", "PSVZbyQSVZ",".pdf"), height=10, width=5)
+p9<-ggplot(data=my_genes_OMIM_Disease_sig0.05_new, aes(x=Term, y=Overlap_Number, fill=Adjusted.P.value))+
+  geom_bar(position="stack", stat="identity")+
+  labs(title=paste0(folder,"_","OMIM_Disease_Gene_Targets_Comparison"))+
+  labs(x="Module names")+
+  theme(axis.text.x=element_text(angle=90,hjust=1)) +
+  labs(y="Number of genes overlap")+
+  labs(caption="based on data from enrichR")+
+  scale_fill_gradient(low="black",high="red")
+  #theme(plot.margin = margin(2,2,2,2, "cm"), plot.background = element_rect(fill = "white"))
+print(p9)
+dev.off()
+```
+
+```{r}
+#Creating a new column with number of genes that overlapped
+my_genes_OMIM_Disease_new<-my_genes_OMIM_Disease
+
+my_genes_OMIM_Disease_new$Overlap_Number<-my_genes_OMIM_Disease$Overlap
+
+my_genes_OMIM_Disease_new$Overlap_Number<-gsub("/.*","",my_genes_OMIM_Disease_new$Overlap_Number)
+
+my_genes_OMIM_Disease_new$Overlap_Number<-as.integer(my_genes_OMIM_Disease_new$Overlap_Number)
+
+write.csv(my_genes_OMIM_Disease_new,file="Step31_result_OMIM_Disease_PSVZbyQSVZ.csv")
+```
+
+```{r}
+# Basic barplot
+folder=getwd()
+pdf(paste0("Step31_plot_OMIM_Disease_Pathway_plot_", "PSVZbyQSVZ",".pdf"), height=10, width=5)
+p10<-ggplot(data=my_genes_OMIM_Disease_new, aes(x=Term, y=Overlap_Number, fill=Adjusted.P.value))+
+  geom_bar(position="stack", stat="identity")+
+  labs(title=paste0(folder,"_","OMIM_Disease_Gene_Targets_Comparison"))+
+  labs(x="Module names")+
+  theme(axis.text.x=element_text(angle=90,hjust=1)) +
+  labs(y="Number of genes overlap")+
+  labs(caption="based on data from enrichR")+
+  scale_fill_gradient(low="black",high="red")
+  #theme(plot.margin = margin(2,2,2,2, "cm"), plot.background = element_rect(fill = "white"))
+print(p10)
+dev.off()
+```
+
+###########################################################################################OMIM_Expanded base analysis############################################################################################################
+
+###Step32: OMIM_Expanded target genes analysis results
+
+```{r}
+#Export OMIM_Expanded pathway result
+my_genes_OMIM_Expanded<-as.data.frame(enriched[["OMIM_Expanded"]])
+my_genes_OMIM_Expanded_sig0.05<-my_genes_OMIM_Expanded[my_genes_OMIM_Expanded$Adjusted.P.value <0.05,]
+head(my_genes_OMIM_Expanded_sig0.05)
+head(my_genes_OMIM_Expanded)
+```
+
+```{r}
+#Creating a new column with number of genes that overlapped
+my_genes_OMIM_Expanded_sig0.05_new<-my_genes_OMIM_Expanded_sig0.05
+
+my_genes_OMIM_Expanded_sig0.05_new$Overlap_Number<-my_genes_OMIM_Expanded_sig0.05$Overlap
+
+my_genes_OMIM_Expanded_sig0.05_new$Overlap_Number<-gsub("/.*","",my_genes_OMIM_Expanded_sig0.05_new$Overlap_Number)
+
+my_genes_OMIM_Expanded_sig0.05_new$Overlap_Number<-as.integer(my_genes_OMIM_Expanded_sig0.05_new$Overlap_Number)
+
+write.csv(my_genes_OMIM_Expanded_sig0.05_new,file="Step32_result_OMIM_Expanded_sig0.05_PSVZbyQSVZ.csv")
+```
+
+```{r}
+# Basic barplot
+folder=getwd()
+pdf(paste0("Step32_plot_sig0.05-OMIM_Expanded_Pathway_plot_", "PSVZbyQSVZ",".pdf"), height=10, width=5)
+p11<-ggplot(data=my_genes_OMIM_Expanded_sig0.05_new, aes(x=Term, y=Overlap_Number, fill=Adjusted.P.value))+
+  geom_bar(position="stack", stat="identity")+
+  labs(title=paste0(folder,"_","OMIM_Expanded_Gene_Targets_Comparison"))+
+  labs(x="Module names")+
+  theme(axis.text.x=element_text(angle=90,hjust=1)) +
+  labs(y="Number of genes overlap")+
+  labs(caption="based on data from enrichR")+
+  scale_fill_gradient(low="black",high="red")
+  #theme(plot.margin = margin(2,2,2,2, "cm"), plot.background = element_rect(fill = "white"))
+print(p11)
+dev.off()
+```
+
+```{r}
+#Creating a new column with number of genes that overlapped
+my_genes_OMIM_Expanded_new<-my_genes_OMIM_Expanded
+
+my_genes_OMIM_Expanded_new$Overlap_Number<-my_genes_OMIM_Expanded$Overlap
+
+my_genes_OMIM_Expanded_new$Overlap_Number<-gsub("/.*","",my_genes_OMIM_Expanded_new$Overlap_Number)
+
+my_genes_OMIM_Expanded_new$Overlap_Number<-as.integer(my_genes_OMIM_Expanded_new$Overlap_Number)
+
+write.csv(my_genes_OMIM_Expanded_new,file="Step32_result_OMIM_Expanded_PSVZbyQSVZ.csv")
+```
+
+```{r}
+# Basic barplot
+folder=getwd()
+pdf(paste0("Step32_plot_OMIM_Expanded_Pathway_plot_", "PSVZbyQSVZ",".pdf"), height=10, width=5)
+p12<-ggplot(data=my_genes_OMIM_Expanded_new, aes(x=Term, y=Overlap_Number, fill=Adjusted.P.value))+
+  geom_bar(position="stack", stat="identity")+
+  labs(title=paste0(folder,"_","OMIM_Expanded_Gene_Targets_Comparison"))+
+  labs(x="Module names")+
+  theme(axis.text.x=element_text(angle=90,hjust=1)) +
+  labs(y="Number of genes overlap")+
+  labs(caption="based on data from enrichR")+
+  scale_fill_gradient(low="black",high="red")
+  #theme(plot.margin = margin(2,2,2,2, "cm"), plot.background = element_rect(fill = "white"))
+print(p12)
+dev.off()
+```
+
+###########################################################################################Human_Gene_Atlas base analysis############################################################################################################
+
+###Step33: Human_Gene_Atlas target genes analysis results
+
+```{r}
+#Export Human_Gene_Atlas pathway result
+my_genes_Human_Gene_Atlas<-as.data.frame(enriched[["Human_Gene_Atlas"]])
+my_genes_Human_Gene_Atlas_sig0.05<-my_genes_Human_Gene_Atlas[my_genes_Human_Gene_Atlas$Adjusted.P.value <0.05,]
+head(my_genes_Human_Gene_Atlas_sig0.05)
+head(my_genes_Human_Gene_Atlas)
+```
+
+```{r}
+#Creating a new column with number of genes that overlapped
+my_genes_Human_Gene_Atlas_sig0.05_new<-my_genes_Human_Gene_Atlas_sig0.05
+
+my_genes_Human_Gene_Atlas_sig0.05_new$Overlap_Number<-my_genes_Human_Gene_Atlas_sig0.05$Overlap
+
+my_genes_Human_Gene_Atlas_sig0.05_new$Overlap_Number<-gsub("/.*","",my_genes_Human_Gene_Atlas_sig0.05_new$Overlap_Number)
+
+my_genes_Human_Gene_Atlas_sig0.05_new$Overlap_Number<-as.integer(my_genes_Human_Gene_Atlas_sig0.05_new$Overlap_Number)
+
+write.csv(my_genes_Human_Gene_Atlas_sig0.05_new,file="Step33_result_Human_Gene_Atlas_sig0.05_PSVZbyQSVZ.csv")
+```
+
+```{r}
+# Basic barplot
+folder=getwd()
+pdf(paste0("Step33_plot_sig0.05-Human_Gene_Atlas_Pathway_plot_", "PSVZbyQSVZ",".pdf"), height=10, width=5)
+p13<-ggplot(data=my_genes_Human_Gene_Atlas_sig0.05_new, aes(x=Term, y=Overlap_Number, fill=Adjusted.P.value))+
+  geom_bar(position="stack", stat="identity")+
+  labs(title=paste0(folder,"_","Human_Gene_Atlas_Gene_Targets_Comparison"))+
+  labs(x="Module names")+
+  theme(axis.text.x=element_text(angle=90,hjust=1)) +
+  labs(y="Number of genes overlap")+
+  labs(caption="based on data from enrichR")+
+  scale_fill_gradient(low="black",high="red")
+  #theme(plot.margin = margin(2,2,2,2, "cm"), plot.background = element_rect(fill = "white"))
+print(p13)
+dev.off()
+```
+
+```{r}
+#Creating a new column with number of genes that overlapped
+my_genes_Human_Gene_Atlas_new<-my_genes_Human_Gene_Atlas
+
+my_genes_Human_Gene_Atlas_new$Overlap_Number<-my_genes_Human_Gene_Atlas$Overlap
+
+my_genes_Human_Gene_Atlas_new$Overlap_Number<-gsub("/.*","",my_genes_Human_Gene_Atlas_new$Overlap_Number)
+
+my_genes_Human_Gene_Atlas_new$Overlap_Number<-as.integer(my_genes_Human_Gene_Atlas_new$Overlap_Number)
+
+write.csv(my_genes_Human_Gene_Atlas_new,file="Step33_result_Human_Gene_Atlas_PSVZbyQSVZ.csv")
+```
+
+```{r}
+# Basic barplot
+folder=getwd()
+pdf(paste0("Step33_plot_Human_Gene_Atlas_Pathway_plot_", "PSVZbyQSVZ",".pdf"), height=10, width=5)
+p14<-ggplot(data=my_genes_Human_Gene_Atlas_new, aes(x=Term, y=Overlap_Number, fill=Adjusted.P.value))+
+  geom_bar(position="stack", stat="identity")+
+  labs(title=paste0(folder,"_","Human_Gene_Atlas_Gene_Targets_Comparison"))+
+  labs(x="Module names")+
+  theme(axis.text.x=element_text(angle=90,hjust=1)) +
+  labs(y="Number of genes overlap")+
+  labs(caption="based on data from enrichR")+
+  scale_fill_gradient(low="black",high="red")
+  #theme(plot.margin = margin(2,2,2,2, "cm"), plot.background = element_rect(fill = "white"))
+print(p14)
+dev.off()
+```
+
+###########################################################################################Mouse_Gene_Atlas base analysis############################################################################################################
+
+###Step34: Mouse_Gene_Atlas target genes analysis results
+
+```{r}
+#Export Mouse_Gene_Atlas pathway result
+my_genes_Mouse_Gene_Atlas<-as.data.frame(enriched[["Mouse_Gene_Atlas"]])
+my_genes_Mouse_Gene_Atlas_sig0.05<-my_genes_Mouse_Gene_Atlas[my_genes_Mouse_Gene_Atlas$Adjusted.P.value <0.05,]
+head(my_genes_Mouse_Gene_Atlas_sig0.05)
+head(my_genes_Mouse_Gene_Atlas)
+```
+
+```{r}
+#Creating a new column with number of genes that overlapped
+my_genes_Mouse_Gene_Atlas_sig0.05_new<-my_genes_Mouse_Gene_Atlas_sig0.05
+
+my_genes_Mouse_Gene_Atlas_sig0.05_new$Overlap_Number<-my_genes_Mouse_Gene_Atlas_sig0.05$Overlap
+
+my_genes_Mouse_Gene_Atlas_sig0.05_new$Overlap_Number<-gsub("/.*","",my_genes_Mouse_Gene_Atlas_sig0.05_new$Overlap_Number)
+
+my_genes_Mouse_Gene_Atlas_sig0.05_new$Overlap_Number<-as.integer(my_genes_Mouse_Gene_Atlas_sig0.05_new$Overlap_Number)
+
+write.csv(my_genes_Mouse_Gene_Atlas_sig0.05_new,file="Step34_result_Mouse_Gene_Atlas_sig0.05_PSVZbyQSVZ.csv")
+```
+
+```{r}
+# Basic barplot
+folder=getwd()
+pdf(paste0("Step34_plot_sig0.05-Mouse_Gene_Atlas_Pathway_plot_", "PSVZbyQSVZ",".pdf"), height=10, width=5)
+p15<-ggplot(data=my_genes_Mouse_Gene_Atlas_sig0.05_new, aes(x=Term, y=Overlap_Number, fill=Adjusted.P.value))+
+  geom_bar(position="stack", stat="identity")+
+  labs(title=paste0(folder,"_","Mouse_Gene_Atlas_Gene_Targets_Comparison"))+
+  labs(x="Module names")+
+  theme(axis.text.x=element_text(angle=90,hjust=1)) +
+  labs(y="Number of genes overlap")+
+  labs(caption="based on data from enrichR")+
+  scale_fill_gradient(low="black",high="red")
+  #theme(plot.margin = margin(2,2,2,2, "cm"), plot.background = element_rect(fill = "white"))
+print(p15)
+dev.off()
+```
+
+```{r}
+#Creating a new column with number of genes that overlapped
+my_genes_Mouse_Gene_Atlas_new<-my_genes_Mouse_Gene_Atlas
+
+my_genes_Mouse_Gene_Atlas_new$Overlap_Number<-my_genes_Mouse_Gene_Atlas$Overlap
+
+my_genes_Mouse_Gene_Atlas_new$Overlap_Number<-gsub("/.*","",my_genes_Mouse_Gene_Atlas_new$Overlap_Number)
+
+my_genes_Mouse_Gene_Atlas_new$Overlap_Number<-as.integer(my_genes_Mouse_Gene_Atlas_new$Overlap_Number)
+
+write.csv(my_genes_Mouse_Gene_Atlas_new,file="Step34_result_Mouse_Gene_Atlas_PSVZbyQSVZ.csv")
+```
+
+```{r}
+# Basic barplot
+folder=getwd()
+pdf(paste0("Step34_plot_Mouse_Gene_Atlas_Pathway_plot_", "PSVZbyQSVZ",".pdf"), height=10, width=5)
+p16<-ggplot(data=my_genes_Mouse_Gene_Atlas_new, aes(x=Term, y=Overlap_Number, fill=Adjusted.P.value))+
+  geom_bar(position="stack", stat="identity")+
+  labs(title=paste0(folder,"_","Mouse_Gene_Atlas_Gene_Targets_Comparison"))+
+  labs(x="Module names")+
+  theme(axis.text.x=element_text(angle=90,hjust=1)) +
+  labs(y="Number of genes overlap")+
+  labs(caption="based on data from enrichR")+
+  scale_fill_gradient(low="black",high="red")
+  #theme(plot.margin = margin(2,2,2,2, "cm"), plot.background = element_rect(fill = "white"))
+print(p16)
+dev.off()
+```
+
+###########################################################################################DrugMatrix base analysis############################################################################################################
+
+###Step35: DrugMatrix target genes analysis results
+
+```{r}
+#Export DrugMatrix pathway result
+my_genes_DrugMatrix<-as.data.frame(enriched[["DrugMatrix"]])
+my_genes_DrugMatrix_sig0.05<-my_genes_DrugMatrix[my_genes_DrugMatrix$Adjusted.P.value <0.05,]
+head(my_genes_DrugMatrix_sig0.05)
+head(my_genes_DrugMatrix)
+```
+
+```{r}
+#Creating a new column with number of genes that overlapped
+my_genes_DrugMatrix_sig0.05_new<-my_genes_DrugMatrix_sig0.05
+
+my_genes_DrugMatrix_sig0.05_new$Overlap_Number<-my_genes_DrugMatrix_sig0.05$Overlap
+
+my_genes_DrugMatrix_sig0.05_new$Overlap_Number<-gsub("/.*","",my_genes_DrugMatrix_sig0.05_new$Overlap_Number)
+
+my_genes_DrugMatrix_sig0.05_new$Overlap_Number<-as.integer(my_genes_DrugMatrix_sig0.05_new$Overlap_Number)
+
+write.csv(my_genes_DrugMatrix_sig0.05_new,file="Step35_result_DrugMatrix_sig0.05_PSVZbyQSVZ.csv")
+```
+
+```{r}
+# Basic barplot
+folder=getwd()
+pdf(paste0("Step35_plot_sig0.05-DrugMatrix_Pathway_plot_", "PSVZbyQSVZ",".pdf"), height=10, width=5)
+p17<-ggplot(data=my_genes_DrugMatrix_sig0.05_new, aes(x=Term, y=Overlap_Number, fill=Adjusted.P.value))+
+  geom_bar(position="stack", stat="identity")+
+  labs(title=paste0(folder,"_","DrugMatrix_Gene_Targets_Comparison"))+
+  labs(x="Module names")+
+  theme(axis.text.x=element_text(angle=90,hjust=1)) +
+  labs(y="Number of genes overlap")+
+  labs(caption="based on data from enrichR")+
+  scale_fill_gradient(low="black",high="red")
+  #theme(plot.margin = margin(2,2,2,2, "cm"), plot.background = element_rect(fill = "white"))
+print(p17)
+dev.off()
+```
+
+```{r}
+#Creating a new column with number of genes that overlapped
+my_genes_DrugMatrix_new<-my_genes_DrugMatrix
+
+my_genes_DrugMatrix_new$Overlap_Number<-my_genes_DrugMatrix$Overlap
+
+my_genes_DrugMatrix_new$Overlap_Number<-gsub("/.*","",my_genes_DrugMatrix_new$Overlap_Number)
+
+my_genes_DrugMatrix_new$Overlap_Number<-as.integer(my_genes_DrugMatrix_new$Overlap_Number)
+
+write.csv(my_genes_DrugMatrix_new,file="Step35_result_DrugMatrix_PSVZbyQSVZ.csv")
+```
+
+```{r}
+# Basic barplot
+folder=getwd()
+pdf(paste0("Step35_plot_DrugMatrix_Pathway_plot_", "PSVZbyQSVZ",".pdf"), height=10, width=5)
+p18<-ggplot(data=my_genes_DrugMatrix_new, aes(x=Term, y=Overlap_Number, fill=Adjusted.P.value))+
+  geom_bar(position="stack", stat="identity")+
+  labs(title=paste0(folder,"_","DrugMatrix_Gene_Targets_Comparison"))+
+  labs(x="Module names")+
+  theme(axis.text.x=element_text(angle=90,hjust=1)) +
+  labs(y="Number of genes overlap")+
+  labs(caption="based on data from enrichR")+
+  scale_fill_gradient(low="black",high="red")
+  #theme(plot.margin = margin(2,2,2,2, "cm"), plot.background = element_rect(fill = "white"))
+print(p18)
+dev.off()
+```
+
+###########################################################################################DSigDB base analysis############################################################################################################
+
+###Step36: DSigDB target genes analysis results
+
+```{r}
+#Export DSigDB pathway result
+my_genes_DSigDB<-as.data.frame(enriched[["DSigDB"]])
+my_genes_DSigDB_sig0.05<-my_genes_DSigDB[my_genes_DSigDB$Adjusted.P.value <0.05,]
+head(my_genes_DSigDB_sig0.05)
+head(my_genes_DSigDB)
+```
+
+```{r}
+#Creating a new column with number of genes that overlapped
+my_genes_DSigDB_sig0.05_new<-my_genes_DSigDB_sig0.05
+
+my_genes_DSigDB_sig0.05_new$Overlap_Number<-my_genes_DSigDB_sig0.05$Overlap
+
+my_genes_DSigDB_sig0.05_new$Overlap_Number<-gsub("/.*","",my_genes_DSigDB_sig0.05_new$Overlap_Number)
+
+my_genes_DSigDB_sig0.05_new$Overlap_Number<-as.integer(my_genes_DSigDB_sig0.05_new$Overlap_Number)
+
+write.csv(my_genes_DSigDB_sig0.05_new,file="Step36_result_DSigDB_sig0.05_PSVZbyQSVZ.csv")
+```
+
+```{r}
+# Basic barplot
+folder=getwd()
+pdf(paste0("Step36_plot_sig0.05-DSigDB_Pathway_plot_", "PSVZbyQSVZ",".pdf"), height=10, width=5)
+p19<-ggplot(data=my_genes_DSigDB_sig0.05_new, aes(x=Term, y=Overlap_Number, fill=Adjusted.P.value))+
+  geom_bar(position="stack", stat="identity")+
+  labs(title=paste0(folder,"_","DSigDB_Gene_Targets_Comparison"))+
+  labs(x="Module names")+
+  theme(axis.text.x=element_text(angle=90,hjust=1)) +
+  labs(y="Number of genes overlap")+
+  labs(caption="based on data from enrichR")+
+  scale_fill_gradient(low="black",high="red")
+  #theme(plot.margin = margin(2,2,2,2, "cm"), plot.background = element_rect(fill = "white"))
+print(p19)
+dev.off()
+```
+
+```{r}
+#Creating a new column with number of genes that overlapped
+my_genes_DSigDB_new<-my_genes_DSigDB
+
+my_genes_DSigDB_new$Overlap_Number<-my_genes_DSigDB$Overlap
+
+my_genes_DSigDB_new$Overlap_Number<-gsub("/.*","",my_genes_DSigDB_new$Overlap_Number)
+
+my_genes_DSigDB_new$Overlap_Number<-as.integer(my_genes_DSigDB_new$Overlap_Number)
+
+write.csv(my_genes_DSigDB_new,file="Step36_result_DSigDB_PSVZbyQSVZ.csv")
+```
+
+```{r}
+# Basic barplot
+folder=getwd()
+pdf(paste0("Step36_plot_DSigDB_Pathway_plot_", "PSVZbyQSVZ",".pdf"), height=10, width=5)
+p20<-ggplot(data=my_genes_DSigDB_new, aes(x=Term, y=Overlap_Number, fill=Adjusted.P.value))+
+  geom_bar(position="stack", stat="identity")+
+  labs(title=paste0(folder,"_","DSigDB_Gene_Targets_Comparison"))+
+  labs(x="Module names")+
+  theme(axis.text.x=element_text(angle=90,hjust=1)) +
+  labs(y="Number of genes overlap")+
+  labs(caption="based on data from enrichR")+
+  scale_fill_gradient(low="black",high="red")
+  #theme(plot.margin = margin(2,2,2,2, "cm"), plot.background = element_rect(fill = "white"))
+print(p20)
+dev.off()
+```
+
+###########################################################################################Epigenomics_Roadmap_HM_ChIP-seq base analysis############################################################################################################
+
+###Step37: Epigenomics_Roadmap_HM_ChIP-seq target genes analysis results
+
+```{r}
+#Export Epigenomics_Roadmap_HM_ChIP-seq pathway result
+my_genes_Epigenomics_Roadmap_HM_ChIPseq<-as.data.frame(enriched[["Epigenomics_Roadmap_HM_ChIP-seq"]])
+my_genes_Epigenomics_Roadmap_HM_ChIPseq_sig0.05<-my_genes_Epigenomics_Roadmap_HM_ChIPseq[my_genes_Epigenomics_Roadmap_HM_ChIPseq$Adjusted.P.value <0.05,]
+head(my_genes_Epigenomics_Roadmap_HM_ChIPseq_sig0.05)
+head(my_genes_Epigenomics_Roadmap_HM_ChIPseq)
+```
+
+```{r}
+#Creating a new column with number of genes that overlapped
+my_genes_Epigenomics_Roadmap_HM_ChIPseq_sig0.05_new<-my_genes_Epigenomics_Roadmap_HM_ChIPseq_sig0.05
+
+my_genes_Epigenomics_Roadmap_HM_ChIPseq_sig0.05_new$Overlap_Number<-my_genes_Epigenomics_Roadmap_HM_ChIPseq_sig0.05$Overlap
+
+my_genes_Epigenomics_Roadmap_HM_ChIPseq_sig0.05_new$Overlap_Number<-gsub("/.*","",my_genes_Epigenomics_Roadmap_HM_ChIPseq_sig0.05_new$Overlap_Number)
+
+my_genes_Epigenomics_Roadmap_HM_ChIPseq_sig0.05_new$Overlap_Number<-as.integer(my_genes_Epigenomics_Roadmap_HM_ChIPseq_sig0.05_new$Overlap_Number)
+
+write.csv(my_genes_Epigenomics_Roadmap_HM_ChIPseq_sig0.05_new,file="Step37_result_Epigenomics_Roadmap_HM_ChIP-seq_sig0.05_PSVZbyQSVZ.csv")
+```
+
+```{r}
+# Basic barplot
+folder=getwd()
+pdf(paste0("Step37_plot_sig0.05-Epigenomics_Roadmap_HM_ChIP-seq_Pathway_plot_", "PSVZbyQSVZ",".pdf"), height=10, width=5)
+p19<-ggplot(data=my_genes_Epigenomics_Roadmap_HM_ChIPseq_sig0.05_new, aes(x=Term, y=Overlap_Number, fill=Adjusted.P.value))+
+  geom_bar(position="stack", stat="identity")+
+  labs(title=paste0(folder,"_","Epigenomics_Roadmap_HM_ChIP-seq_Gene_Targets_Comparison"))+
+  labs(x="Module names")+
+  theme(axis.text.x=element_text(angle=90,hjust=1)) +
+  labs(y="Number of genes overlap")+
+  labs(caption="based on data from enrichR")+
+  scale_fill_gradient(low="black",high="red")
+  #theme(plot.margin = margin(2,2,2,2, "cm"), plot.background = element_rect(fill = "white"))
+print(p19)
+dev.off()
+```
+
+```{r}
+#Creating a new column with number of genes that overlapped
+my_genes_Epigenomics_Roadmap_HM_ChIPseq_new<-my_genes_Epigenomics_Roadmap_HM_ChIPseq
+
+my_genes_Epigenomics_Roadmap_HM_ChIPseq_new$Overlap_Number<-my_genes_Epigenomics_Roadmap_HM_ChIPseq$Overlap
+
+my_genes_Epigenomics_Roadmap_HM_ChIPseq_new$Overlap_Number<-gsub("/.*","",my_genes_Epigenomics_Roadmap_HM_ChIPseq_new$Overlap_Number)
+
+my_genes_Epigenomics_Roadmap_HM_ChIPseq_new$Overlap_Number<-as.integer(my_genes_Epigenomics_Roadmap_HM_ChIPseq_new$Overlap_Number)
+
+write.csv(my_genes_Epigenomics_Roadmap_HM_ChIPseq_new,file="Step37_result_Epigenomics_Roadmap_HM_ChIP-seq_PSVZbyQSVZ.csv")
+```
+
+```{r}
+# Basic barplot
+folder=getwd()
+pdf(paste0("Step37_plot_Epigenomics_Roadmap_HM_ChIP-seq_Pathway_plot_", "PSVZbyQSVZ",".pdf"), height=10, width=5)
+p20<-ggplot(data=my_genes_Epigenomics_Roadmap_HM_ChIPseq_new, aes(x=Term, y=Overlap_Number, fill=Adjusted.P.value))+
+  geom_bar(position="stack", stat="identity")+
+  labs(title=paste0(folder,"_","Epigenomics_Roadmap_HM_ChIP-seq_Gene_Targets_Comparison"))+
+  labs(x="Module names")+
+  theme(axis.text.x=element_text(angle=90,hjust=1)) +
+  labs(y="Number of genes overlap")+
+  labs(caption="based on data from enrichR")+
+  scale_fill_gradient(low="black",high="red")
+  #theme(plot.margin = margin(2,2,2,2, "cm"), plot.background = element_rect(fill = "white"))
+print(p20)
+dev.off()
+```
+
+###########################################################################################ENCODE_and_ChEA_Consensus_TFs_from_ChIP-X base analysis############################################################################################################
+
+###Step38: ENCODE_and_ChEA_Consensus_TFs_from_ChIP-X target genes analysis results
+
+```{r}
+#Export ENCODE_and_ChEA_Consensus_TFs_from_ChIP-X pathway result
+my_genes_ENCODE_and_ChEA_Consensus_TFs_from_ChIPX<-as.data.frame(enriched[["ENCODE_and_ChEA_Consensus_TFs_from_ChIP-X"]])
+my_genes_ENCODE_and_ChEA_Consensus_TFs_from_ChIPX_sig0.05<-my_genes_ENCODE_and_ChEA_Consensus_TFs_from_ChIPX[my_genes_ENCODE_and_ChEA_Consensus_TFs_from_ChIPX$Adjusted.P.value <0.05,]
+head(my_genes_ENCODE_and_ChEA_Consensus_TFs_from_ChIPX_sig0.05)
+head(my_genes_ENCODE_and_ChEA_Consensus_TFs_from_ChIPX)
+```
+
+```{r}
+#Creating a new column with number of genes that overlapped
+my_genes_ENCODE_and_ChEA_Consensus_TFs_from_ChIPX_sig0.05_new<-my_genes_ENCODE_and_ChEA_Consensus_TFs_from_ChIPX_sig0.05
+
+my_genes_ENCODE_and_ChEA_Consensus_TFs_from_ChIPX_sig0.05_new$Overlap_Number<-my_genes_ENCODE_and_ChEA_Consensus_TFs_from_ChIPX_sig0.05$Overlap
+
+my_genes_ENCODE_and_ChEA_Consensus_TFs_from_ChIPX_sig0.05_new$Overlap_Number<-gsub("/.*","",my_genes_ENCODE_and_ChEA_Consensus_TFs_from_ChIPX_sig0.05_new$Overlap_Number)
+
+my_genes_ENCODE_and_ChEA_Consensus_TFs_from_ChIPX_sig0.05_new$Overlap_Number<-as.integer(my_genes_ENCODE_and_ChEA_Consensus_TFs_from_ChIPX_sig0.05_new$Overlap_Number)
+
+write.csv(my_genes_ENCODE_and_ChEA_Consensus_TFs_from_ChIPX_sig0.05_new,file="Step38_result_ENCODE_and_ChEA_Consensus_TFs_from_ChIP-X_sig0.05_PSVZbyQSVZ.csv")
+```
+
+```{r}
+# Basic barplot
+folder=getwd()
+pdf(paste0("Step38_plot_sig0.05-ENCODE_and_ChEA_Consensus_TFs_from_ChIP-X_Pathway_plot_", "PSVZbyQSVZ",".pdf"), height=10, width=5)
+p19<-ggplot(data=my_genes_ENCODE_and_ChEA_Consensus_TFs_from_ChIPX_sig0.05_new, aes(x=Term, y=Overlap_Number, fill=Adjusted.P.value))+
+  geom_bar(position="stack", stat="identity")+
+  labs(title=paste0(folder,"_","ENCODE_and_ChEA_Consensus_TFs_from_ChIP-X_Gene_Targets_Comparison"))+
+  labs(x="Module names")+
+  theme(axis.text.x=element_text(angle=90,hjust=1)) +
+  labs(y="Number of genes overlap")+
+  labs(caption="based on data from enrichR")+
+  scale_fill_gradient(low="black",high="red")
+  #theme(plot.margin = margin(2,2,2,2, "cm"), plot.background = element_rect(fill = "white"))
+print(p19)
+dev.off()
+```
+
+```{r}
+#Creating a new column with number of genes that overlapped
+my_genes_ENCODE_and_ChEA_Consensus_TFs_from_ChIPX_new<-my_genes_ENCODE_and_ChEA_Consensus_TFs_from_ChIPX
+
+my_genes_ENCODE_and_ChEA_Consensus_TFs_from_ChIPX_new$Overlap_Number<-my_genes_ENCODE_and_ChEA_Consensus_TFs_from_ChIPX$Overlap
+
+my_genes_ENCODE_and_ChEA_Consensus_TFs_from_ChIPX_new$Overlap_Number<-gsub("/.*","",my_genes_ENCODE_and_ChEA_Consensus_TFs_from_ChIPX_new$Overlap_Number)
+
+my_genes_ENCODE_and_ChEA_Consensus_TFs_from_ChIPX_new$Overlap_Number<-as.integer(my_genes_ENCODE_and_ChEA_Consensus_TFs_from_ChIPX_new$Overlap_Number)
+
+write.csv(my_genes_ENCODE_and_ChEA_Consensus_TFs_from_ChIPX_new,file="Step38_result_ENCODE_and_ChEA_Consensus_TFs_from_ChIP-X_PSVZbyQSVZ.csv")
+```
+
+```{r}
+# Basic barplot
+folder=getwd()
+pdf(paste0("Step38_plot_ENCODE_and_ChEA_Consensus_TFs_from_ChIP-X_Pathway_plot_", "PSVZbyQSVZ",".pdf"), height=10, width=5)
+p20<-ggplot(data=my_genes_ENCODE_and_ChEA_Consensus_TFs_from_ChIPX_new, aes(x=Term, y=Overlap_Number, fill=Adjusted.P.value))+
+  geom_bar(position="stack", stat="identity")+
+  labs(title=paste0(folder,"_","ENCODE_and_ChEA_Consensus_TFs_from_ChIP-X_Gene_Targets_Comparison"))+
+  labs(x="Module names")+
+  theme(axis.text.x=element_text(angle=90,hjust=1)) +
+  labs(y="Number of genes overlap")+
+  labs(caption="based on data from enrichR")+
+  scale_fill_gradient(low="black",high="red")
+  #theme(plot.margin = margin(2,2,2,2, "cm"), plot.background = element_rect(fill = "white"))
+print(p20)
+dev.off()
+```
+
+###Step39: Organization and saving session (software version) information 
+
+```{r}
+sessionInfo()
+toLatex(sessionInfo())
+```
+
+```{r}
+#save image
+save.image(file="PSVZbyQSVZEnrichR.RData")
+```
+
+```{r}
+#Organize of files
+library(filesstrings)
+
+dir.create("PSVZbyQSVZEnrichR")
+file.move(list.files(pattern = "*PSVZbyQSVZ.pdf"), "PSVZbyQSVZEnrichR")
+file.move(list.files(pattern = "*PSVZbyQSVZ.csv"), "PSVZbyQSVZEnrichR", overwrite = TRUE)
+file.move(list.files(pattern = "PSVZbyQSVZEnrichR.RData"), "PSVZbyQSVZEnrichR")
+```
+
+```{r}
+#Remove .RData and clear environment to free up memory
+rm(list=ls())
+file.remove("temp.RData")
+gc()
+```
+
+###########################################################################################<Start next pipeline>############################################################################################################
+
+
+
+
+
+
+
+
+
+

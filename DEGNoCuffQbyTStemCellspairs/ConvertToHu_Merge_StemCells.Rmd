@@ -1,0 +1,517 @@
+---
+title: "ConvertToHu_Merge_StemCells"
+author: "Shradha Mukherjee"
+date: "Updated January 19, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Notes for re-using this code
+1) This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document.
+2) This code can be rerun as is by clicking Rum>All Chunks
+3) To use this code for different data, change the input files as needed
+4) This pipeline is used to convert Mouse and Rat gene symbols to Human gene symbols 
+
+###Step 1: Load libraries
+```{r}
+library(biomaRt)#required for the gene symbol conversion
+library(ggmap)#plots
+library(gplots)#plots
+library(RColorBrewer)#color pallet
+library(Hmisc)#for corelation plot
+library(dplyr)
+library(plyr)
+library(qpcR)
+options(stringsAsFactors = FALSE)
+```
+
+```{r}
+# Basic function to convert rat to human gene names in data frames
+convertRatGeneList <- function(x){
+ 
+require("biomaRt")
+human = useMart("ensembl", dataset = "hsapiens_gene_ensembl")
+rat = useMart("ensembl", dataset = "rnorvegicus_gene_ensembl")
+ 
+genesV2 = getLDS(attributes = c("rgd_symbol"), filters = "rgd_symbol", values = x , mart = rat, attributesL = c("hgnc_symbol"), martL = human, uniqueRows=T)
+
+#some genes will be duplicate so lets make them unique
+genesV2=genesV2[!duplicated(genesV2$RGD.symbol),]
+}
+```
+
+```{r}
+# Basic function to convert mouse to human gene names in data frames
+convertMouseGeneList <- function(x){
+ 
+require("biomaRt")
+human = useMart("ensembl", dataset = "hsapiens_gene_ensembl")
+mouse = useMart("ensembl", dataset = "mmusculus_gene_ensembl")
+ 
+genesV2 = getLDS(attributes = c("mgi_symbol"), filters = "mgi_symbol", values = x , mart = mouse, attributesL = c("hgnc_symbol"), martL = human, uniqueRows=T)
+
+#some genes will be duplicate so lets make them unique
+genesV2=genesV2[!duplicated(genesV2$MGI.symbol),]
+}
+```
+
+```{r}
+# Basic function to convert rat to unique rat gene names in data frames
+convertUniqueratGeneList <- function(x){
+ 
+require("biomaRt")
+rat = useMart("ensembl", dataset = "rnorvegicus_gene_ensembl")
+rat = useMart("ensembl", dataset = "rnorvegicus_gene_ensembl")
+ 
+genesV2 = getLDS(attributes = c("rgd_symbol"), filters = "rgd_symbol", values = x , mart = rat, attributesL = c("rgd_symbol"), martL = rat, uniqueRows=T)
+ 
+#some genes will be duplicate so lets make them unique
+genesV2=genesV2[!duplicated(genesV2$RGD.symbol),]
+}
+```
+
+```{r}
+# Basic function to convert mouse to unique mouse gene names in data frames
+convertUniquemouseGeneList <- function(x){
+ 
+require("biomaRt")
+mouse = useMart("ensembl", dataset = "mmusculus_gene_ensembl")
+mouse = useMart("ensembl", dataset = "mmusculus_gene_ensembl")
+ 
+genesV2 = getLDS(attributes = c("mgi_symbol"), filters = "mgi_symbol", values = x , mart = mouse, attributesL = c("mgi_symbol"), martL = mouse, uniqueRows=T)
+ 
+#some genes will be duplicate so lets make them unique
+genesV2=genesV2[!duplicated(genesV2$MGI.symbol),]
+}
+```
+
+
+#Testing the functions convertRatGeneList, convertMouseGeneList, convertUniqueratGeneList and convertUniquemouseGeneList
+```{r}
+mygenes1=c("Rpl4", "Ascl1")
+mygenes_1=convertRatGeneList(mygenes1)
+mygenes_1
+```
+
+```{r}
+mygenes2=c("Rpl4", "Ascl1")
+mygenes_2=convertMouseGeneList(mygenes2)
+mygenes_2
+```
+
+```{r}
+mygenes3=c("Rpl4", "Ascl1", "Rpl4")
+mygenes_3=convertUniqueratGeneList(mygenes3)
+mygenes_3
+```
+
+```{r}
+mygenes4=c("Rpl4", "Ascl1", "Rpl4")
+mygenes_4=convertUniquemouseGeneList(mygenes4)
+mygenes_4
+```
+
+###Step 2: Import dataset GSE68270NPCbyNSCList
+#convert to Hu gene symbols
+```{r}
+dat1=read.csv('./GSE68270_Treatment_NPCbyNSC/DEG_AllDEGmethods_results/Step22_result_allContrasts_FC1.25_DEG_edgeR_AllDEGmethods.csv', sep=',')
+dat1=dat1[,c("X","Contrast")]
+names(dat1)=c("Gene","Category")
+dat1=as.data.frame(dat1)
+dim(dat1)
+head(dat1[1:3,])
+```
+
+```{r}
+mygenes_dat1Hu <- convertMouseGeneList(dat1$Gene)
+
+#Lets rename the mouse gene symbol column as "Gene" so we can merge with the dat1 "Gene" column
+colnames(mygenes_dat1Hu)[which(colnames(mygenes_dat1Hu) == 'MGI.symbol')] <- 'Gene'
+dim(mygenes_dat1Hu)
+head(mygenes_dat1Hu)
+```
+
+```{r}
+merge_dat1Hu <- merge(mygenes_dat1Hu, dat1, by="Gene")
+#Get rid of the mouse gene symbol column
+merge_dat1Hu <- merge_dat1Hu[,-1]
+#Lets rename the human gene symbol column back to "Gene"
+colnames(merge_dat1Hu)[which(colnames(merge_dat1Hu) == 'HGNC.symbol')] <- "Gene"
+#Sort by Category 
+merge_dat1Hu<-merge_dat1Hu[order(merge_dat1Hu$Category),]
+View(merge_dat1Hu)
+```
+
+```{r}
+write.csv(merge_dat1Hu, "GSE68270NPCbyNSCList_Hu.csv")
+```
+
+###Step 3: Import dataset GSE68270NSCbyNPCList
+#convert to Hu gene symbols
+```{r}
+dat1=read.csv('./GSE68270_Treatment_NSCbyNPC/DEG_AllDEGmethods_results/Step22_result_allContrasts_FC1.25_DEG_edgeR_AllDEGmethods.csv', sep=',')
+dat1=dat1[,c("X","Contrast")]
+names(dat1)=c("Gene","Category")
+dat1=as.data.frame(dat1)
+dim(dat1)
+head(dat1[1:3,])
+```
+
+```{r}
+mygenes_dat1Hu <- convertMouseGeneList(dat1$Gene)
+
+#Lets rename the mouse gene symbol column as "Gene" so we can merge with the dat1 "Gene" column
+colnames(mygenes_dat1Hu)[which(colnames(mygenes_dat1Hu) == 'MGI.symbol')] <- 'Gene'
+dim(mygenes_dat1Hu)
+head(mygenes_dat1Hu)
+```
+
+```{r}
+merge_dat1Hu <- merge(mygenes_dat1Hu, dat1, by="Gene")
+#Get rid of the mouse gene symbol column
+merge_dat1Hu <- merge_dat1Hu[,-1]
+#Lets rename the human gene symbol column back to "Gene"
+colnames(merge_dat1Hu)[which(colnames(merge_dat1Hu) == 'HGNC.symbol')] <- "Gene"
+#Sort by Category 
+merge_dat1Hu<-merge_dat1Hu[order(merge_dat1Hu$Category),]
+View(merge_dat1Hu)
+```
+
+```{r}
+write.csv(merge_dat1Hu, "GSE68270NSCbyNPCList_Hu.csv")
+```
+
+###Step 4: Import dataset GSE70696QNPbyTAPList
+#convert to Hu gene symbols
+```{r}
+dat1=read.csv('./GSE70696_Treatment_QNPbyTAP/DEG_AllDEGmethods_results/Step22_result_allContrasts_FC1.25_DEG_edgeR_AllDEGmethods.csv', sep=',')
+dat1=dat1[,c("X","Contrast")]
+names(dat1)=c("Gene","Category")
+dat1=as.data.frame(dat1)
+dim(dat1)
+head(dat1[1:3,])
+```
+
+```{r}
+mygenes_dat1Hu <- convertRatGeneList(dat1$Gene)
+
+#Lets rename the rat gene symbol column as "Gene" so we can merge with the dat1 "Gene" column
+colnames(mygenes_dat1Hu)[which(colnames(mygenes_dat1Hu) == 'RGD.symbol')] <- 'Gene'
+dim(mygenes_dat1Hu)
+head(mygenes_dat1Hu)
+```
+
+```{r}
+merge_dat1Hu <- merge(mygenes_dat1Hu, dat1, by="Gene")
+#Get rid of the rat gene symbol column
+merge_dat1Hu <- merge_dat1Hu[,-1]
+#Lets rename the human gene symbol column back to "Gene"
+colnames(merge_dat1Hu)[which(colnames(merge_dat1Hu) == 'HGNC.symbol')] <- "Gene"
+#Sort by Category 
+merge_dat1Hu<-merge_dat1Hu[order(merge_dat1Hu$Category),]
+View(merge_dat1Hu)
+```
+
+```{r}
+write.csv(merge_dat1Hu, "GSE70696QNPbyTAPList_Hu.csv")
+```
+
+###Step 5: Import dataset GSE70696TAPbyQNPList
+#convert to Hu gene symbols
+```{r}
+dat1=read.csv('./GSE70696_Treatment_TAPbyQNP/DEG_AllDEGmethods_results/Step22_result_allContrasts_FC1.25_DEG_edgeR_AllDEGmethods.csv', sep=',')
+dat1=dat1[,c("X","Contrast")]
+names(dat1)=c("Gene","Category")
+dat1=as.data.frame(dat1)
+dim(dat1)
+head(dat1[1:3,])
+```
+
+```{r}
+mygenes_dat1Hu <- convertRatGeneList(dat1$Gene)
+
+#Lets rename the rat gene symbol column as "Gene" so we can merge with the dat1 "Gene" column
+colnames(mygenes_dat1Hu)[which(colnames(mygenes_dat1Hu) == 'RGD.symbol')] <- 'Gene'
+dim(mygenes_dat1Hu)
+head(mygenes_dat1Hu)
+```
+
+```{r}
+merge_dat1Hu <- merge(mygenes_dat1Hu, dat1, by="Gene")
+#Get rid of the rat gene symbol column
+merge_dat1Hu <- merge_dat1Hu[,-1]
+#Lets rename the human gene symbol column back to "Gene"
+colnames(merge_dat1Hu)[which(colnames(merge_dat1Hu) == 'HGNC.symbol')] <- "Gene"
+#Sort by Category 
+merge_dat1Hu<-merge_dat1Hu[order(merge_dat1Hu$Category),]
+View(merge_dat1Hu)
+```
+
+```{r}
+write.csv(merge_dat1Hu, "GSE70696TAPbyQNPList_Hu.csv")
+```
+
+###Step 6: Import dataset GSE93991PGBCbyQGBCList
+#convert to Hu gene symbols
+```{r}
+dat1=read.csv('./GSE93991_Treatment_PGBCbyQGBC/DEG_AllDEGmethods_results/Step22_result_allContrasts_FC1.25_DEG_edgeR_AllDEGmethods.csv', sep=',')
+dat1=dat1[,c("X","Contrast")]
+names(dat1)=c("Gene","Category")
+dat1=as.data.frame(dat1)
+dim(dat1)
+head(dat1[1:3,])
+```
+
+```{r}
+#Already human gene symbols as its a human dataset
+dat1Hu <- dat1
+#Sort by Category 
+dat1Hu<-dat1Hu[order(dat1Hu$Category),]
+View(dat1Hu)
+```
+
+```{r}
+write.csv(dat1Hu, "GSE93991PGBCbyQGBCList_Hu.csv")
+```
+
+###Step 7: Import dataset GSE93991QGBCbyPGBCList
+#convert to Hu gene symbols
+```{r}
+dat1=read.csv('./GSE93991_Treatment_QGBCbyPGBC/DEG_AllDEGmethods_results/Step22_result_allContrasts_FC1.25_DEG_edgeR_AllDEGmethods.csv', sep=',')
+dat1=dat1[,c("X","Contrast")]
+names(dat1)=c("Gene","Category")
+dat1=as.data.frame(dat1)
+dim(dat1)
+head(dat1[1:3,])
+```
+
+```{r}
+#Already human gene symbols as its a human dataset
+dat1Hu <- dat1
+#Sort by Category 
+dat1Hu<-dat1Hu[order(dat1Hu$Category),]
+View(dat1Hu)
+```
+
+```{r}
+write.csv(dat1Hu, "GSE93991QGBCbyPGBCList_Hu.csv")
+```
+
+###Step 8: Import dataset GSE99777PSVZbyQSVZList
+#convert to Hu gene symbols
+```{r}
+dat1=read.csv('./GSE99777_Treatment_PSVZbyQSVZ_Array/DEG_AllDEGmethods_results/Step22_result_allContrasts_FC1.25_DEG_edgeR_AllDEGmethods.csv', sep=',')
+dat1=dat1[,c("X","Contrast")]
+names(dat1)=c("Gene","Category")
+dat1=as.data.frame(dat1)
+dim(dat1)
+head(dat1[1:3,])
+```
+
+```{r}
+mygenes_dat1Hu <- convertMouseGeneList(dat1$Gene)
+
+#Lets rename the mouse gene symbol column as "Gene" so we can merge with the dat1 "Gene" column
+colnames(mygenes_dat1Hu)[which(colnames(mygenes_dat1Hu) == 'MGI.symbol')] <- 'Gene'
+dim(mygenes_dat1Hu)
+head(mygenes_dat1Hu)
+```
+
+```{r}
+merge_dat1Hu <- merge(mygenes_dat1Hu, dat1, by="Gene")
+#Get rid of the mouse gene symbol column
+merge_dat1Hu <- merge_dat1Hu[,-1]
+#Lets rename the human gene symbol column back to "Gene"
+colnames(merge_dat1Hu)[which(colnames(merge_dat1Hu) == 'HGNC.symbol')] <- "Gene"
+#Sort by Category 
+merge_dat1Hu<-merge_dat1Hu[order(merge_dat1Hu$Category),]
+View(merge_dat1Hu)
+```
+
+```{r}
+write.csv(merge_dat1Hu, "GSE99777PSVZbyQSVZList_Hu.csv")
+```
+
+###Step 9: Import dataset GSE99777QSVZbyPSVZList
+#convert to Hu gene symbols
+```{r}
+dat1=read.csv('./GSE99777_Treatment_QSVZbyPSVZ_Array/DEG_AllDEGmethods_results/Step22_result_allContrasts_FC1.25_DEG_edgeR_AllDEGmethods.csv', sep=',')
+dat1=dat1[,c("X","Contrast")]
+names(dat1)=c("Gene","Category")
+dat1=as.data.frame(dat1)
+dim(dat1)
+head(dat1[1:3,])
+```
+
+```{r}
+mygenes_dat1Hu <- convertMouseGeneList(dat1$Gene)
+
+#Lets rename the mouse gene symbol column as "Gene" so we can merge with the dat1 "Gene" column
+colnames(mygenes_dat1Hu)[which(colnames(mygenes_dat1Hu) == 'MGI.symbol')] <- 'Gene'
+dim(mygenes_dat1Hu)
+head(mygenes_dat1Hu)
+```
+
+```{r}
+merge_dat1Hu <- merge(mygenes_dat1Hu, dat1, by="Gene")
+#Get rid of the mouse gene symbol column
+merge_dat1Hu <- merge_dat1Hu[,-1]
+#Lets rename the human gene symbol column back to "Gene"
+colnames(merge_dat1Hu)[which(colnames(merge_dat1Hu) == 'HGNC.symbol')] <- "Gene"
+#Sort by Category 
+merge_dat1Hu<-merge_dat1Hu[order(merge_dat1Hu$Category),]
+View(merge_dat1Hu)
+```
+
+```{r}
+write.csv(merge_dat1Hu, "GSE99777QSVZbyPSVZList_Hu.csv")
+```
+
+###Step 10: Import dataset GSE114574PGBObyQGBOList
+#convert to Hu gene symbols
+```{r}
+dat1=read.csv('./GSE114574_Treatment_PGBObyQGBO/DEG_AllDEGmethods_results/Step22_result_allContrasts_FC1.25_DEG_edgeR_AllDEGmethods.csv', sep=',')
+dat1=dat1[,c("X","Contrast")]
+names(dat1)=c("Gene","Category")
+dat1=as.data.frame(dat1)
+dim(dat1)
+head(dat1[1:3,])
+```
+
+```{r}
+#Already human gene symbols as its a human dataset
+dat1Hu <- dat1
+#Sort by Category 
+dat1Hu<-dat1Hu[order(dat1Hu$Category),]
+View(dat1Hu)
+```
+
+```{r}
+write.csv(dat1Hu, "GSE114574PGBObyQGBOList_Hu.csv")
+```
+
+###Step 11: Import dataset GSE114574QGBObyPGBOList
+#convert to Hu gene symbols
+```{r}
+dat1=read.csv('./GSE114574_Treatment_QGBObyPGBO/DEG_AllDEGmethods_results/Step22_result_allContrasts_FC1.25_DEG_edgeR_AllDEGmethods.csv', sep=',')
+dat1=dat1[,c("X","Contrast")]
+names(dat1)=c("Gene","Category")
+dat1=as.data.frame(dat1)
+dim(dat1)
+head(dat1[1:3,])
+```
+
+```{r}
+#Already human gene symbols as its a human dataset
+dat1Hu <- dat1
+#Sort by Category 
+dat1Hu<-dat1Hu[order(dat1Hu$Category),]
+View(dat1Hu)
+```
+
+```{r}
+write.csv(dat1Hu, "GSE114574QGBObyPGBOList_Hu.csv")
+```
+#######################################################################################################################
+###Step 12: Import human symbol lists
+```{r}
+dat1=read.csv('./GSE68270NPCbyNSCList_Hu.csv', sep=',')
+dat1=as.data.frame(dat1)
+dim(dat1)
+head(dat1[1:3,])
+```
+
+```{r}
+dat2=read.csv('./GSE68270NSCbyNPCList_Hu.csv', sep=',')
+dat2=as.data.frame(dat2)
+dim(dat2)
+head(dat2[1:3,])
+```
+
+```{r}
+dat3=read.csv('./GSE70696QNPbyTAPList_Hu.csv', sep=',')
+dat3=as.data.frame(dat3)
+dim(dat3)
+head(dat3[1:3,])
+```
+
+```{r}
+dat4=read.csv('./GSE70696TAPbyQNPList_Hu.csv', sep=',')
+dat4=as.data.frame(dat4)
+dim(dat4)
+head(dat4[1:3,])
+```
+
+```{r}
+dat5=read.csv('./GSE93991PGBCbyQGBCList_Hu.csv', sep=',')
+dat5=as.data.frame(dat5)
+dim(dat5)
+head(dat5[1:3,])
+```
+
+```{r}
+dat6=read.csv('./GSE93991QGBCbyPGBCList_Hu.csv', sep=',')
+dat6=as.data.frame(dat6)
+dim(dat6)
+head(dat6[1:3,])
+```
+
+```{r}
+dat7=read.csv('./GSE99777PSVZbyQSVZList_Hu.csv', sep=',')
+dat7=as.data.frame(dat7)
+dim(dat7)
+head(dat7[1:3,])
+```
+
+```{r}
+dat8=read.csv('./GSE99777QSVZbyPSVZList_Hu.csv', sep=',')
+dat8=as.data.frame(dat8)
+dim(dat8)
+head(dat8[1:3,])
+```
+
+```{r}
+dat9=read.csv('./GSE114574PGBObyQGBOList_Hu.csv', sep=',')
+dat9=as.data.frame(dat9)
+dim(dat9)
+head(dat9[1:3,])
+```
+
+```{r}
+dat10=read.csv('./GSE114574QGBObyPGBOList_Hu.csv', sep=',')
+dat10=as.data.frame(dat10)
+dim(dat10)
+head(dat10[1:3,])
+```
+
+###Step 13: Merge the imported human symbol lists
+```{r}
+total<-rbind(dat1, dat2, dat3, dat4, dat5, dat6, dat7, dat8, dat9, dat10)
+total=as.data.frame(total)
+dim(total)
+head(total[1:3,])
+```
+
+```{r}
+count(total$Category)
+```
+
+```{r}
+write.csv(total, "StemCells_notCellTypeBrainImmune_Full_HuMsRatToHu.csv")
+write.csv(count(total$Category), "StemCells_notCellTypeBrainImmune_Full_HuMsRatToHu_count.csv")
+```
+
+
+
+
+
+
+
+
+
+
+
+

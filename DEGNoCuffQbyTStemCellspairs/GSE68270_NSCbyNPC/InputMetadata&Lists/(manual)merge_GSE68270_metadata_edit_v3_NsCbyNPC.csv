@@ -1,0 +1,9 @@
+Sample_Name,MsGroup_Name,GEO_Accession,Treatment,Age,Study,Gender,Tissue,cell_state,source_name
+NSC_SRR1997853,NSC_1,SRR1997853,NSC,8,GSE68270,No_data,dentate_gyrus,quiescent,Neural_stem_cells_LPA1GFP
+NSC_SRR1997854,NSC_2,SRR1997854,NSC,8,GSE68270,No_data,dentate_gyrus,quiescent,Neural_stem_cells_LPA1GFP
+NSC_SRR1997855,NSC_3,SRR1997855,NSC,8,GSE68270,No_data,dentate_gyrus,quiescent,Neural_stem_cells_LPA1GFP
+NSC_SRR1997856,NSC_4,SRR1997856,NSC,8,GSE68270,No_data,dentate_gyrus,quiescent,Neural_stem_cells_LPA1GFP
+NPC_SRR1997857,NPC_1,SRR1997857,NPC,8,GSE68270,No_data,dentate_gyrus,proliferative,Neural_progenitor_cells_LPA1GFP
+NPC_SRR1997858,NPC_2,SRR1997858,NPC,8,GSE68270,No_data,dentate_gyrus,proliferative,Neural_progenitor_cells_LPA1GFP
+NPC_SRR1997859,NPC_3,SRR1997859,NPC,8,GSE68270,No_data,dentate_gyrus,proliferative,Neural_progenitor_cells_LPA1GFP
+NPC_SRR1997860,NPC_4,SRR1997860,NPC,8,GSE68270,No_data,dentate_gyrus,proliferative,Neural_progenitor_cells_LPA1GFP

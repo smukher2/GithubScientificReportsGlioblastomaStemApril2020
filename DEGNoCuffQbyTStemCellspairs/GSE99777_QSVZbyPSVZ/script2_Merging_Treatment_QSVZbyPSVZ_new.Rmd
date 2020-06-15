@@ -1,0 +1,177 @@
+---
+title: "script2_Merging_Treatment_QSVZbyPSVZ"
+author: "Shradha Mukherjee"
+date: "Last updated January, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. Html_fragmented is quicker to load than html, hence for this pipeline which genenerated a large mount of data, we have used html_fragment to report Rmarkdown.
+
+#Checklist for this pipeline 
+  #1) GEO series number from publication or searching GEO for dataset of interest, here GSE=GSE99777. And their respective GPL gene annotation files
+  #2) metadata file made by manually combining individual metadata files from GEO to give '(original)merge_GSE99777_metadata_edit_v4' which was further edited manually to give '(manual)merge_GSE99777_metadata_edit_v3_QSVZbyPSVZ.csv' 
+  #3) The present analysis was done on MacOS, using knitToHtmlfragment.
+  
+To reuse this code for other datasets 
+  a) replace 1) and 2) input files above with equivalent files for the dataset
+  b) in this pipeline human gene symbols are used
+
+####################################Merging GSE99777####################################### 
+
+###Step5A: Load required libraries , setting working directory and Import data###
+```{r}
+#save working directory location
+wd<-getwd()
+wd
+```
+
+```{r}
+#Install packages by uncommenting two lines below if packages not already installed before
+#source("https://bioconductor.org/biocLite.R")
+#biocLite(c("tidyr","dplyr"))
+library(dplyr) # used for general data wrangling
+library(tidyr) # used for tidying tables
+library(expss)
+```
+
+```{r}
+#handling NAs https://rstudio-pubs-static.s3.amazonaws.com/73936_a22f365dbd584bbf883ed60c540ac736.html
+#https://rdrr.io/cran/expss/man/if_na.html
+GSE99777Expr=read.csv("GSE99777_Annotation_Expr_GeneMs.csv", header =T, sep=',', na.strings = c("", "NA"))
+GSE99777Expr=GSE99777Expr %>% na.omit()
+
+```
+
+```{r}
+DT::datatable(GSE99777Expr[1:7,1:7])
+```
+
+```{r}
+dim(GSE99777Expr)
+```
+
+###Step5B: merge datasets ###
+
+```{r}
+#Rename the last column name of both datasets to same 'GeneMs'
+colnames(GSE99777Expr)[colnames(GSE99777Expr)=='gene_symbol']='GeneMs'
+
+```
+
+```{r}
+
+#keep all ids 
+mergeExpr=GSE99777Expr
+
+dim(mergeExpr)
+dim(GSE99777Expr)
+
+DT::datatable(head(mergeExpr))
+DT::datatable(head(GSE99777Expr))
+
+```
+
+```{r}
+#Except one ID column and one gene column, remove other non-sample annotation columns. 
+#Here can GSE99777 ID column and gene column to save. Since in microarray probe IDs are unique genes are not unique. We save gene columns and will remove duplicates later
+#may check colnames using colnames(mergeExpr)
+#mergeExpr=mergeExpr[-c(2,3,628,629)]
+mergeExpr=mergeExpr[!names(mergeExpr) %in% c("X", "ID")]
+dim(mergeExpr)
+#make sure there are no more X and Y ids
+colnames(mergeExpr)
+```
+  
+###Step5C: Matching GSM or SRR number and replacing Sample_Names of choice from merged metadata (same order as merging of expression data above)###
+#Also incuded is a match column step in this code to ensure match
+#Before importing the metadate file, decide and include a column of sample names of your liking and the Study or batch information column you have. 
+#The individual_metadata.csv to make merged '(original)merge_GSE99777_metadata_edit'
+```{r}
+merge_metadata=read.csv('./InputMetadata&Lists/(manual)merge_GSE99777_metadata_edit_v3_QSVZbyPSVZ.csv', header =T, sep=',')
+DT::datatable(head(merge_metadata))
+```
+
+```{r}
+#Number of rows of above metadata is same as number of columns of Expr data +1 for GeneMs 
+dim(mergeExpr)
+dim(merge_metadata)
+```
+
+```{r}
+#Replace of column names in expression with sample names
+colnames(mergeExpr) <- merge_metadata$Sample_Name[match(colnames(mergeExpr), merge_metadata$GEO_Accession)]
+colnames(mergeExpr)[7]<-"GeneMs"
+DT::datatable(head(mergeExpr))
+```
+
+```{r}
+#Lets drop the GEO accession number from the metadata now
+#merge_metadata=merge_metadata[,-c(1)] #to drop column by number
+merge_metadata <- merge_metadata[!names(merge_metadata) %in% c("GEO_Accession")]
+DT::datatable(head(merge_metadata))
+```
+
+```{r}
+#Make genes row name
+mergeExpr_1=as.data.frame(mergeExpr)
+#rownames cannot be duplicate so remove duplicate genes
+mergeExpr_2=mergeExpr_1[!duplicated(mergeExpr_1$GeneMs),]
+dim(mergeExpr)
+dim(mergeExpr_1)
+dim(mergeExpr_2)
+#We lost Gene IDs for duplicate genes
+```
+
+```{r}
+mergeExpr_3=mergeExpr_2[,-7]#remove gene column and make it rowname
+rownames(mergeExpr_3)=mergeExpr_2$GeneMs
+```
+
+```{r}
+#Now we adjust the NAs coming from GSE43490 by replacing NAs with column mean. This way we retain the genes and do not lose genes because of this one dataset 
+#if_na(mergeExpr_3)=t(mean_col(mergeExpr_3))
+
+#remove rows that contain Inf in gene expression value
+#mergeExpr_3=mergeExpr_3[!mergeExpr_3$M_PSVZ_GSM2652126 == "Inf", ]
+
+mergeExpr=mergeExpr_3
+dim(mergeExpr)
+```
+
+```{r}
+#Now we make the same order of sample names in both expression data and metadata
+Ordered_merge_metadata=merge_metadata[order(merge_metadata$Sample_Name),]
+Ordered_merge_metadata[1:3,1:3]
+
+Ordered_mergeExpr=mergeExpr[ ,order(names(mergeExpr))]
+Ordered_mergeExpr[1:3,1:3]
+
+colnames(Ordered_mergeExpr)==Ordered_merge_metadata$Sample_Name
+#This should be all TRUE 
+```
+
+```{r}
+mergeExpr=Ordered_mergeExpr
+merge_metadata=Ordered_merge_metadata
+colnames(mergeExpr)==merge_metadata$Sample_Name
+#This should be all TRUE 
+```
+
+###Step5D: we can export the Expression data and Metadata with Sample_Name can be used for SVA, DEG and WGCNA analysis###
+```{r}
+#here tpmlog for RNA-seq or lumilog for microarray is being exported similarly cpm, tpm, rpkm, cpmlog and rpkmlog can also be exported for ENA-seq
+write.csv(mergeExpr,"Step5D_result_merge_GSE99777_Expr_Gene_SampleID.csv")
+write.csv(merge_metadata,"Step5D_result_merge_GSE99777_metadata_SampleID.csv")
+```
+
+```{r}
+#The files we needed are saved so we now clear workspace and delete files and folders that are not needed 
+save.image(file="preSVA_Merging.RData")
+rm(list=ls())
+gc()
+``` 

@@ -1,0 +1,16 @@
+Sample_Name,HuGroup_Name,GEO_Accession,Treatment,Age,Study,Gender,Tissue
+PGBC_SRR5196886,JHHS1_S1,SRR5196886,PGBC,No_data,GSE93991,No_data,Glioblastoma_cancer_stem_cell
+PGBC_SRR5196887,JHHS2_S2,SRR5196887,PGBC,No_data,GSE93991,No_data,Glioblastoma_cancer_stem_cell
+PGBC_SRR5196888,JHHS3_S1,SRR5196888,PGBC,No_data,GSE93991,No_data,Glioblastoma_cancer_stem_cell
+PGBC_SRR5196889,JHHS4_S2,SRR5196889,PGBC,No_data,GSE93991,No_data,Glioblastoma_cancer_stem_cell
+PGBC_SRR5196890,JHHS5_S1,SRR5196890,PGBC,No_data,GSE93991,No_data,Glioblastoma_cancer_stem_cell
+PGBC_SRR5196891,JHHS6_S2,SRR5196891,PGBC,No_data,GSE93991,No_data,Glioblastoma_cancer_stem_cell
+PGBC_SRR5196892,JHHS7_S1,SRR5196892,PGBC,No_data,GSE93991,No_data,Glioblastoma_cancer_stem_cell
+PGBC_SRR5196893,JHHS8_S2,SRR5196893,PGBC,No_data,GSE93991,No_data,Glioblastoma_cancer_stem_cell
+QGBC_SRR5196894,JHHS9_S1,SRR5196894,QGBC,No_data,GSE93991,No_data,Glioblastoma_cancer_stem_cell
+QGBC_SRR5196895,JHHS10_S2,SRR5196895,QGBC,No_data,GSE93991,No_data,Glioblastoma_cancer_stem_cell
+QGBC_SRR5196896,JHHS11_S1,SRR5196896,QGBC,No_data,GSE93991,No_data,Glioblastoma_cancer_stem_cell
+QGBC_SRR5196897,JHHS12_S2,SRR5196897,QGBC,No_data,GSE93991,No_data,Glioblastoma_cancer_stem_cell
+PGBC_SRR5196898,JHHS14_S1,SRR5196898,PGBC,No_data,GSE93991,No_data,Glioblastoma_cancer_stem_cell
+QGBC_SRR5196899,JHH17_S2,SRR5196899,QGBC,No_data,GSE93991,No_data,Glioblastoma_cancer_stem_cell
+QGBC_SRR5196900,JHH20_S1,SRR5196900,QGBC,No_data,GSE93991,No_data,Glioblastoma_cancer_stem_cell

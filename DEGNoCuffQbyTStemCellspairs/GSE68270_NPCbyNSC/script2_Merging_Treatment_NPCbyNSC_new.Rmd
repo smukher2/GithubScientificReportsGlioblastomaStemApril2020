@@ -1,0 +1,537 @@
+---
+title: "script2_Merging_Treatment_NPCbyNSC_v1"
+author: "Shradha Mukherjee"
+date: "Last updated January, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. Html_fragmented is quicker to load than html, hence for this pipeline which genenerated a large mount of data, we have used html_fragment to report Rmarkdown.
+
+#Checklist for this pipeline 
+  #1) GEO series number from publication or searching GEO for dataset of interest, here GSE=GSE68270. And their respective GPL gene annotation files
+  #2) metadata file made by manually combining individual metadata files from GEO to give '(original)merge_GSE68270_metadata_edit_v3' which was further edited manually to give '(manual)merge_GSE68270_metadata_edit_v3_NPCbyNSC.csv' 
+  #3) The present analysis was done on MacOS, using knitToHtmlfragment.
+  
+To reuse this code for other datasets 
+  a) replace 1) and 2) input files above with equivalent files for the dataset
+  b) in this pipeline human gene symbols are used
+
+####################################Merging GSE68270####################################### 
+
+###Step1: Load required libraries , setting working directory and Import data###
+```{r}
+#save working directory location
+wd<-getwd()
+wd
+```
+
+```{r}
+#Install packages by uncommenting two lines below if packages not already installed before
+#source("https://bioconductor.org/biocLite.R")
+##biocLite(c("stringr", "reshape2",  "dplyr", "ggplot2",  "magrittr", "edgeR", "DT))
+
+library(stringr)
+library(reshape2)
+library(dplyr)
+library(ggplot2)
+library(magrittr)
+library(edgeR)
+library(DT)
+```
+
+###Step2: Merge the htseq-counts expression data###
+```{r}
+setwd("./InputHtseqCount")
+#Be careful to check that the input pattern here is such that only the count data and no other files are selected
+htseqcountfiles <- list.files(pattern = "*.txt")
+htseqcountfiles
+setwd(wd)
+```  
+
+```{r}
+setwd("./InputHtseqCount")
+#Given that the above files were imported properly as shown above, lets read the entire list of files into a single object
+readhtseqcountfiles = lapply(htseqcountfiles, read.table, sep="\t",fill=TRUE)
+setwd(wd)
+```
+  
+```{r}
+#Now that all the files in the list have been 'read' we can merge them by 'V1' column which has gene symbols
+htseqCount <- Reduce(function(x, y) {
+    merge(x, y, all=TRUE, by="V1")
+}, readhtseqcountfiles)
+```
+  
+```{r}
+#Removal of extra htseqcount information
+htseqCount1=htseqCount[6:dim(htseqCount)[1],]
+
+#Gene names to row names
+rownames(htseqCount1)=htseqCount1$V1
+htseqCount1$V1=NULL
+
+#Sample names as colnames
+htseqCount2 <- htseqCount1
+colnames(htseqCount2)<-htseqcountfiles
+colnames(htseqCount2) <- gsub(".txt","",colnames(htseqCount2))
+```
+  
+```{r}
+#Here we just eyeball and make sure that the order of the samples here is same as the order of the input sample htseqcount files in the first code chunk i.e. 'htseqcountfiles <- list.files(pattern = "*.txt")'
+htseqcountfiles
+colnames(htseqCount2)
+```
+  
+```{r}
+#29 columns i.e. 29 samples + 1 column of genes, number of rows is the total number of gene annotations
+dim(htseqCount2)
+
+#Also can check that this is correct by looking at the first gene expression here 'A1BG' in the individual htseqcount files SRR4407798.txt and SRR4407800.txt. I checked and it looks ok.
+DT::datatable(head(htseqCount2))
+```
+  
+###Step3: Matching GSM or SRR number and replacing Sample_Names of choice from merged metadata (same order as merging of expression data above)###
+#Also incuded is a match column step in this code to ensure match
+#Before importing the metadate file, decide and include a column of sample names of your liking and the Study or batch information column you have. 
+#The individual_metadata.csv to make merged '(original)merge_GSE68270_metadata_edit_v3'
+```{r}
+merge_metadata=read.csv('./InputMetadata&Lists/(manual)merge_GSE68270_metadata_edit_v3_NPCbyNSC.csv', header =T, sep=',')
+DT::datatable(head(merge_metadata))
+```
+
+```{r}
+#Number of rows of above metadata is same as number of columns of Expr  
+dim(htseqCount2)
+dim(merge_metadata)
+```
+
+```{r}
+#Replace of column names in expression with sample names
+colnames(htseqCount2) <- merge_metadata$Sample_Name[match(colnames(htseqCount2), merge_metadata$GEO_Accession)]
+#DT::datatable(head(htseqCount2))
+htseqCount2[1:3,1:3]
+#Also can check that this is correct by looking at the first gene expression here 'A1BG' in the individual htseqcount files SRR4407798_1.txt and SRR4407800_1.txt. I checked and it looks ok.
+```
+
+```{r}
+#Lets drop the GEO accession number from the metadata now
+#merge_metadata=merge_metadata[,-c(1)] #to drop column by number
+merge_metadata <- merge_metadata[!names(merge_metadata) %in% c("GEO_Accession")]
+DT::datatable(head(merge_metadata))
+```
+
+```{r}
+#Now we make the same order of sample names in both expression data and metadata
+Ordered_merge_metadata=merge_metadata[order(merge_metadata$Sample_Name),]
+Ordered_merge_metadata[1:3,1:3]
+
+Ordered_htseqCount2=htseqCount2[ ,order(names(htseqCount2))]
+Ordered_htseqCount2[1:3,1:3]
+
+colnames(Ordered_htseqCount2)==Ordered_merge_metadata$Sample_Name
+#This should be all TRUE 
+```
+
+```{r}
+htseqCount2=Ordered_htseqCount2
+merge_metadata=Ordered_merge_metadata
+colnames(htseqCount2)==merge_metadata$Sample_Name
+#This should be all TRUE 
+```
+
+###Step3: Calculate gene length for the gene_name or gene symbols ###
+Ref: http://seqanswers.com/forums/archive/index.php/t-39797.html
+https://github.com/dpryan79/Answers/blob/master/SEQanswers_42420/GTF2LengthGC.R
+https://www.cnblogs.com/qiniqnyang/p/7518991.html
+https://www.biostars.org/p/196548/#196757
+
+```{r}
+library(GenomicRanges)
+library(rtracklayer)
+```
+
+```{r}
+#Import gtf file
+GTFfile = "Mus_musculus.GRCm38.92.gtf"
+#leave feature type blank to import all features
+GTF <- import.gff(GTFfile, format="gtf", genome="GRCm38.92", feature.type="gene")
+```
+
+```{r}
+grl <- reduce(split(GTF, elementMetadata(GTF)$gene_name)) #use gene_id to get ensemble ids and transcript_id to get ensemble transcript id
+reducedGTF <- unlist(grl, use.names=T)
+```
+
+```{r}
+#Create gene_name and width columns and fill in with values
+#elementMetadata(reducedGTF)$gene_name <- rep(names(grl), elementLengths(grl))
+elementMetadata(reducedGTF)$gene_name <- rep(names(grl), elementNROWS(grl))
+#elementLengths() has been changed to function elementNROWS()
+#https://github.com/genomicsclass/labs/issues/62
+#use gene_id to get ensemble ids and transcript_id to get ensemble transcript id
+
+elementMetadata(reducedGTF)$widths <- width(reducedGTF)
+
+```
+
+```{r}
+#calculate length of the selected feature gene and gene_name 
+calc_length <- function(x) {
+sum(elementMetadata(x)$widths)
+}
+
+gene_length_output <- t(sapply(split(reducedGTF, elementMetadata(reducedGTF)$gene_name), calc_length)) 
+#use gene_id to get ensemble ids and transcript_id to get ensemble transcript id
+```
+
+```{r}
+gene_length_output_1<- t(gene_length_output)
+colnames(gene_length_output_1) <- c("gene_name_length")
+#convert to data frame
+gene_length_output_2=as.data.frame(gene_length_output_1) 
+```
+
+```{r}
+write.csv(gene_length_output_2, file = "Mus_musculus.GRCm38.92_gene_name_length.csv")
+```
+
+###Step4: Normalization of the htseq-counts expression data: cpm, rpkm, fpkm and tpm method###
+code
+https://gist.github.com/slowkow/6e34ccb4d1311b8fe62e
+https://bioinformatics.stackexchange.com/questions/66/how-to-compute-rpkm-in-r
+discussions
+https://www.biostars.org/p/270108/
+https://www.biostars.org/p/68126/
+https://www.rna-seqblog.com/rpkm-fpkm-and-tpm-clearly-explained/
+
+```{r}
+#edgeR recommends to remove genes without atleast 1 cpm in >= no. of samples in minimum sample group. Our samples belong to different categoeies and sub-categories, so using 3 (triplicate)
+Keep<-rowSums(cpm(htseqCount2) > 1) >= 2
+htseqCount2_keep<-htseqCount2[Keep, ]
+dim(htseqCount2)
+dim(htseqCount2_keep) 
+#We remove 56K-25K=31K low genes
+```
+
+```{r}
+#we will use cpm function available in edgeR
+library(edgeR)
+#cpm normalize for library size differences. Alternatives are RPKM or TPM normalization. 
+htseqCount2_keepcpm=cpm(htseqCount2_keep, normalized.lib.sizes=TRUE)
+DT::datatable(htseqCount2_keepcpm[1:7,1:7])
+```
+
+```{r}
+#log2+1 transform cpm
+htseqCount2_cpmlog=log2(htseqCount2_keepcpm+1)
+DT::datatable(htseqCount2_cpmlog[1:7,1:7])
+```
+
+```{r}
+dim(htseqCount2)
+#filter htseqCount2 by gene names in gene_length_output_2 file so that they are matched otherwise after tpm and rpkm normalization the file will have blank rownames instead of gene names
+htseqCount2_matched<- htseqCount2[match(rownames(gene_length_output_2),rownames(htseqCount2)),]
+dim(htseqCount2_matched)
+head(htseqCount2_matched)
+```
+
+```{r}
+#function for caluclation of tpm
+tpm <- function(counts, lengths) {
+  rate <- counts / lengths
+  rate / sum(rate) * 1e6
+}
+
+#Alternative function for calculation of tpm above but in log space
+tpm_alt = function (counts, effective_lengths) {
+    rate = log(counts) - log(effective_lengths)
+    exp(rate - log(sum(exp(rate))) + log(1E6))
+}
+
+#calculation of tpm from htseqCount2_matched 
+htseqCount2_matched_tpm=apply(htseqCount2_matched, 2, function(x) tpm(x, gene_length_output_2$gene_name_length))
+DT::datatable(htseqCount2_matched_tpm[1:7,1:7])
+```
+
+```{r}
+#Filtering low counts instead of cpm based filtering this is same condition applied to tpm filtering
+htseqCount2_matched_keeptpm=htseqCount2_matched_tpm[rowSums(htseqCount2_matched_tpm > 1) >= 2, ]
+dim(htseqCount2_matched_tpm)
+dim(htseqCount2_matched_keeptpm)
+```
+
+```{r}
+#log2+1 transform tpm
+htseqCount2_matched_tpmlog=log2(htseqCount2_matched_keeptpm+1)
+DT::datatable(htseqCount2_matched_tpmlog[1:7,1:7])
+```
+
+```{r}
+#Alternative function for caluclation of rpkm
+rpkm_alt1 <- function(counts, lengths) {
+  rate <- counts / lengths 
+  rate / sum(counts) * 1e9
+}
+
+#Alternative function for calculation of rpkm above but in log space
+rpkm_alt2 = function (counts, effective_lengths) {
+    exp(log(counts) - log(effective_lengths) - log(sum(counts)) + log(1E9))
+}
+
+#calculation of rpkm from htseqCount2_matched for alternative rpkm functions above
+#htseqCount2_matched_rpkm <- apply(htseqCount2_matched, 2, function(x) rpkm(x, gene_length_output_2$gene_name_length))
+
+#we will use rpkm function available in edgeR
+library(edgeR)
+
+#calculation of rpkm from htseqCount2_matched
+htseqCount2_matched_rpkm=rpkm(htseqCount2_matched, gene_length_output_2$gene_name_length, normalized.lib.sizes=TRUE)
+DT::datatable(htseqCount2_matched_rpkm[1:7,1:7])
+```
+
+```{r}
+#Filtering low counts instead of cpm based filtering this is same condition applied to rpkm filtering
+#htseqCount2_matched_keeprpkm=htseqCount2_matched_rpkm[rowSums(htseqCount2_matched_rpkm > 1) >= 2, ]
+#above filtering removed 50% more genes than cpm and tpm filtered counts, 
+#[1] 12985   324
+#so reduced stringency of filtering to get genes of similar number to tpm and cpm
+
+htseqCount2_matched_keeprpkm=htseqCount2_matched_rpkm[rowSums(htseqCount2_matched_rpkm > 1) >= 2, ]
+dim(htseqCount2_matched_rpkm)
+dim(htseqCount2_matched_keeprpkm)
+```
+
+```{r}
+#log2+1 transform rpkm
+htseqCount2_matched_rpkmlog=log2(htseqCount2_matched_keeprpkm+1)
+DT::datatable(htseqCount2_matched_rpkmlog[1:7,1:7])
+```
+
+  #4.1 Check for negative values. Negative values will not work in WGCNA
+```{r}
+exprRaw_ifneg<-apply(htseqCount2, 1, function(row) any(row <0))
+length(which(exprRaw_ifneg)) #what is the length of negative numbers
+
+exprRaw1_ifneg<-apply(htseqCount2_keep, 1, function(row) any(row <0))
+length(which(exprRaw1_ifneg)) #what is the length of negative numbers
+
+exprCpm_ifneg<-apply(htseqCount2_keepcpm, 1, function(row) any(row <0))
+length(which(exprCpm_ifneg)) #what is the length of negative numbers
+
+exprCpmLog_ifneg<-apply(htseqCount2_cpmlog, 1, function(row) any(row <0))
+length(which(exprCpmLog_ifneg)) #what is the length of negative numbers
+#0 means no negative values 
+
+exprTpm_ifneg<-apply(htseqCount2_matched_keeptpm, 1, function(row) any(row <0))
+length(which(exprTpm_ifneg)) #what is the length of negative numbers
+
+exprTpmLog_ifneg<-apply(htseqCount2_matched_tpmlog, 1, function(row) any(row <0))
+length(which(exprTpmLog_ifneg)) #what is the length of negative numbers
+#0 means no negative values 
+
+exprRpkm_ifneg<-apply(htseqCount2_matched_keeprpkm, 1, function(row) any(row <0))
+length(which(exprRpkm_ifneg)) #what is the length of negative numbers
+
+exprRpkmLog_ifneg<-apply(htseqCount2_matched_rpkmlog, 1, function(row) any(row <0))
+length(which(exprRpkmLog_ifneg)) #what is the length of negative numbers
+#0 means no negative values 
+```
+
+  #4.2 Check for max and min values. Ususally don't want max to be <100 
+```{r}
+exprRaw_max<-which.max(as.matrix(htseqCount2))
+exprRaw_max
+exprRaw_min<-which.min(as.matrix(htseqCount2))
+exprRaw_min
+
+exprRaw1_max<-which.max(as.matrix(htseqCount2_keep))
+exprRaw1_max
+exprRaw1_min<-which.min(as.matrix(htseqCount2_keep))
+exprRaw1_min
+
+exprCpm_max<-which.max(as.matrix(htseqCount2_keepcpm))
+exprCpm_max
+exprCpm_min<-which.min(as.matrix(htseqCount2_keepcpm))
+exprCpm_min
+
+exprCpmLog_max<-which.max(as.matrix(htseqCount2_cpmlog))
+exprCpmLog_max
+exprCpmLog_min<-which.min(as.matrix(htseqCount2_cpmlog))
+exprCpmLog_min
+
+exprTpm_max<-which.max(as.matrix(htseqCount2_matched_keeptpm))
+exprTpm_max
+exprTpm_min<-which.min(as.matrix(htseqCount2_matched_keeptpm))
+exprTpm_min
+
+exprTpmLog_max<-which.max(as.matrix(htseqCount2_matched_tpmlog))
+exprTpmLog_max
+exprTpmLog_min<-which.min(as.matrix(htseqCount2_matched_tpmlog))
+exprTpmLog_min
+
+exprRpkm_max<-which.max(as.matrix(htseqCount2_matched_keeprpkm))
+exprRpkm_max
+exprRpkm_min<-which.min(as.matrix(htseqCount2_matched_keeprpkm))
+exprRpkm_min
+
+exprRpkmLog_max<-which.max(as.matrix(htseqCount2_matched_rpkmlog))
+exprRpkmLog_max
+exprRpkmLog_min<-which.min(as.matrix(htseqCount2_matched_rpkmlog))
+exprRpkmLog_min
+```
+
+  #4.3 Descriptive or summary statistics of the data
+```{r}
+DT::datatable(summary(htseqCount2))
+```
+
+```{r}
+DT::datatable(summary(htseqCount2_keep))
+```
+
+```{r}
+DT::datatable(summary(htseqCount2_keepcpm))
+```
+
+```{r}
+DT::datatable(summary(htseqCount2_cpmlog))
+```
+
+```{r}
+DT::datatable(summary(htseqCount2_matched_keeptpm))
+```
+
+```{r}
+DT::datatable(summary(htseqCount2_matched_tpmlog))
+```
+
+```{r}
+DT::datatable(summary(htseqCount2_matched_keeprpkm))
+```
+
+```{r}
+DT::datatable(summary(htseqCount2_matched_rpkmlog))
+```
+
+  #4.4 Visualization of merged GSE68270
+```{r}
+pdf(file="Step4_plot_Visualization_GSE68270_rawdata_transformation.pdf",height=5,width=5)
+par(mfrow=c(2,1)) #plots are big, so put two per page
+
+#exprRaw boxplot
+par(mai=c(1,0.8,1,0.8))
+boxplot(htseqCount2, outline=FALSE, las=2, cex=0.25, main="exprRaw", col="yellow")
+
+#exprRaw1 boxplot
+par(mai=c(1,0.8,1,0.8))
+boxplot(htseqCount2_keep, outline=FALSE, las=2, cex=0.25, main="exprRaw1", col="yellow")
+
+#exprCpm boxplot
+par(mai=c(1,0.8,1,0.8))
+boxplot(htseqCount2_keepcpm, outline=FALSE, las=2, cex=0.25, main="exprCpm", col="yellow")
+
+#exprCpmLog boxplot
+par(mai=c(1,0.8,1,0.8))
+boxplot(htseqCount2_cpmlog, outline=FALSE, las=2, cex=0.25, main="exprCpmLog", col="yellow")
+
+#exprTpm boxplot
+par(mai=c(1,0.8,1,0.8))
+boxplot(htseqCount2_matched_keeptpm, outline=FALSE, las=2, cex=0.25, main="exprTpm", col="yellow")
+
+#exprTpmLog boxplot
+par(mai=c(1,0.8,1,0.8))
+boxplot(htseqCount2_matched_tpmlog, outline=FALSE, las=2, cex=0.25, main="exprTpmLog", col="yellow")
+
+#exprRpkm boxplot
+par(mai=c(1,0.8,1,0.8))
+boxplot(htseqCount2_matched_keeprpkm, outline=FALSE, las=2, cex=0.25, main="exprRpkm", col="yellow")
+
+#exprRpkmLog boxplot
+par(mai=c(1,0.8,1,0.8))
+boxplot(htseqCount2_matched_rpkmlog, outline=FALSE, las=2, cex=0.25, main="exprRpkmLog", col="yellow")
+
+dev.off()
+```
+
+  #4.5 Visualization of merged GSE68270 few samples
+```{r}
+pdf(file="Step4_plot_Visualization_GSE68270_rawdata_transformation_FewSamples.pdf",height=5,width=5)
+par(mfrow=c(2,1)) #plots are big, so put two per page
+
+#randomly select 7 samples to visualize change in exprssion data with normalization. Fro large datasets to visualiza all samplse is too many and hard to see
+col_sel=sample(ncol(htseqCount2), 7) #use number less than 7 is total samples is less than 7
+
+#exprRaw boxplot
+par(mai=c(1,0.8,1,0.8))
+boxplot(htseqCount2[,col_sel], outline=FALSE, las=2, cex=0.25, main="exprRaw", col="yellow")
+
+#exprRaw1 boxplot
+par(mai=c(1,0.8,1,0.8))
+boxplot(htseqCount2_keep[,col_sel], outline=FALSE, las=2, cex=0.25, main="exprRaw1", col="yellow")
+
+#exprCpm boxplot
+par(mai=c(1,0.8,1,0.8))
+boxplot(htseqCount2_keepcpm[,col_sel], outline=FALSE, las=2, cex=0.25, main="exprCpm", col="yellow")
+
+#exprCpmLog boxplot
+par(mai=c(1,0.8,1,0.8))
+boxplot(htseqCount2_cpmlog[,col_sel], outline=FALSE, las=2, cex=0.25, main="exprCpmLog", col="yellow")
+
+#exprTpm boxplot
+par(mai=c(1,0.8,1,0.8))
+boxplot(htseqCount2_matched_keeptpm[,col_sel], outline=FALSE, las=2, cex=0.25, main="exprTpm", col="yellow")
+
+#exprTpmLog boxplot
+par(mai=c(1,0.8,1,0.8))
+boxplot(htseqCount2_matched_tpmlog[,col_sel], outline=FALSE, las=2, cex=0.25, main="exprTpmLog", col="yellow")
+
+#exprRpkm boxplot
+par(mai=c(1,0.8,1,0.8))
+boxplot(htseqCount2_matched_keeprpkm[,col_sel], outline=FALSE, las=2, cex=0.25, main="exprRpkm", col="yellow")
+
+#exprRpkmLog boxplot
+par(mai=c(1,0.8,1,0.8))
+boxplot(htseqCount2_matched_rpkmlog[,col_sel], outline=FALSE, las=2, cex=0.25, main="exprRpkmLog", col="yellow")
+
+dev.off()
+```
+
+```{r}
+#Now we make the same order of sample names in both expression data and metadata
+Ordered_merge_metadata=merge_metadata[order(merge_metadata$Sample_Name),]
+Ordered_merge_metadata[1:3,1:3]
+
+htseqCount2_matched_tpmlog=as.data.frame(htseqCount2_matched_tpmlog)
+
+Ordered_htseqCount2_matched_tpmlog=htseqCount2_matched_tpmlog[ ,order(names(htseqCount2_matched_tpmlog))]
+Ordered_htseqCount2_matched_tpmlog[1:3,1:3]
+
+colnames(Ordered_htseqCount2_matched_tpmlog)==Ordered_merge_metadata$Sample_Name
+#This should be all TRUE 
+```
+
+```{r}
+htseqCount2_matched_tpmlog=Ordered_htseqCount2_matched_tpmlog
+merge_metadata=Ordered_merge_metadata
+colnames(htseqCount2_matched_tpmlog)==merge_metadata$Sample_Name
+#This should be all TRUE 
+```
+
+###Step5: we can export the Expression data and Metadata with Sample_Name can be used for SVA, DEG and WGCNA analysis###
+```{r}
+#here tpmlog for RNA-seq or lumilog for microarray is being exported similarly cpm, tpm, rpkm, cpmlog and rpkmlog can also be exported for ENA-seq
+write.csv(htseqCount2_matched_tpmlog,"Step5D_result_merge_GSE68270_Expr_Gene_SampleID.csv")
+write.csv(merge_metadata,"Step5D_result_merge_GSE68270_metadata_SampleID.csv")
+```
+
+```{r}
+#The files we needed are saved so we now clear workspace and delete files and folders that are not needed 
+save.image(file="preSVA_Merging.RData")
+rm(list=ls())
+gc()
+``` 

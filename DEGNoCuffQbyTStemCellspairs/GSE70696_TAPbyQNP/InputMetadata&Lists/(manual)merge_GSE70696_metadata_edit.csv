@@ -1,0 +1,5 @@
+Sample_Name,RatGroup_Name,GEO_Accession,Treatment,Age,Study,Gender,Tissue
+QNP_SRR3486450,HCN_QNP_1,SRR3486450,QNP,NA,GSE70696,NA,HCN cells in iQNP electroporated with empty vector
+QNP_SRR3486449,HCN_QNP_2,SRR3486449,QNP,NA,GSE70696,NA,HCN cells in iQNP  electroporated with empty vector
+TAP_SRR3486455,HCN_TAP_1,SRR3486455,TAP,NA,GSE70696,NA,HCN cells in TAP  electroporated with empty vector
+TAP_SRR3486456,HCN_TAP_2,SRR3486456,TAP,NA,GSE70696,NA,HCN cells in TAP electroporated with empty vector

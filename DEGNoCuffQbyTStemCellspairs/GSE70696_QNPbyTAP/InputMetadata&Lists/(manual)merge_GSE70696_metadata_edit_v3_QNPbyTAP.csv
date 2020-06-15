@@ -1,0 +1,5 @@
+Sample_Name,RatGroup_Name,GEO_Accession,Treatment,Age,Study,Gender,Tissue
+QNP_SRR3486450,HCN_QNP_1,SRR3486450,QNP,No_data,GSE70696,No_data,HCN_cells_in_iQNP_electroporated_with_empty_vector
+QNP_SRR3486449,HCN_QNP_2,SRR3486449,QNP,No_data,GSE70696,No_data,HCN_cells_in_iQNP_electroporated_with_empty_vector
+TAP_SRR3486455,HCN_TAP_1,SRR3486455,TAP,No_data,GSE70696,No_data,HCN_cells_in_TAP_electroporated_with_empty_vector
+TAP_SRR3486456,HCN_TAP_2,SRR3486456,TAP,No_data,GSE70696,No_data,HCN_cells_in_TAP_electroporated_with_empty_vector

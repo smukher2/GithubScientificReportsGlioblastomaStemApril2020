@@ -1,0 +1,13 @@
+Sample_Name,HuGroup_Name,GEO_Accession,Treatment,Age,Study,Gender,Tissue,cell_state,source_name
+QGBO_SRR7175675,QGBO_1,SRR7175675,QGBO,No_data,GSE114574,No_data,GBM_cells_in_3D_organoid_culture,quiescent,Brain
+QGBO_SRR7175676,QGBO_2,SRR7175676,QGBO,No_data,GSE114574,No_data,GBM_cells_in_3D_organoid_culture,quiescent,Brain
+QGBO_SRR7175677,QGBO_3,SRR7175677,QGBO,No_data,GSE114574,No_data,GBM_cells_in_3D_organoid_culture,quiescent,Brain
+QGBO_SRR7175678,QGBO_4,SRR7175678,QGBO,No_data,GSE114574,No_data,GBM_cells_in_3D_organoid_culture,quiescent,Brain
+QGBO_SRR7175679,QGBO_5,SRR7175679,QGBO,No_data,GSE114574,No_data,GBM_cells_in_3D_organoid_culture,quiescent,Brain
+QGBO_SRR7175680,QGBO_6,SRR7175680,QGBO,No_data,GSE114574,No_data,GBM_cells_in_3D_organoid_culture,quiescent,Brain
+PGBO_SRR7175681,PGBO_7,SRR7175681,PGBO,No_data,GSE114574,No_data,GBM_cells_in_3D_organoid_culture,proliferative,Brain
+PGBO_SRR7175682,PGBO_8,SRR7175682,PGBO,No_data,GSE114574,No_data,GBM_cells_in_3D_organoid_culture,proliferative,Brain
+PGBO_SRR7175683,PGBO_9,SRR7175683,PGBO,No_data,GSE114574,No_data,GBM_cells_in_3D_organoid_culture,proliferative,Brain
+PGBO_SRR7175684,PGBO_10,SRR7175684,PGBO,No_data,GSE114574,No_data,GBM_cells_in_3D_organoid_culture,proliferative,Brain
+PGBO_SRR7175685,PGBO_11,SRR7175685,PGBO,No_data,GSE114574,No_data,GBM_cells_in_3D_organoid_culture,proliferative,Brain
+PGBO_SRR7175686,PGBO_12,SRR7175686,PGBO,No_data,GSE114574,No_data,GBM_cells_in_3D_organoid_culture,proliferative,Brain

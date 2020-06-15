@@ -1,0 +1,288 @@
+---
+title: "GSE99777_download_full"
+author: "Shradha Mukherjee"
+date: "March 1, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+####################################Getting raw data GSE99777####################################### 
+
+###Step1: Load required libraries ans setting working directory###
+
+```{r}
+#save working directory location
+wd<-getwd()
+wd
+```
+
+```{r}
+#Install packages by uncommenting two lines below if packages not already installed before
+#source("https://bioconductor.org/biocLite.R")
+#biocLite(c("GEOquery","Biobase", "limma", "R.utils", "lumi", "DT"))
+
+library(Biobase)
+library(GEOquery)
+library(lumi)
+library(R.utils)
+library(DT)
+library(limma)
+library(sva)
+library(pamr)
+library(stringr)
+```
+
+```{r}
+#At start of pipeline no input files are needed except the .Rproj which sets working directory to current directory and keeps R environment independent of other folders and the .Rmd R code
+list.files()
+```
+
+###Step2: Getting GEO expression data and metadata###
+  #2.1 Get GE0 data as R object
+```{r}
+# Saving series and platform gene annotation data from GEO to gset object
+gset <- getGEO("GSE99777", GSEMatrix =TRUE, AnnotGPL=TRUE)
+if (length(gset) > 1) idx <- grep("GPL1261", attr(gset, "names")) else idx <- 1
+gset <- gset[[idx]] 
+```
+
+  #2.2 keep only samples of interest
+```{r}
+#these groups were selected on the GEO2R to keep only PSVZ and QSVZ, but not the irradiated PSVZ. Also do not get one sample from PSVZ and one from QSVZ which have NA values only in gene expression
+gsms <- paste0("00X0XXXX111X")
+sml <- c()
+for (i in 1:nchar(gsms)) { sml[i] <- substr(gsms,i,i) }
+# eliminate samples marked as "X"
+sel <- which(sml != "X")
+sml <- sml[sel]
+gset <- gset[ ,sel]  
+```
+
+  #2.3 Getting GEO metadata of interest
+```{r}
+#Names of available phenotype data
+names(pData(gset))
+```
+
+```{r}
+metadata=data.frame(gset$geo_accession, gset$source_name_ch1, gset$`state:ch1`, gset$`tissue:ch1`, gset$`gender:ch1`)
+head(metadata)
+write.csv(metadata,'GSE99777_metadata.csv')
+```
+
+  #2.4 Get GE0 raw expression data. 
+```{r}
+DT::datatable(exprs(gset)[1:3,])
+```
+
+```{r}
+#The expression data uploaded for this entry is Agilent dual color cy5 cy3 label microarray 
+exprList<-exprs(gset)
+write.table(exprList, "GSE99777_expression_data_originalfromGEO.txt", sep="\t", quote=F)
+```
+
+###Step3: Quantile normalization with lumi ###
+  #3.1 Reading and formatting expression data for normalization
+```{r}
+#Now we read in the raw expression values
+exprRaw<-read.delim('GSE99777_expression_data_originalfromGEO.txt',header=T, sep='\t')
+DT::datatable(exprRaw[1:3,])
+DT::datatable(summary(exprRaw))
+```
+
+```{r}
+#The original GSE99777 is in GC-RMA Intensity values non-log  https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM2652126
+#conversiton back to non-log scale not needed
+#exprRaw1 = 10^exprRaw
+exprRaw1 = exprRaw
+DT::datatable(exprRaw1[1:3,])
+write.table(exprRaw1, "GSE99777_expression_data_non-log.txt", sep="\t", quote=F)
+```
+
+  #3.2 Using lumi for quantile normalization  
+```{r}
+#Perform qualtile normalization on the raw expression data should be matrix format.
+exprLumi<-lumiN(as.matrix(exprRaw1),method="quantile")
+DT::datatable(exprLumi[1:3,])
+```
+
+  #3.3 log2+1 transformation
+```{r}
+#log2+1 transform the expression data. This step also changes it back to data frame format
+exprLog<-log2(exprLumi+1)
+DT::datatable(exprLog[1:3,])
+```
+
+  #3.4 Check for negative values. Negative values will not work in WGCNA
+```{r}
+exprRaw_ifneg<-apply(exprRaw, 1, function(row) any(row <0))
+length(which(exprRaw_ifneg)) #what is the length of negative numbers
+
+exprRaw1_ifneg<-apply(exprRaw1, 1, function(row) any(row <0))
+length(which(exprRaw1_ifneg)) #what is the length of negative numbers
+#0 means no negative values
+
+exprLumi_ifneg<-apply(exprLumi, 1, function(row) any(row <0))
+length(which(exprLumi_ifneg)) #what is the length of negative numbers
+#0 means no negative values 
+
+exprLog_ifneg<-apply(exprLog, 1, function(row) any(row <0))
+length(which(exprLog_ifneg)) #what is the length of negative numbers
+#0 means no negative values 
+```
+
+  #3.5 Check for max and min values. Ususally don't want max to be <100 
+```{r}
+exprRaw_max<-which.max(as.matrix(exprRaw))
+exprRaw_max
+exprRaw_min<-which.min(as.matrix(exprRaw))
+exprRaw_min
+
+exprRaw1_max<-which.max(as.matrix(exprRaw1))
+exprRaw1_max
+exprRaw1_min<-which.min(as.matrix(exprRaw1))
+exprRaw1_min
+
+exprLumi_max<-which.max(as.matrix(exprLumi))
+exprLumi_max
+exprLumi_min<-which.min(as.matrix(exprLumi))
+exprLumi_min
+
+exprLog_max<-which.max(as.matrix(exprLog))
+exprLog_max
+exprLog_min<-which.min(as.matrix(exprLog))
+exprLog_min
+```
+
+  #3.6 Descriptive or summary statistics of the data
+```{r}
+DT::datatable(summary(exprRaw))
+```
+
+```{r}
+DT::datatable(summary(exprRaw1))
+```
+
+```{r}
+DT::datatable(summary(exprLumi))
+```
+
+```{r}
+DT::datatable(summary(exprLog))
+```
+
+	#3.7 Visualization of GSE99777 alone
+```{r}
+pdf(file="Step3_plot_Visualization_GSE99777_rawdata_transformation.pdf",height=5,width=5)
+par(mfrow=c(2,2))
+
+#randomly select 6 samples to visualize change in exprssion data with normalization. Trying to visualiza all sample is too many and hard to see
+col_sel=sample(ncol(exprRaw), 6) #use number less than 6 is total samples is less than 6
+
+#exprRaw boxplot
+par(mai=c(1,0.8,1,0.8))
+boxplot(exprRaw[,col_sel], outline=FALSE, las=2, cex=0.25, main="exprRaw", col="yellow")
+
+#exprRaw1 boxplot
+par(mai=c(1,0.8,1,0.8))
+boxplot(exprRaw1[,col_sel], outline=FALSE, las=2, cex=0.25, main="exprRaw1", col="yellow")
+
+#exprLumi boxplot
+par(mai=c(1,0.8,1,0.8))
+boxplot(exprLumi[,col_sel], outline=FALSE, las=2, cex=0.25, main="exprLumi", col="yellow")
+
+#exprLog boxplot
+par(mai=c(1,0.8,1,0.8))
+boxplot(exprLog[,col_sel], outline=FALSE, las=2, cex=0.25, main="exprLog", col="yellow")
+
+
+#exprRaw MDSplot, colored by Study
+#par(mai=c(1,0.8,1,0.8))
+#plotMDS(exprRaw[,col_sel], legend= "all", main="exprRaw Study", cex=0.5)#like PCA plot
+
+#exprRaw1 MDSplot, colored by Study
+#par(mai=c(1,0.8,1,0.8))
+#plotMDS(exprRaw1[,col_sel], legend= "all", main="exprRaw1 Study", cex=0.5)#like PCA plot
+
+#exprLumi MDSplot, colored by Study
+#par(mai=c(1,0.8,1,0.8))
+#plotMDS(exprLumi[,col_sel], legend= "all", main="exprLumi Study", cex=0.5)#like PCA plot
+
+#exprLog MDSplot, colored by Study
+#par(mai=c(1,0.8,1,0.8))
+#plotMDS(exprLog[,col_sel], legend= "all", main="exprLog Study", cex=0.5)#like PCA plot
+
+dev.off()
+```
+
+###Step4: Use GPL file to convert probe ID to GeneSymbol in exprLog that will be used for further analysis ###
+  #4.1 Getting GPL annotation file 
+```{r}
+GPLid<-annotation(gset)
+GPL_file<-getGEO(GPLid)
+## File stored at:
+## /var/folders/0g/5tz57sgx7090n5vttfqvs3ym0000gn/T//Rtmpv5hBUt/GPL1261.soft
+colnames(GPL_file@dataTable@table)
+write.table(GPL_file@dataTable@table,"GPL1261.txt", sep='\t', quote=F)
+```
+
+```{r}
+#We pick the ID or reporter ID and Gene Symbol or gene symbols from options displayed above. We need this to annotate expression data. Will use ID to combine.
+GPL_file1<-GPL_file@dataTable@table[,c("ID","Gene Symbol")]
+DT::datatable(head(GPL_file1))
+```
+
+```{r}
+#from the above GPL file we only want to keep first gene symbols and not any other gene name types
+colnames(GPL_file1)<-c("ID","gene_assignment")
+GPL_file2<-GPL_file1
+GPL_file2<-str_split_fixed(GPL_file2$gene_assignment, " /// ", 2)
+colnames(GPL_file2)<-c("gene_symbol", "B")
+GPL_file2<-as.data.frame(GPL_file2)
+#get columns from GPL_file1 which has IDs and gene assignment. We did not change order so this we can import the said columns into the data frame
+GPL_file2$ID<-GPL_file1$ID
+GPL_file2$gene_assignment<-GPL_file1$gene_assignment
+#chack from view below that the match looks good in GPL_file2
+View(GPL_file1)
+View(GPL_file2)
+```
+
+```{r}
+#now we create a new dataframe to use further
+GPL_file3<-GPL_file2[,c("ID", "gene_symbol")]
+View(GPL_file3)
+```
+
+  #4.2 preparing gene expression data exprLog for merging with annotation file
+```{r}
+exprGene=exprLog
+#colnames already are sample GSM id
+DT::datatable(head(exprGene))
+```
+
+```{r}
+#Add "ID" column that we will use for merging with annotation
+exprGene1=cbind(exprGene, rownames(exprGene))
+colnames(exprGene1)=c(colnames(exprGene),"ID")
+DT::datatable(head(exprGene1))
+```
+
+  #4.3 get gene expression data with gene symbols. GEO annotation is static and ensures that annotation of genes does not change over time.
+```{r}
+#This is complete gene expression with Gene symbol annotations
+#Save and use columns for pipelines as needed
+exprGene2=merge(exprGene1, GPL_file3, by="ID")
+dim(exprGene2)
+DT::datatable(head(exprGene2))
+write.csv(exprGene2, "GSE99777_Annotation_Expr_GeneMs.csv")
+```
+
+```{r}
+#The files we needed are saved so we now clear workspace and delete files and folders that are not needed 
+save.image(file="preSVA_GSE99777_temp.RData")
+rm(list=ls())
+gc()
+```

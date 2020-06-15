@@ -1,0 +1,35 @@
+AvgSpotLen	BioSample	DATASTORE_provider	Experiment	LoadDate	MBases	MBytes	Run	SRA_Sample	Sample_Name	growth_condition	source_name	treatment	Assay_Type	AssemblyName	BioProject	Center_Name	Consent	DATASTORE_filetype	DATASTORE_region	InsertSize	Instrument	LibraryLayout	LibrarySelection	LibrarySource	Organism	Platform	ReleaseDate	SRA_Study	cell_line	passages
+175	SAMN04961786	ncbi	SRX1748278	2016-05-09	3160	689	SRR3486450	SRS1426067	GSM2146811	iQNP	HCN cells in iQNP or quiescent growth condition	electroporated with empty vector	RNA-Seq	RGSC_v3.4	PRJNA289392	GEO	public	sra		0	Illumina HiSeq 2500	PAIRED	cDNA	TRANSCRIPTOMIC	Rattus norvegicus	ILLUMINA	2016-11-09	SRP060621	hippocampal neural stem (HCN) cells derived from the adult rat brain	multiple
+166	SAMN04961785	ncbi	SRX1748277	2016-05-09	2244	496	SRR3486449	SRS1426069	GSM2146810	iQNP	HCN cells in iQNP or quiescent growth condition	electroporated with empty vector	RNA-Seq	RGSC_v3.4	PRJNA289392	GEO	public	sra		0	Illumina HiSeq 2500	PAIRED	cDNA	TRANSCRIPTOMIC	Rattus norvegicus	ILLUMINA	2016-11-09	SRP060621	hippocampal neural stem (HCN) cells derived from the adult rat brain	multiple
+169	SAMN04961787	ncbi	SRX1748279	2016-05-09	2267	501	SRR3486451	SRS1426070	GSM2146812	iQNP	HCN cells in iQNP or quiescent growth condition	electroporated with Restkd vector	RNA-Seq	RGSC_v3.4	PRJNA289392	GEO	public	sra		0	Illumina HiSeq 2500	PAIRED	cDNA	TRANSCRIPTOMIC	Rattus norvegicus	ILLUMINA	2016-11-09	SRP060621	hippocampal neural stem (HCN) cells derived from the adult rat brain	multiple
+177	SAMN04961788	ncbi	SRX1748280	2016-05-09	2884	651	SRR3486452	SRS1426071	GSM2146813	iQNP	HCN cells in iQNP or quiescent growth condition	electroporated with Restkd vector	RNA-Seq	RGSC_v3.4	PRJNA289392	GEO	public	sra		0	Illumina HiSeq 2500	PAIRED	cDNA	TRANSCRIPTOMIC	Rattus norvegicus	ILLUMINA	2016-11-09	SRP060621	hippocampal neural stem (HCN) cells derived from the adult rat brain	multiple
+183	SAMN04961789	ncbi	SRX1748281	2016-05-09	9668	4813	SRR3486453	SRS1426072	GSM2146814	iQNP	HCN cells in iQNP or quiescent growth condition	electroporated with Restkd vector	RNA-Seq	RGSC_v3.4	PRJNA289392	GEO	public	sra		0	Illumina HiSeq 2500	PAIRED	cDNA	TRANSCRIPTOMIC	Rattus norvegicus	ILLUMINA	2016-11-09	SRP060621	hippocampal neural stem (HCN) cells derived from the adult rat brain	multiple
+164	SAMN04961791	ncbi	SRX1748283	2016-05-09	2440	528	SRR3486455	SRS1426073	GSM2146816	TAP	HCN cells in TAP or proliferative growth condition	electroporated with empty vector	RNA-Seq	RGSC_v3.4	PRJNA289392	GEO	public	sra		0	Illumina HiSeq 2500	PAIRED	cDNA	TRANSCRIPTOMIC	Rattus norvegicus	ILLUMINA	2016-11-09	SRP060621	hippocampal neural stem (HCN) cells derived from the adult rat brain	multiple
+182	SAMN04961790	sra-sos	SRX1748282	2016-11-30	6888	3476	SRR3486454	SRS1426074	GSM2146815	iQNP	HCN cells in iQNP or quiescent growth condition	electroporated with Restkd vector	RNA-Seq	RGSC_v3.4	PRJNA289392	GEO	public	sra	sra-sos.public	0	Illumina HiSeq 2500	PAIRED	cDNA	TRANSCRIPTOMIC	Rattus norvegicus	ILLUMINA	2016-11-09	SRP060621	hippocampal neural stem (HCN) cells derived from the adult rat brain	multiple
+174	SAMN04961792	ncbi	SRX1748284	2016-05-09	1687	405	SRR3486456	SRS1426075	GSM2146817	TAP	HCN cells in TAP or proliferative growth condition	electroporated with empty vector	RNA-Seq	RGSC_v3.4	PRJNA289392	GEO	public	sra		0	Illumina HiSeq 2500	PAIRED	cDNA	TRANSCRIPTOMIC	Rattus norvegicus	ILLUMINA	2016-11-09	SRP060621	hippocampal neural stem (HCN) cells derived from the adult rat brain	multiple
+184	SAMN04961794	ncbi	SRX1748286	2016-05-09	10844	2794	SRR3486458	SRS1426076	GSM2146819	TAP	HCN cells in TAP or proliferative growth condition	electroporated with Restkd vector	RNA-Seq	RGSC_v3.4	PRJNA289392	GEO	public	sra		0	Illumina HiSeq 2500	PAIRED	cDNA	TRANSCRIPTOMIC	Rattus norvegicus	ILLUMINA	2016-11-09	SRP060621	hippocampal neural stem (HCN) cells derived from the adult rat brain	multiple
+167	SAMN04961793	ncbi	SRX1748285	2016-05-09	3282	712	SRR3486457	SRS1426077	GSM2146818	TAP	HCN cells in TAP or proliferative growth condition	electroporated with Restkd vector	RNA-Seq	RGSC_v3.4	PRJNA289392	GEO	public	sra		0	Illumina HiSeq 2500	PAIRED	cDNA	TRANSCRIPTOMIC	Rattus norvegicus	ILLUMINA	2016-11-09	SRP060621	hippocampal neural stem (HCN) cells derived from the adult rat brain	multiple
+184	SAMN04961795	ncbi	SRX1748287	2016-05-09	8965	4442	SRR3486459	SRS1426078	GSM2146820	TAP	HCN cells in TAP or proliferative growth condition	electroporated with Restkd vector	RNA-Seq	RGSC_v3.4	PRJNA289392	GEO	public	sra		0	Illumina HiSeq 2500	PAIRED	cDNA	TRANSCRIPTOMIC	Rattus norvegicus	ILLUMINA	2016-11-09	SRP060621	hippocampal neural stem (HCN) cells derived from the adult rat brain	multiple
+182	SAMN04961796	ncbi	SRX1748288	2016-05-09	6507	3290	SRR3486460	SRS1426080	GSM2146821	TAP	HCN cells in TAP or proliferative growth condition	electroporated with Restkd vector	RNA-Seq	RGSC_v3.4	PRJNA289392	GEO	public	sra		0	Illumina HiSeq 2500	PAIRED	cDNA	TRANSCRIPTOMIC	Rattus norvegicus	ILLUMINA	2016-11-09	SRP060621	hippocampal neural stem (HCN) cells derived from the adult rat brain	multiple
+
+
+cuffdiff -o tap_vs_qnp_cuffdiff2 -L tap,qnp -p 2 --library-norm-method classic-fpkm -v /media/sf_VM-share/GSE70696_cuffdiff/archive-2015-07-17-14-36-10/Genes/genes.gtf tap_SRR3486455rn5accepted_hits.bam,tap_SRR3486456rn5accepted_hits.bam qnp_SRR3486449rn5accepted_hits.bam,qnp_SRR3486450rn5accepted_hits.bam
+htseq-count -f bam -r pos -t gene -i gene_name -s no SRR3486449rn5accepted_hits.bam /Users/powermac/GSE70696_cuffdiff/archive-2015-07-17-14-36-10/Genes/genes.gtf > SRR3486449rn5accepted_hits.txt
+htseq-count -f bam -r pos -t gene -i gene_name -s no SRR3486450rn5accepted_hits.bam /Users/powermac/GSE70696_cuffdiff/archive-2015-07-17-14-36-10/Genes/genes.gtf > SRR3486450rn5accepted_hits.txt
+htseq-count -f bam -r pos -t gene -i gene_name -s no SRR3486455rn5accepted_hits.bam /Users/powermac/GSE70696_cuffdiff/archive-2015-07-17-14-36-10/Genes/genes.gtf > SRR3486455rn5accepted_hits.txt
+htseq-count -f bam -r pos -t gene -i gene_name -s no SRR3486456rn5accepted_hits.bam /Users/powermac/GSE70696_cuffdiff/archive-2015-07-17-14-36-10/Genes/genes.gtf > SRR3486456rn5accepted_hits.txt
+
+
+
+samtools sort SRR3486449rn5accepted_hits.bam -o SRR3486449rn5_sort_accepted_hits.bam 
+/home/manager/anaconda3/bin/htseq-count -f bam -r pos -t CDS -i gene_name -s no SRR3486449rn5accepted_hits_PE.bam archive-2015-07-17-14-36-10_rn5_genes.gtf > SRR3486449rn5accepted_hits_PE.txt
+
+#still gives warning that no feature gene is found but the pipeline works. tried gene_id still warning. 
+samtools view -bf 1 SRR3486449rn5accepted_hits.bam > SRR3486449rn5accepted_hits_PE.bam
+samtools view -bf 1 SRR3486450rn5accepted_hits.bam > SRR3486450rn5accepted_hits_PE.bam
+samtools view -bf 1 SRR3486455rn5accepted_hits.bam > SRR3486455rn5accepted_hits_PE.bam
+samtools view -bf 1 SRR3486456rn5accepted_hits.bam > SRR3486456rn5accepted_hits_PE.bam
+
+
+
+

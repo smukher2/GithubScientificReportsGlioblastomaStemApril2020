@@ -1,0 +1,5 @@
+"","Sample_Name","RatGroup_Name","Treatment","Age","Study","Gender","Tissue"
+"2","QNP_SRR3486449","HCN_QNP_2","QNP","No_data","GSE70696","No_data","HCN_cells_in_iQNP_electroporated_with_empty_vector"
+"1","QNP_SRR3486450","HCN_QNP_1","QNP","No_data","GSE70696","No_data","HCN_cells_in_iQNP_electroporated_with_empty_vector"
+"3","TAP_SRR3486455","HCN_TAP_1","TAP","No_data","GSE70696","No_data","HCN_cells_in_TAP_electroporated_with_empty_vector"
+"4","TAP_SRR3486456","HCN_TAP_2","TAP","No_data","GSE70696","No_data","HCN_cells_in_TAP_electroporated_with_empty_vector"
