@@ -1,0 +1,7 @@
+"","HuAgeGBsplit_19....c1_HuAgeGBsplitRnaseq_14__"
+"1","AC007249.2"
+"2","ODC1"
+"3","PPDPF"
+"4","SLC2A4RG"
+"5","SLC44A2"
+"6","ZNF555"

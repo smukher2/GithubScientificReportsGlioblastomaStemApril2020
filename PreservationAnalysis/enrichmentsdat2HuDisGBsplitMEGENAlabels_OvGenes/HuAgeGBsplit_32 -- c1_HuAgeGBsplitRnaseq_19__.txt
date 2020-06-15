@@ -1,0 +1,6 @@
+"","HuAgeGBsplit_32....c1_HuAgeGBsplitRnaseq_19__"
+"1","AC019254.2"
+"2","AC073648.2"
+"3","C2orf88"
+"4","SLC5A8"
+"5","TDRD5"

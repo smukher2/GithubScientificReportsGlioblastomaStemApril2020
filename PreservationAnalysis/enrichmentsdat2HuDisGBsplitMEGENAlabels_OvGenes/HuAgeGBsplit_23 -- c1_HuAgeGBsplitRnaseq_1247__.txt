@@ -1,0 +1,8 @@
+"","HuAgeGBsplit_23....c1_HuAgeGBsplitRnaseq_1247__"
+"1","AC004408.1"
+"2","AC005225.2"
+"3","AC233701.1"
+"4","CRAMP1"
+"5","HIGD1C"
+"6","PRR5"
+"7","RPL34P19"

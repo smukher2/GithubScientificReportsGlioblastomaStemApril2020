@@ -1,0 +1,6 @@
+"","HuAgeGBsplit_17....c1_HuAgeGBsplitRnaseq_41__"
+"1","NSUN5P1"
+"2","NSUN5P2"
+"3","STAG3L1"
+"4","STAG3L2"
+"5","STAG3L3"

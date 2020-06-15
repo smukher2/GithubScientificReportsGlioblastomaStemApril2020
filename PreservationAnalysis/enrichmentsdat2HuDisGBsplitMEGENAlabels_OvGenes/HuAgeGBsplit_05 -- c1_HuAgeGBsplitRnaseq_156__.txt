@@ -1,0 +1,8 @@
+"","HuAgeGBsplit_05....c1_HuAgeGBsplitRnaseq_156__"
+"1","ANP32E"
+"2","BROX"
+"3","COP1"
+"4","GPATCH2"
+"5","RNF187"
+"6","STARD7"
+"7","TROVE2"

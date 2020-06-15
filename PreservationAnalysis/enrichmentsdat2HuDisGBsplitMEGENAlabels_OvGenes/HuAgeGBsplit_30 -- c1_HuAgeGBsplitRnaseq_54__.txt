@@ -1,0 +1,6 @@
+"","HuAgeGBsplit_30....c1_HuAgeGBsplitRnaseq_54__"
+"1","ARHGAP30"
+"2","CD53"
+"3","CIITA"
+"4","LCP1"
+"5","RAC2"

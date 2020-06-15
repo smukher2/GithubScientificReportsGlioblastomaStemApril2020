@@ -1,0 +1,6 @@
+"","HuAgeGBsplit_07....c1_HuAgeGBsplitRnaseq_50__"
+"1","AC007325.2"
+"2","AC007325.4"
+"3","FAM107A"
+"4","FBXO2"
+"5","SELENOM"

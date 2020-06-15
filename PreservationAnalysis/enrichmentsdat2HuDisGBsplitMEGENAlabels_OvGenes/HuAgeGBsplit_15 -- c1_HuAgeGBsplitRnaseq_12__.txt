@@ -1,0 +1,7 @@
+"","HuAgeGBsplit_15....c1_HuAgeGBsplitRnaseq_12__"
+"1","AC000067.1"
+"2","AFAP1L2"
+"3","AHNAK2"
+"4","CENPVL3"
+"5","MAP3K7CL"
+"6","TEAD3"

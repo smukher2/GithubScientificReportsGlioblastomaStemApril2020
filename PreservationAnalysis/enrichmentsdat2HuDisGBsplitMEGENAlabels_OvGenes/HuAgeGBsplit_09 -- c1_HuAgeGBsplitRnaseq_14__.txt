@@ -1,0 +1,6 @@
+"","HuAgeGBsplit_09....c1_HuAgeGBsplitRnaseq_14__"
+"1","ADGRD2"
+"2","FOXB1"
+"3","NPIPA2"
+"4","NPIPA3"
+"5","UROC1"

@@ -1,0 +1,6 @@
+"","HuAgeGBsplit_16....c1_HuAgeGBsplitRnaseq_1364__"
+"1","BCL11B"
+"2","C4orf50"
+"3","FOXD2"
+"4","JAKMIP1"
+"5","KCNQ3"

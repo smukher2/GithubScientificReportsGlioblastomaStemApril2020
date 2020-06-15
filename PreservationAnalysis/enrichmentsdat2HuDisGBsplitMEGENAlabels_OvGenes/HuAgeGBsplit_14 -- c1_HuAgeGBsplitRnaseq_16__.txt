@@ -1,0 +1,7 @@
+"","HuAgeGBsplit_14....c1_HuAgeGBsplitRnaseq_16__"
+"1","AC018475.1"
+"2","AC087650.1"
+"3","AP000593.2"
+"4","CCDC58P2"
+"5","RN7SL824P"
+"6","VGLL2"

@@ -1,0 +1,7 @@
+"","HuAgeGBsplit_26....c1_HuAgeGBsplitRnaseq_360__"
+"1","AC007923.2"
+"2","ACTBP13"
+"3","AL356133.2"
+"4","FRG2IP"
+"5","RNA5SP208"
+"6","ZFP42"

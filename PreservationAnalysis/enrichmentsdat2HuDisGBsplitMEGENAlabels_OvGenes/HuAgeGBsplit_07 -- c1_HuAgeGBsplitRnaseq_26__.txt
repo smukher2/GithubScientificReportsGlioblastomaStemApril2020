@@ -1,0 +1,8 @@
+"","HuAgeGBsplit_07....c1_HuAgeGBsplitRnaseq_26__"
+"1","AC006971.1"
+"2","AC074351.1"
+"3","AC087699.1"
+"4","CALM1P2"
+"5","EGFR"
+"6","ELDR"
+"7","SEC61G"

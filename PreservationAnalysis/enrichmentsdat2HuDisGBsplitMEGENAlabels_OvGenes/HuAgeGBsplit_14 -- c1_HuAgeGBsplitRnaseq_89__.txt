@@ -1,0 +1,8 @@
+"","HuAgeGBsplit_14....c1_HuAgeGBsplitRnaseq_89__"
+"1","C2CD3"
+"2","EMSY"
+"3","GVQW3"
+"4","POLD3"
+"5","RNF121"
+"6","THAP12"
+"7","UCP3"

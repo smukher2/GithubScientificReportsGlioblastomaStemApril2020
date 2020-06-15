@@ -1,0 +1,8 @@
+"","HuAgeGBsplit_27....c1_HuAgeGBsplitRnaseq_30__"
+"1","AL589993.1"
+"2","ASCL1"
+"3","CEP85L"
+"4","CITED2"
+"5","EZR"
+"6","STARD13"
+"7","THBS2"

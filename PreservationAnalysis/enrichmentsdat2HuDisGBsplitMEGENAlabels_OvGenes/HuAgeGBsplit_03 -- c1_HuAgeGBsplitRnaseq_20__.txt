@@ -1,0 +1,7 @@
+"","HuAgeGBsplit_03....c1_HuAgeGBsplitRnaseq_20__"
+"1","ATP5MFP5"
+"2","DEFA6"
+"3","MIR548AB"
+"4","MMEL1"
+"5","RPL21P43"
+"6","SDK1"

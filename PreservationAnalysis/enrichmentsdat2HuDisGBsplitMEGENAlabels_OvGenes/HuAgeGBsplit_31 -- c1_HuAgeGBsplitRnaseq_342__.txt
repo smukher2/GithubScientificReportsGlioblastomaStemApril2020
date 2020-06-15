@@ -1,0 +1,7 @@
+"","HuAgeGBsplit_31....c1_HuAgeGBsplitRnaseq_342__"
+"1","AC011979.2"
+"2","AL122127.1"
+"3","AP004607.1"
+"4","ATP5MC1P7"
+"5","KRT18P49"
+"6","KRT8P5"

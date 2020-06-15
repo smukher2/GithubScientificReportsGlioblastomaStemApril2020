@@ -1,0 +1,7 @@
+"","HuAgeGBsplit_07....c1_HuAgeGBsplitRnaseq_1895__"
+"1","AC002127.2"
+"2","AIM2"
+"3","EEF1A1P28"
+"4","KIAA0895"
+"5","SDHAF3"
+"6","SH3BP1"

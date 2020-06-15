@@ -1,0 +1,7 @@
+"","HuAgeGBsplit_25....c1_HuAgeGBsplitRnaseq_6__"
+"1","AL772284.1"
+"2","ELOBP2"
+"3","MRPL35P4"
+"4","RBM22P7"
+"5","TSEN2P1"
+"6","Z75741.2"

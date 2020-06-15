@@ -1,0 +1,7 @@
+"","HuAgeGBsplit_03....c1_HuAgeGBsplitRnaseq_2034__"
+"1","AC138749.5"
+"2","ANP32BP1"
+"3","HNRNPABP1"
+"4","MAP2K1P1"
+"5","MIR4475"
+"6","OR5B15P"

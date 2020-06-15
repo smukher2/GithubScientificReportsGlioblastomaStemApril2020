@@ -1,0 +1,8 @@
+"","HuAgeGBsplit_06....c1_HuAgeGBsplitRnaseq_161__"
+"1","AC022384.1"
+"2","C11orf72"
+"3","LINC00606"
+"4","SLC6A1"
+"5","SLC6A11"
+"6","SRGAP3"
+"7","SYN2"

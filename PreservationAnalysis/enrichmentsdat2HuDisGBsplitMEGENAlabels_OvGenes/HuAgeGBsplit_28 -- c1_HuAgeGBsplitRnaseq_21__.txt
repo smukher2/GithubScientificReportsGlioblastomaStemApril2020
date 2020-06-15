@@ -1,0 +1,7 @@
+"","HuAgeGBsplit_28....c1_HuAgeGBsplitRnaseq_21__"
+"1","AC069439.1"
+"2","AC112203.1"
+"3","ADAMTS5"
+"4","AHCYP4"
+"5","CPDP1"
+"6","PPIAP13"

@@ -1,0 +1,6 @@
+"","HuAgeGBsplit_07....c1_HuAgeGBsplitRnaseq_14__"
+"1","AL589743.1"
+"2","AL589743.6"
+"3","DUXAP8"
+"4","DUXAP9"
+"5","NBEAP3"

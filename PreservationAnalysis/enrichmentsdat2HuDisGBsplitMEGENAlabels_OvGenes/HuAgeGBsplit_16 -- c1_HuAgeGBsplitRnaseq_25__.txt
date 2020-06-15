@@ -1,0 +1,8 @@
+"","HuAgeGBsplit_16....c1_HuAgeGBsplitRnaseq_25__"
+"1","AC003986.1"
+"2","AC016065.1"
+"3","CNMD"
+"4","DSG2"
+"5","GFRA2"
+"6","ITPR3"
+"7","RHEBL1"

@@ -1,0 +1,8 @@
+"","HuAgeGBsplit_09....c1_HuAgeGBsplitRnaseq_64__"
+"1","AC096582.1"
+"2","AL022722.2"
+"3","AL390719.2"
+"4","AP003041.1"
+"5","FZD10"
+"6","PPM1AP1"
+"7","TMEM106B"

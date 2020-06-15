@@ -1,0 +1,7 @@
+"","HuAgeGBsplit_02....c1_HuAgeGBsplitRnaseq_2024__"
+"1","AC092580.3"
+"2","ACHE"
+"3","CCDC68"
+"4","DERL3"
+"5","SMG1P6"
+"6","SVIP"

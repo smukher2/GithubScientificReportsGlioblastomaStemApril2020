@@ -1,0 +1,5 @@
+"","HuAgeGBsplit_23....c1_HuAgeGBsplitRnaseq_388__"
+"1","GAPDHP37"
+"2","MS4A8"
+"3","VN1R96P"
+"4","Z97988.1"

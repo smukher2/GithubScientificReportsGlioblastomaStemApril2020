@@ -1,0 +1,7 @@
+"","HuAgeGBsplit_27....c1_HuAgeGBsplitRnaseq_75__"
+"1","AC008687.4"
+"2","AC010273.1"
+"3","B4GALNT3"
+"4","IL17B"
+"5","ROPN1B"
+"6","SPHK1"

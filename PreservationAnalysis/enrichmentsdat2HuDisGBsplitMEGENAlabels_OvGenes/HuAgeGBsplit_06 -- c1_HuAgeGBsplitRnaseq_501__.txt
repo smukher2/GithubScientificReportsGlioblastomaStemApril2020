@@ -1,0 +1,8 @@
+"","HuAgeGBsplit_06....c1_HuAgeGBsplitRnaseq_501__"
+"1","GLIS1"
+"2","JAK1"
+"3","MGAT5"
+"4","PGF"
+"5","PPIF"
+"6","RHBDL3"
+"7","TGIF1"

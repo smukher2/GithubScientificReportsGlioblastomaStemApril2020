@@ -1,0 +1,8 @@
+"","HuAgeGBsplit_02....c1_HuAgeGBsplitRnaseq_830__"
+"1","AC010883.1"
+"2","AC011742.1"
+"3","GAP43"
+"4","KIAA0040"
+"5","LINC01126"
+"6","MAP3K6"
+"7","SNTA1"

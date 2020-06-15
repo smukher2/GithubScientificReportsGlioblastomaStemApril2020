@@ -1,0 +1,6 @@
+"","HuAgeGBsplit_32....c1_HuAgeGBsplitRnaseq_1105__"
+"1","AP001485.1"
+"2","CRYGB"
+"3","GTF2IP5"
+"4","SEPT14"
+"5","SULT2A1"

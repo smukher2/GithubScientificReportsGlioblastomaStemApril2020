@@ -1,0 +1,384 @@
+---
+title: "Pres&Hyper_HuDisGBsplitVsHuDisGBsplitMEGENA(bw)"
+author: "Shradha Mukherjee"
+date: "Last updated January 21, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning=FALSE,message=FALSE)
+```
+
+## R Markdown
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. 
+
+##Checklist for running this pipeline: 
+  #1)The input data for this pipeline, 
+dat1labels:'Step20_result_ForPres&Hyper_HuDisGBsplitWGCNA_GeneModule.csv' and 'Step20_result_ForPres&Hyper_HuDisGBsplitWGCNA_datExprA1g2.csv' from 'HuDisDis_GBsplitWGCNA(recoded)_7.71_MEGENA'
+
+dat2labels:'Step20_result_ForPres&Hyper_HuDisGBsplitMEGENA_GeneModuleL.csv' and 'Step20_result_ForPres&Hyper_HuDisGBsplitMEGENA_datExprA1g2.csv' from 'HuDisDis_GBsplitMEGENA(recoded)_v7.71PDstudyotherCONs_MEGENA'
+
+  #2) data 'dat1labels' is the data from which we input the labels or module definition of the preservation analysis
+
+  #3) To reuse this code for other datasets 
+  a) replace 1) and 2) input files above with equivalent files for the dataset
+  b) replace "HuDisGBsplit" and "HuDisGBsplitMEGENA" with appropriate names for the dataset 
+  c) in this pipeline human gene symbols are used
+
+###Step 1: Load libraries, working directory and Import data for MEGENA###
+###Focussing on data sets A1 and A2, and common genes between them###
+```{r}
+#save working directory location
+wd<-getwd()
+wd
+```
+
+```{r}
+#Load additional functions required for this pipeline
+#Reference: Miller, J.A., Horvath, S., and Geschwind, D.H. (2010). Divergence of Human and mouse brain transcriptome highlights Alzheimer disease pathways. Proceedings of the National Academy of Sciences of the United States of America 107, 12698-12703.
+
+write.geneList <- function(PG, filename, allProbes=0, allGenes=0, probe="g")
+{
+## These functions write a genelist / probelist to a file of geneNames
+
+## USER inputs
+# PG = the probe/gene you want written to a gene list
+# allProbes = the list of probe names for the above probes
+# allGenes = the list of gene names for the corresponding probes
+# filename = the filename (can include folder)
+# probe = the default ("g") says PG is a gene and doesn''t need to be converted
+#         to a gene.  Otherwise PG is assumed to be a probe and converted
+
+gene = PG
+if (probe!="g") {
+  gene = probe2Gene(PG,allProbes,allGenes)
+}
+write(gene,filename,sep="\n")
+
+}
+
+cor.test.l = function(x){
+## Performs a Pearson correlation on a vector of genes
+ ct = cor.test(x,var)
+ return(c(ct$est,ct$p.val))
+}
+```
+
+```{r}
+#library(BiocInstaller)
+#biocLite("qvalue")
+#install.packages(c("impute","dynamicTreeCut","flashClust","Hmisc","MEGENA","stringi","enrichR","DT","filesstrings"))
+library(impute)
+library(DT)
+library(dynamicTreeCut)
+library(qvalue)
+library(flashClust)
+library(Hmisc)
+library(MEGENA)
+library(WGCNA)
+library(stringi)
+library(stringr)
+library(filesstrings)
+library(enrichR)#for pathway analysis
+options(stringsAsFactors = FALSE)
+options("scipen"=100, "digits"=4)
+```
+
+###Step2: Preparation of data for preservation analysis dat1labels###
+#Import dat1labels for analysis
+```{r}
+#Obtain this listMod of choice from the WGCNA pipeline to which the dataset needs to be compared with
+dat1labels=read.csv('./HuDis_GBsplit(recoded)_v7.5(done)(8-16-19)/Module_GenesRankskMEHubs/Step20_result_ForPres&Hyper_HuAgeGBsplit_GeneModuleL.csv', sep=',')
+DT::datatable(dat1labels[1:3,])
+```
+
+```{r}
+#give module labels dataset specific name
+#dat1labels$Module=sub("HuAgeGBsplit_", "wgcnaHuAgeGBsplit_", dat1labels$Module)
+# This module assignment labels. Check column name and label appropriately 
+dat1labels = dat1labels$Module
+head(dat1labels)
+```
+
+```{r}
+# the following data frame contains the gene expression data: columns are genes, rows are arrays (samples)
+dat1Expr=read.csv('./HuDis_GBsplit(recoded)_v7.5(done)(8-16-19)/Module_GenesRankskMEHubs/Step20_result_ForPres&Hyper_HuAgeGBsplit_datExprA1g2.csv', sep=',')
+DT::datatable(dat1Expr[1:3,1:3])
+```
+
+```{r}
+#tranpose expression data so that samples are along rows and genes are colnames
+dat1Expr_1 <- t(dat1Expr[,-1])
+colnames(dat1Expr_1)=dat1Expr$X
+dat1Expr=dat1Expr_1[-1,]
+#dat1Expr=as.data.frame(dat1Expr)
+rm(dat1Expr_1)
+dim(dat1Expr)
+DT::datatable(dat1Expr[1:3,1:3])
+```
+
+```{r}
+no.samples <- dim(dat1Expr)[1]
+no.samples
+```
+
+```{r}
+write.csv(dat1Expr, "dat1Expr.csv", col.names=TRUE, row.names=TRUE)
+```
+
+```{r}
+dat1Expr=read.csv("dat1Expr.csv", header=TRUE, row.names=1, sep=',')
+#library(dplyr)
+dat1Expr %>% str()
+```
+
+#####################################################################for comparison with HuDisGBsplitMEGENA modules##################################################################################
+
+###Step 3: Preparation of data for preservation analysis HuDisGBsplitMEGENA###
+#Import dat2labels for analysis
+```{r}
+#Obtain this listMod of choice from the MEGENA pipeline to which the dataset needs to be compared with
+dat2labels=read.csv('./HuDis_GBsplit(recoded)_v7.5_MEGENA(done)(8-16-19)/Module_GenesKDHubs/Step20_result_ForPres&Hyper_HuAgeGBsplitRnaseq_GeneModule.csv', sep=',')
+DT::datatable(dat2labels[1:3,])
+```
+
+```{r}
+#give module labels dataset specific name
+#dat2labels$Module=sub("c1_HuAgeGBsplitRnaseq_", "megenaHuAgeGBsplit_", dat2labels$Module)
+# This module assignment labels. Check column name and label appropriately 
+#Assigning module dynamic labels does not work for preservation
+dat2labels = dat2labels$Module
+head(dat2labels)
+```
+
+```{r}
+# the following data frame contains the gene expression data: columns are genes, rows are arrays (samples)
+dat2Expr=read.csv('./HuDis_GBsplit(recoded)_v7.5_MEGENA(done)(8-16-19)/Module_GenesKDHubs/Step20_result_ForPres&Hyper_HuAgeGBsplitRnaseq_datExprA1g2.csv', sep=',')
+DT::datatable(dat2Expr[1:3,1:3])
+```
+
+```{r}
+#tranpose expression data so that samples are along rows and genes are colnames
+dat2Expr_1 <- t(dat2Expr[,-1])
+colnames(dat2Expr_1)=dat2Expr$X
+dat2Expr=dat2Expr_1[-1,]
+#dat2Expr=as.data.frame(dat2Expr)
+rm(dat2Expr_1)
+dim(dat2Expr)
+DT::datatable(dat2Expr[1:3,1:3])
+```
+
+```{r}
+write.csv(dat2Expr, "dat2Expr.csv", col.names=TRUE, row.names=TRUE)
+```
+
+```{r}
+dat2Expr=read.csv("dat2Expr.csv", header=TRUE, row.names=1, sep=',')
+#library(dplyr)
+dat2Expr %>% str()
+```
+
+###Step 4: Preservation analysis with dat1labels vs dat2labels HuAgeGBsplit###
+#Calculation of module preservation using first dataset or previous analysis module labels
+#Ref: Langfelder, P., Luo, R., Oldham, M. C., and Horvath, S. (2011). Is my network module preserved and reproducible? PLoS Comput. Biol. 7. doi:10.1371/journal.pcbi.1001057.
+```{r}
+setLabels1 = c("HuDisGBsplitWGCNA_labels", "HuDisGBsplitMEGENA_labels");
+multiExpr1 = list(A = list(data = dat1Expr), B = list(data = dat2Expr));
+multiLabel1 = list(A = dat1labels)
+```
+
+```{r}
+system.time( {
+mp1 = modulePreservation(multiExpr1, multiLabel1,
+referenceNetworks = 1,
+nPermutations = 50,
+maxGoldModuleSize= 100,
+maxModuleSize = 3000,
+#greyName = NULL, 
+#goldName = NULL,
+randomSeed = 1,
+quickCor = 0,
+verbose = 3)
+} );
+#Note: can change maxModuleSize to your biggest module size or else a random smaple of 1000 genes will be used for preservation calculation
+```
+
+```{r}
+#Analysis and display of module preservation results using previous module labels
+ref = 1
+test = 2
+statsObs1 = cbind(mp1$quality$observed[[ref]][[test]][, -1], mp1$preservation$observed[[ref]][[test]][, -1])
+statsZ1 = cbind(mp1$quality$Z[[ref]][[test]][, -1], mp1$preservation$Z[[ref]][[test]][, -1]);
+```
+
+```{r}
+# Compare preservation to quality:
+print( cbind(statsObs1[, c("medianRank.pres", "medianRank.qual")],
+signif(statsZ1[, c("Zsummary.pres", "Zsummary.qual")], 2)) )
+```
+
+```{r}
+# Module labels and module sizes are also contained in the results
+modLabels1 = rownames(mp1$preservation$observed[[ref]][[test]])
+moduleSizes1 = mp1$preservation$Z[[ref]][[test]][, 1];
+# leave grey and gold modules out
+plotMods1 = !(modLabels1 %in% c("grey", "gold"));
+# Text labels for points
+text1 = modLabels1[plotMods1];
+# Auxiliary convenience variable
+plotData1 = cbind(mp1$preservation$observed[[ref]][[test]][, 2], mp1$preservation$Z[[ref]][[test]][, 2])
+# Main titles for the plot
+mains = c("Preservation Median rank", "Preservation Zsummary");
+# Start the plot
+sizeGrWindow(10, 5);
+pdf(file="Step4_plot_HuDisGBsplitWGCNA_labels_vs_HuDisGBsplitMEGENA_labels_preservation.pdf", width=30, height=15)
+par(mfrow = c(1,2))
+par(mar = c(4.5,4.5,2.5,1))
+for (p in 1:2)
+{
+min = min(plotData1[, p], na.rm = TRUE);
+max = max(plotData1[, p], na.rm = TRUE);
+# Adjust ploting ranges appropriately
+if (p==2)
+{
+if (min > -max/10) min = -max/10
+ylim = c(min - 0.1 * (max-min), max + 0.1 * (max-min))
+} else
+ylim = c(max + 0.1 * (max-min), min - 0.1 * (max-min))
+plot(moduleSizes1[plotMods1], plotData1[plotMods1, p], col = 1, bg = "red", pch = 21,
+main = mains[p],
+cex = 2,
+ylab = mains[p], xlab = "Module size", log = "x",
+ylim = ylim,
+xlim = c(10, 7000), cex.lab = 2, cex.axis = 2, cex.main =1.4)
+labelPoints(moduleSizes1[plotMods1], plotData1[plotMods1, p], text1, cex = 2, offs = 0.08);
+# For Zsummary, add threshold lines
+if (p==2)
+{
+abline(h=0)
+abline(h=2, col = "blue", lty = 2)
+abline(h=10, col = "darkgreen", lty = 2)
+}
+}
+# If plotting into a file, close it
+dev.off()
+```
+
+In general, the higher the value of "Zsummary.pres" the more preserved the module is between data sets:5<Z<10 indicates moderate preservation, while Z>10 indicates high preservation. 
+We find several modules which are highly preserved between A1 and A2. Bonferoni corrected log base 10 p-value are also shown to be significant below.
+```{r}
+#Preservation Z summary
+mp_Zsummary=as.data.frame(mp1$preservation$Z)
+write.csv(mp_Zsummary, "Step4_result_HuDisGBsplitWGCNA_labels_vs_HuDisGBsplitMEGENA_labels_preservation_Zsummary.csv")
+```
+
+```{r}
+#Preservation Bonferoni corrected log base 10 p-value
+mp_logp_Bonfsummary=as.data.frame(mp1$preservation$log.pBonf)
+mp_logp_Bonfsummary[,-c(1)]
+write.csv(mp_logp_Bonfsummary[,-c(1)], "Step4_result_HuDisGBsplitWGCNA_labels_vs_HuDisGBsplitMEGENA_labels_preservation_logP_Bonfsummary.csv")
+```
+
+###Step 5: Enrichment test for comparison with dat1labels vs dat2labels HuDisGBsplitMEGENA ###
+```{r}
+#Format and prepare dat2labels for enrichment test
+dat2labels=read.csv('./HuDis_GBsplit(recoded)_v7.5_MEGENA(done)(8-16-19)/Module_GenesKDHubs/Step20_result_ForPres&Hyper_HuAgeGBsplitRnaseq_GeneModule.csv', sep=',')
+#dat2labels_1=dat2labels[,c("Module", "Gene")]
+dat2labels_1=dat2labels[,c("Gene","Module", "Gene")]
+names(dat2labels_1) <- c("", "Module", "Gene")
+
+#duplicate 'row.names' are not allowed
+#rownames(dat2labels_1)=dat2labels_1$Gene
+
+#give module labels dataset specific name
+#dat2labels_1$Module=sub("c1_HuAgeGBsplitRnaseq_", "megenaHuAgeGBsplit_", dat2labels_1$Module )
+
+DT::datatable(dat2labels_1[1:3,])
+write.csv(dat2labels_1,"Step5_result_ForEnrich_dat2HuDisGBsplitMEGENAlabels_Hu.csv", row.names=FALSE)
+```
+
+```{r}
+#count of number of genes per module
+dat2labels=dat2labels_1
+rm(dat2labels_1)
+dat2labelsGeneCount=as.data.frame(table(dat2labels$Module))
+#dat2labelsGeneCount
+write.csv(dat2labelsGeneCount,"Step5_result_ForEnrich_dat2HuDisGBsplitMEGENAlabels_Hu_GeneCount.csv")
+```
+
+```{r}
+#This is the actual hypergeometric enrichment test step
+modulesA1=dat1labels
+enrichmentsdat2labels = userListEnrichment(colnames(dat1Expr), modulesA1,"Step5_result_ForEnrich_dat2HuDisGBsplitMEGENAlabels_Hu.csv", "", "enrichmentsdat2HuDisGBsplitMEGENAlabels_labels.csv")
+```
+
+```{r}
+#Saving results of enrichment
+enrichmentsdat2labels_OvGenes=enrichmentsdat2labels[[2]]
+dir.create("./enrichmentsdat2HuDisGBsplitMEGENAlabels_OvGenes")
+for (i in 1:length(enrichmentsdat2labels_OvGenes)) {
+  write.csv(enrichmentsdat2labels_OvGenes[i], file=paste0("enrichmentsdat2HuDisGBsplitMEGENAlabels_OvGenes/", names(enrichmentsdat2labels_OvGenes)[i], ".txt"))
+}
+
+enrichmentsdat2labels_NumOvGenes_pvalue=enrichmentsdat2labels[[1]]
+write.csv(enrichmentsdat2labels_NumOvGenes_pvalue,"enrichmentsdat2HuDisGBsplitMEGENA_NumOvGenes_pvalue_labels.csv")
+```
+
+#Lets export another enrichment result file to contain only significant trait associated WGCNA modules
+```{r}
+sig_mod_namesWGCNA<-c("HuAgeGBsplit_35","HuAgeGBsplit_16","HuAgeGBsplit_18","HuAgeGBsplit_24","HuAgeGBsplit_00","HuAgeGBsplit_36","HuAgeGBsplit_08","HuAgeGBsplit_33","HuAgeGBsplit_27","HuAgeGBsplit_26")
+sig_mod_namesMEGENA<-c("c1_HuAgeGBsplitRnaseq_79","c1_HuAgeGBsplitRnaseq_97","c1_HuAgeGBsplitRnaseq_71","c1_HuAgeGBsplitRnaseq_8","c1_HuAgeGBsplitRnaseq_388","c1_HuAgeGBsplitRnaseq_1177","c1_HuAgeGBsplitRnaseq_193","c1_HuAgeGBsplitRnaseq_2024","c1_HuAgeGBsplitRnaseq_160","c1_HuAgeGBsplitRnaseq_576","c1_HuAgeGBsplitRnaseq_583","c1_HuAgeGBsplitRnaseq_1353","c1_HuAgeGBsplitRnaseq_470","c1_HuAgeGBsplitRnaseq_331","c1_HuAgeGBsplitRnaseq_162","c1_HuAgeGBsplitRnaseq_332","c1_HuAgeGBsplitRnaseq_475","c1_HuAgeGBsplitRnaseq_95","c1_HuAgeGBsplitRnaseq_405","c1_HuAgeGBsplitRnaseq_32","c1_HuAgeGBsplitRnaseq_58","c1_HuAgeGBsplitRnaseq_61","c1_HuAgeGBsplitRnaseq_1364","c1_HuAgeGBsplitRnaseq_64","c1_HuAgeGBsplitRnaseq_163","c1_HuAgeGBsplitRnaseq_99","c1_HuAgeGBsplitRnaseq_24","c1_HuAgeGBsplitRnaseq_5","c1_HuAgeGBsplitRnaseq_75","c1_HuAgeGBsplitRnaseq_73","c1_HuAgeGBsplitRnaseq_553","c1_HuAgeGBsplitRnaseq_586","c1_HuAgeGBsplitRnaseq_175","c1_HuAgeGBsplitRnaseq_159","c1_HuAgeGBsplitRnaseq_25","c1_HuAgeGBsplitRnaseq_605","c1_HuAgeGBsplitRnaseq_1513","c1_HuAgeGBsplitRnaseq_361","c1_HuAgeGBsplitRnaseq_395","c1_HuAgeGBsplitRnaseq_338","c1_HuAgeGBsplitRnaseq_757","c1_HuAgeGBsplitRnaseq_103","c1_HuAgeGBsplitRnaseq_691")
+```
+
+```{r}
+enrichmentsdat2labels_NumOvGenes_pvalue_sigTrait=enrichmentsdat2labels_NumOvGenes_pvalue[enrichmentsdat2labels_NumOvGenes_pvalue$InputCategories %in% sig_mod_namesWGCNA,]
+enrichmentsdat2labels_NumOvGenes_pvalue_sigTrait$UserDefinedCategories=sub("__", "", enrichmentsdat2labels_NumOvGenes_pvalue_sigTrait$UserDefinedCategories)
+enrichmentsdat2labels_NumOvGenes_pvalue_sigTrait=enrichmentsdat2labels_NumOvGenes_pvalue_sigTrait[enrichmentsdat2labels_NumOvGenes_pvalue_sigTrait$UserDefinedCategories %in% sig_mod_namesMEGENA,]
+```
+
+```{r}
+enrichmentsdat2HuDisGBsplitMEGENAlabels=read.csv('enrichmentsdat2HuDisGBsplitMEGENAlabels_labels.csv', sep=',')
+enrichmentsdat2HuDisGBsplitMEGENAlabels_sigTrait=enrichmentsdat2HuDisGBsplitMEGENAlabels[enrichmentsdat2HuDisGBsplitMEGENAlabels$InputCategories %in% sig_mod_namesWGCNA,]
+enrichmentsdat2HuDisGBsplitMEGENAlabels_sigTrait$UserDefinedCategories=sub("__", "", enrichmentsdat2HuDisGBsplitMEGENAlabels_sigTrait$UserDefinedCategories)
+enrichmentsdat2HuDisGBsplitMEGENAlabels_sigTrait=enrichmentsdat2HuDisGBsplitMEGENAlabels_sigTrait[enrichmentsdat2HuDisGBsplitMEGENAlabels_sigTrait$UserDefinedCategories %in% sig_mod_namesMEGENA,]
+```
+
+```{r}
+write.csv(enrichmentsdat2labels_NumOvGenes_pvalue_sigTrait,"enrichmentsdat2HuDisGBsplitMEGENA_NumOvGenes_pvalue_labels_sigTrait.csv")
+write.csv(enrichmentsdat2HuDisGBsplitMEGENAlabels_sigTrait,"enrichmentsdat2HuDisGBsplitMEGENAlabels_labels_sigTrait.csv")
+```
+
+```{r}
+sessionInfo()
+toLatex(sessionInfo())
+```
+
+```{r}
+#save image
+save.image(file="PreservationEnrichment_temp.RData")
+```
+
+```{r}
+#Organize of files
+library(filesstrings)
+
+file.move(list.files(pattern = "enrichmentsdat2HuDisGBsplitMEGENAlabels_labels.csv"), "enrichmentsdat2HuDisGBsplitMEGENAlabels_OvGenes")
+file.move(list.files(pattern = "enrichmentsdat2HuDisGBsplitMEGENA_NumOvGenes_pvalue_labels.csv"), "enrichmentsdat2HuDisGBsplitMEGENAlabels_OvGenes")
+file.move(list.files(pattern = "Step5_result_ForEnrich*"), "enrichmentsdat2HuDisGBsplitMEGENAlabels_OvGenes")
+file.move(list.files(pattern = "*sigTrait.csv"), "enrichmentsdat2HuDisGBsplitMEGENAlabels_OvGenes")
+
+dir.create("PreservationResults")
+file.move(list.files(pattern = "*logP_Bonfsummary.csv"), "PreservationResults")
+file.move(list.files(pattern = "*Modules.RData"), "PreservationResults")
+file.move(list.files(pattern = "*_temp.RData"), "PreservationResults")
+file.move(list.files(pattern = "*preservation.pdf"), "PreservationResults")
+file.move(list.files(pattern = "*Zsummary.csv"), "PreservationResults")
+file.remove("dat1Expr.csv")
+file.remove("dat2Expr.csv")
+```
+
+```{r}
+#clear environment to free up memory
+rm(list=ls())
+gc()
+```

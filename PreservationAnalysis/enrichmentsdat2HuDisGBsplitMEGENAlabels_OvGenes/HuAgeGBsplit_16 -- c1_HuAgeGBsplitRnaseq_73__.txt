@@ -1,0 +1,7 @@
+"","HuAgeGBsplit_16....c1_HuAgeGBsplitRnaseq_73__"
+"1","AC104408.1"
+"2","AL109941.1"
+"3","FANCL"
+"4","RPL21P103"
+"5","RPS29P23"
+"6","VRK2"

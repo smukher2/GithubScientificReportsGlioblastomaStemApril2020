@@ -1,0 +1,3 @@
+"","HuAgeGBsplit_03....c1_HuAgeGBsplitRnaseq_1211__"
+"1","ESRP1"
+"2","SMC1B"

@@ -1,0 +1,7 @@
+"","HuAgeGBsplit_06....c1_HuAgeGBsplitRnaseq_19__"
+"1","AC009075.1"
+"2","AC027243.2"
+"3","AL645939.2"
+"4","IFITM4P"
+"5","MIR320A"
+"6","RNU6ATAC32P"

@@ -1,0 +1,7 @@
+"","HuAgeGBsplit_07....c1_HuAgeGBsplitRnaseq_360__"
+"1","AC008736.2"
+"2","FP236383.3"
+"3","GTF2IP14"
+"4","LINC01128"
+"5","LINC02556"
+"6","ZNF618"

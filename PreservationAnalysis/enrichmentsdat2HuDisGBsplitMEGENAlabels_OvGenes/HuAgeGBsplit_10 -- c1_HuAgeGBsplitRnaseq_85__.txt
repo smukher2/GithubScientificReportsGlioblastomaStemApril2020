@@ -1,0 +1,3 @@
+"","HuAgeGBsplit_10....c1_HuAgeGBsplitRnaseq_85__"
+"1","AFAP1L1"
+"2","APLN"

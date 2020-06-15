@@ -1,0 +1,8 @@
+"","HuAgeGBsplit_08....c1_HuAgeGBsplitRnaseq_11__"
+"1","AC003102.1"
+"2","AL162377.2"
+"3","KCNK1"
+"4","MYL5"
+"5","SLC10A1"
+"6","SLC12A2"
+"7","SLC22A15"

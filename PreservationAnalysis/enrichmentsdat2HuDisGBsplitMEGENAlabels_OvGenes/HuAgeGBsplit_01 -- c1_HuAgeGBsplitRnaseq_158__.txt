@@ -1,0 +1,8 @@
+"","HuAgeGBsplit_01....c1_HuAgeGBsplitRnaseq_158__"
+"1","AC073508.2"
+"2","CACNB1"
+"3","DUSP14"
+"4","LINC02035"
+"5","PARM1"
+"6","PLEKHH3"
+"7","PPIAP39"

@@ -1,0 +1,7 @@
+"","HuAgeGBsplit_03....c1_HuAgeGBsplitRnaseq_80__"
+"1","AC090099.2"
+"2","AC090312.2"
+"3","GXYLT1P1"
+"4","HMGN2P18"
+"5","KRT19P2"
+"6","SEPT2P1"

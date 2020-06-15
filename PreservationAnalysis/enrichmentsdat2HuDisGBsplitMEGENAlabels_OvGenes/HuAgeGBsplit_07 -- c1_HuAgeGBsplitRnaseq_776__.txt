@@ -1,0 +1,7 @@
+"","HuAgeGBsplit_07....c1_HuAgeGBsplitRnaseq_776__"
+"1","EIF3D"
+"2","FOXRED2"
+"3","HMGXB4"
+"4","NIPSNAP1"
+"5","RBFOX2"
+"6","TXN2"

@@ -1,0 +1,6 @@
+"","HuAgeGBsplit_19....c1_HuAgeGBsplitRnaseq_212__"
+"1","C1QTNF4"
+"2","DAO"
+"3","F5"
+"4","FAM180B"
+"5","TRPM3"

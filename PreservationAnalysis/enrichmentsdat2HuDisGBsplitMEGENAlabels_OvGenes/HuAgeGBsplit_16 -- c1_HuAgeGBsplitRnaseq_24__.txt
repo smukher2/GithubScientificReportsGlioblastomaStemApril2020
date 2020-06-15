@@ -1,0 +1,7 @@
+"","HuAgeGBsplit_16....c1_HuAgeGBsplitRnaseq_24__"
+"1","AC011468.2"
+"2","AC239803.1"
+"3","AL590483.1"
+"4","HIVEP3"
+"5","HUNK"
+"6","PTH2"

@@ -1,0 +1,8 @@
+"","HuAgeGBsplit_15....c1_HuAgeGBsplitRnaseq_10__"
+"1","AC073585.1"
+"2","AC107081.1"
+"3","AL355490.1"
+"4","CUZD1"
+"5","FAM24B"
+"6","FAM83H"
+"7","KNDC1"

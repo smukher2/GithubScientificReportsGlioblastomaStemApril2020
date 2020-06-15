@@ -1,0 +1,8 @@
+"","HuAgeGBsplit_24....c1_HuAgeGBsplitRnaseq_22__"
+"1","AC090616.1"
+"2","ACTN2"
+"3","C2orf27A"
+"4","CARD14"
+"5","FAM184B"
+"6","SCCPDH"
+"7","STAT5A"

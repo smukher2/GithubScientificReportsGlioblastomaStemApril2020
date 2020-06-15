@@ -1,0 +1,8 @@
+"","HuAgeGBsplit_11....c1_HuAgeGBsplitRnaseq_223__"
+"1","AC006449.5"
+"2","ERBB2"
+"3","PCGF2"
+"4","PHACTR3"
+"5","RNF157"
+"6","SYCP2"
+"7","UBALD2"

@@ -1,0 +1,6 @@
+"","HuAgeGBsplit_06....c1_HuAgeGBsplitRnaseq_124__"
+"1","AL353743.3"
+"2","ID1"
+"3","ID2"
+"4","ID3"
+"5","SMAD6"

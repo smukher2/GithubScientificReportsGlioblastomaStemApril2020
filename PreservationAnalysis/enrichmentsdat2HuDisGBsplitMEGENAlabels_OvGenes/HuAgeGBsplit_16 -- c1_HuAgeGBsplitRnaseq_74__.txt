@@ -1,0 +1,6 @@
+"","HuAgeGBsplit_16....c1_HuAgeGBsplitRnaseq_74__"
+"1","CLEC4F"
+"2","LINC01143"
+"3","PHBP17"
+"4","RF02272"
+"5","VAX2"

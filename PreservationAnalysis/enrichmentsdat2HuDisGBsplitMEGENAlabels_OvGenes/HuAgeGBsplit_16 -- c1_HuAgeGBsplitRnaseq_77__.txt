@@ -1,0 +1,7 @@
+"","HuAgeGBsplit_16....c1_HuAgeGBsplitRnaseq_77__"
+"1","AL162574.2"
+"2","ATP4B"
+"3","CFAP97D2"
+"4","EPPK1"
+"5","KCNJ4"
+"6","MCIDAS"

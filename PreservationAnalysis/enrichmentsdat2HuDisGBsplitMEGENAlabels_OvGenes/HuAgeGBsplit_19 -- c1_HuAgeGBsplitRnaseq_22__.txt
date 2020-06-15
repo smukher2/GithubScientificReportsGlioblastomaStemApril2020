@@ -1,0 +1,8 @@
+"","HuAgeGBsplit_19....c1_HuAgeGBsplitRnaseq_22__"
+"1","AC004801.6"
+"2","KIFC3"
+"3","RN7SL76P"
+"4","SLC13A3"
+"5","SPRY1"
+"6","STX16"
+"7","TBC1D16"

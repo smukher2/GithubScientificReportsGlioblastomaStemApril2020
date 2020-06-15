@@ -1,0 +1,8 @@
+"","HuAgeGBsplit_16....c1_HuAgeGBsplitRnaseq_440__"
+"1","AC113208.2"
+"2","AL669970.1"
+"3","ATP5MC1P1"
+"4","CCDC122"
+"5","CSRP2"
+"6","ELK2BP"
+"7","LACC1"

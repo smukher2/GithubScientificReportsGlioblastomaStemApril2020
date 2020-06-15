@@ -1,0 +1,8 @@
+"","HuAgeGBsplit_11....c1_HuAgeGBsplitRnaseq_15__"
+"1","AC064836.2"
+"2","CAPN5"
+"3","CEL"
+"4","CELP"
+"5","MYO7A"
+"6","PRKCA"
+"7","RPS29P15"

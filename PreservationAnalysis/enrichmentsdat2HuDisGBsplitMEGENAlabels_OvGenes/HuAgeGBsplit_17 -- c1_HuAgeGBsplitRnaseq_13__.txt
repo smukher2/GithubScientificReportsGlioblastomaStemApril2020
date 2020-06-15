@@ -1,0 +1,7 @@
+"","HuAgeGBsplit_17....c1_HuAgeGBsplitRnaseq_13__"
+"1","AL157931.1"
+"2","AP006587.2"
+"3","GGACT"
+"4","LINC00621"
+"5","NLK"
+"6","NUS1P2"

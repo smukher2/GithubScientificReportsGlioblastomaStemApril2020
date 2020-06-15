@@ -1,0 +1,6 @@
+"","HuAgeGBsplit_08....c1_HuAgeGBsplitRnaseq_52__"
+"1","MAGIX"
+"2","PHEX"
+"3","PIM2"
+"4","RPS6KA3"
+"5","SMS"

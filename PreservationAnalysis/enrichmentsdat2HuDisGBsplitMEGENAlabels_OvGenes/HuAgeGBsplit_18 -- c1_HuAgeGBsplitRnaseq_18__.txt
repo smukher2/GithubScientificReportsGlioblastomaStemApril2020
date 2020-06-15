@@ -1,0 +1,6 @@
+"","HuAgeGBsplit_18....c1_HuAgeGBsplitRnaseq_18__"
+"1","BAGE2"
+"2","C17orf51"
+"3","LINC00944"
+"4","PRRX2"
+"5","XIRP1"

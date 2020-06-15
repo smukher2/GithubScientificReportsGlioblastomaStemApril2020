@@ -1,0 +1,7 @@
+"","HuAgeGBsplit_07....c1_HuAgeGBsplitRnaseq_212__"
+"1","AC006978.2"
+"2","CHCHD10"
+"3","HDAC10"
+"4","VPREB3"
+"5","ZNRF2"
+"6","ZNRF2P2"

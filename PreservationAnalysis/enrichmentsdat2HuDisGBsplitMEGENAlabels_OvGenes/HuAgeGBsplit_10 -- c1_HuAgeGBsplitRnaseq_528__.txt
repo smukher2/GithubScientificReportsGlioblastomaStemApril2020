@@ -1,0 +1,8 @@
+"","HuAgeGBsplit_10....c1_HuAgeGBsplitRnaseq_528__"
+"1","ANXA2"
+"2","ANXA2P2"
+"3","CAVIN1"
+"4","LIMS1"
+"5","RAB11FIP4"
+"6","TSPYL5"
+"7","WWTR1"

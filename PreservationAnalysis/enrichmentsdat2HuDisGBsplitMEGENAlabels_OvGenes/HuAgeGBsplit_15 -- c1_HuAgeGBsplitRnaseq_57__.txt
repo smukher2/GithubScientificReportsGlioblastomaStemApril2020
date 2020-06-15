@@ -1,0 +1,7 @@
+"","HuAgeGBsplit_15....c1_HuAgeGBsplitRnaseq_57__"
+"1","AL589826.2"
+"2","CEP170B"
+"3","LUZP1"
+"4","POU3F2"
+"5","RAB11FIP5"
+"6","RBMXP4"

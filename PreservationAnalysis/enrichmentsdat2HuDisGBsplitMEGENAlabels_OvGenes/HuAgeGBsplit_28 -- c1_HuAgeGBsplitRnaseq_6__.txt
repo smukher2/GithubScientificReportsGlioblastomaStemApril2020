@@ -1,0 +1,7 @@
+"","HuAgeGBsplit_28....c1_HuAgeGBsplitRnaseq_6__"
+"1","AC087499.6"
+"2","AC126915.2"
+"3","DUX4L52"
+"4","FXYD6P1"
+"5","LINC02100"
+"6","RPS23P3"

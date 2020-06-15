@@ -1,0 +1,6 @@
+"","HuAgeGBsplit_01....c1_HuAgeGBsplitRnaseq_757__"
+"1","AC138207.2"
+"2","AL022328.4"
+"3","ARHGAP27P2"
+"4","COX6A1P2"
+"5","DLK2"

@@ -1,0 +1,8 @@
+"","HuAgeGBsplit_12....c1_HuAgeGBsplitRnaseq_13__"
+"1","AC010894.2"
+"2","AL132709.1"
+"3","HSD3B7"
+"4","MEG3"
+"5","MEG9"
+"6","PIK3R3"
+"7","PLCXD2"

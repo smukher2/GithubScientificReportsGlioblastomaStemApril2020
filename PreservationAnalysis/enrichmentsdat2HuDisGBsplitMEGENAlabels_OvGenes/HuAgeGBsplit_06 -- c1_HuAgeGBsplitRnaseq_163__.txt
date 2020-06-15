@@ -1,0 +1,8 @@
+"","HuAgeGBsplit_06....c1_HuAgeGBsplitRnaseq_163__"
+"1","AC010168.2"
+"2","AC104695.3"
+"3","FOSL2"
+"4","HIST4H4"
+"5","SLC2A3"
+"6","SYNGR2"
+"7","TMC6"
