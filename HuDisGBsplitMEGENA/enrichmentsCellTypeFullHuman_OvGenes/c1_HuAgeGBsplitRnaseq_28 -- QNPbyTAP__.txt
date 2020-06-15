@@ -1,0 +1,7 @@
+"","c1_HuAgeGBsplitRnaseq_28....QNPbyTAP__"
+"1","APOM"
+"2","GABARAP"
+"3","MIP"
+"4","NTRK3"
+"5","SLC25A24"
+"6","VAMP2"

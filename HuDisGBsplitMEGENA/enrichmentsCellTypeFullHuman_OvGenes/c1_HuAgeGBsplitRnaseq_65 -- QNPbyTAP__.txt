@@ -1,0 +1,8 @@
+"","c1_HuAgeGBsplitRnaseq_65....QNPbyTAP__"
+"1","CD80"
+"2","DCBLD2"
+"3","FAM181B"
+"4","FUOM"
+"5","NAALADL1"
+"6","PRCP"
+"7","RCAN1"

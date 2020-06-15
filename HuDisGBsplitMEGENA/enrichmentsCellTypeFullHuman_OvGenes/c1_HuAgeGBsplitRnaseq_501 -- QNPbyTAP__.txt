@@ -1,0 +1,8 @@
+"","c1_HuAgeGBsplitRnaseq_501....QNPbyTAP__"
+"1","DGAT2"
+"2","ETS2"
+"3","FNDC3B"
+"4","GSDMA"
+"5","IL11"
+"6","RHBDL3"
+"7","RTL3"

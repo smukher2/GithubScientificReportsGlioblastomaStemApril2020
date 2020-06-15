@@ -1,0 +1,6 @@
+"","c1_HuAgeGBsplitRnaseq_395....TAPbyQNP__"
+"1","AGAP2"
+"2","CDK4"
+"3","FRMD4B"
+"4","PLD1"
+"5","SMOC2"

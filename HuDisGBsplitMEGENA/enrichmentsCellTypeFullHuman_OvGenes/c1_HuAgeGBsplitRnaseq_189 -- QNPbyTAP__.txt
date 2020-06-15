@@ -1,0 +1,8 @@
+"","c1_HuAgeGBsplitRnaseq_189....QNPbyTAP__"
+"1","CKAP2"
+"2","DCLK1"
+"3","ITM2B"
+"4","MTMR6"
+"5","PROSER1"
+"6","RFC3"
+"7","SAP18"

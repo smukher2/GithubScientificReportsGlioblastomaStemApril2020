@@ -1,0 +1,5 @@
+"","c1_HuAgeGBsplitRnaseq_125....TAPbyQNP__"
+"1","CLP1"
+"2","SSRP1"
+"3","TIMM10"
+"4","UBE2L6"

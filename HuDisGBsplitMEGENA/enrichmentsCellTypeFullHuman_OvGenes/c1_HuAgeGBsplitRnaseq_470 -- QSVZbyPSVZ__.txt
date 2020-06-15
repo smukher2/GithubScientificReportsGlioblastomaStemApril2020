@@ -1,0 +1,8 @@
+"","c1_HuAgeGBsplitRnaseq_470....QSVZbyPSVZ__"
+"1","C1GALT1"
+"2","CAPN5"
+"3","IL15RA"
+"4","OPLAH"
+"5","RASGEF1A"
+"6","TTR"
+"7","UBXN10"

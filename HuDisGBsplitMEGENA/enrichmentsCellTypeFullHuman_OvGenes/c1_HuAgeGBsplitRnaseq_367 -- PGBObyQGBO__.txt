@@ -1,0 +1,8 @@
+"","c1_HuAgeGBsplitRnaseq_367....PGBObyQGBO__"
+"1","AC048341.1"
+"2","AC093382.1"
+"3","CBX1P1"
+"4","CCSAP"
+"5","DDR2"
+"6","LIN7A"
+"7","LINC01465"

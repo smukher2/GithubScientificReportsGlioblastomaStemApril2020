@@ -1,0 +1,8 @@
+"","c1_HuAgeGBsplitRnaseq_2024....NSCbyNPC__"
+"1","CENPQ"
+"2","ELF4"
+"3","PPP1R17"
+"4","PRIM2"
+"5","SYNE2"
+"6","XKR5"
+"7","XRCC3"

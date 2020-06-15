@@ -1,0 +1,7 @@
+"","c1_HuAgeGBsplitRnaseq_180....PSVZbyQSVZ__"
+"1","CCDC73"
+"2","EGFR"
+"3","ENPP4"
+"4","IL2"
+"5","PDZD9"
+"6","SBSN"

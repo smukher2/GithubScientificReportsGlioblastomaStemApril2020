@@ -1,0 +1,6 @@
+"","c1_HuAgeGBsplitRnaseq_339....NSCbyNPC__"
+"1","C4orf19"
+"2","IRGM"
+"3","TNFRSF13B"
+"4","TNFRSF1A"
+"5","ZNF22"

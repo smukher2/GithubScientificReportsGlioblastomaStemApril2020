@@ -1,0 +1,3 @@
+"","Term","Overlap","P.value","Adjusted.P.value","Old.P.value","Old.Adjusted.P.value","Odds.Ratio","Combined.Score","Genes","Overlap_Number"
+"1","Peroxisome_Homo sapiens_hsa04146","3/83",0.0179506415264851,1,0,0,5.43527493432376,21.8505086967086,"PEX16;CAT;FAR1",3
+"2","Proteasome_Homo sapiens_hsa03050","2/44",0.0346173430637843,1,0,0,6.83526999316473,22.9897503614596,"PSMC3;PSMD13",2

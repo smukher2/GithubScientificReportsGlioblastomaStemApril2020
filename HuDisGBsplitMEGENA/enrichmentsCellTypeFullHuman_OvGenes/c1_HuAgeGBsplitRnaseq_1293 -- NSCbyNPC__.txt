@@ -1,0 +1,7 @@
+"","c1_HuAgeGBsplitRnaseq_1293....NSCbyNPC__"
+"1","APOBEC3H"
+"2","METTL25"
+"3","PLPPR4"
+"4","PRELID2"
+"5","RREB1"
+"6","ZRANB3"

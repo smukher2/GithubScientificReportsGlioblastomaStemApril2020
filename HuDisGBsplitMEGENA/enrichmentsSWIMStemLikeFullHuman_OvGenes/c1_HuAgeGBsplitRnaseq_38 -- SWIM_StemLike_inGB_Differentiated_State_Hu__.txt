@@ -1,0 +1,7 @@
+"","c1_HuAgeGBsplitRnaseq_38....SWIM_StemLike_inGB_Differentiated_State_Hu__"
+"1","ALDH5A1"
+"2","GRIK3"
+"3","LAPTM4B"
+"4","MAP2"
+"5","RNF157"
+"6","UNC80"

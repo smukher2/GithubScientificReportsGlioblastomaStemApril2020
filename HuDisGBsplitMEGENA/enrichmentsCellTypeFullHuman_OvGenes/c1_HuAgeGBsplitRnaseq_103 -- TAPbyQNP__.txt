@@ -1,0 +1,4 @@
+"","c1_HuAgeGBsplitRnaseq_103....TAPbyQNP__"
+"1","AP1S2"
+"2","PKNOX2"
+"3","SLC2A12"

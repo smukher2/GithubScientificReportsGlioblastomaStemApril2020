@@ -1,0 +1,8 @@
+"","c1_HuAgeGBsplitRnaseq_411....NSCbyNPC__"
+"1","BLM"
+"2","CASP8"
+"3","CCDC114"
+"4","CCNO"
+"5","KCNQ4"
+"6","MNS1"
+"7","TIMD4"

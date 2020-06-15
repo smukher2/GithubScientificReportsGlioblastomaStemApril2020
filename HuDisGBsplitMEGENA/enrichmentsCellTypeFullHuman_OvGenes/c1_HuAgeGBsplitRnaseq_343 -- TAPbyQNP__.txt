@@ -1,0 +1,6 @@
+"","c1_HuAgeGBsplitRnaseq_343....TAPbyQNP__"
+"1","AP1G2"
+"2","EPS8L1"
+"3","LGALS12"
+"4","RBM34"
+"5","VN1R4"

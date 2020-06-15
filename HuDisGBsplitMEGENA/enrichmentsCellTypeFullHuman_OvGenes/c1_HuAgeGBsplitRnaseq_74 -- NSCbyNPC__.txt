@@ -1,0 +1,7 @@
+"","c1_HuAgeGBsplitRnaseq_74....NSCbyNPC__"
+"1","CD55"
+"2","CLEC10A"
+"3","LPXN"
+"4","MAGEB6B"
+"5","TIFAB"
+"6","XCR1"

@@ -1,0 +1,8 @@
+"","c1_HuAgeGBsplitRnaseq_605....PGBObyQGBO__"
+"1","AC012512.1"
+"2","AP001527.2"
+"3","EFNB2"
+"4","IL1RAP"
+"5","LINC01711"
+"6","SERPINE2"
+"7","SLC49A3"

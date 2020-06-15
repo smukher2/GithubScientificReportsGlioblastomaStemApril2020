@@ -1,0 +1,7 @@
+"","c1_HuAgeGBsplitRnaseq_19....TAPbyQNP__"
+"1","C2orf88"
+"2","EIF1AY"
+"3","KBTBD11"
+"4","LRRC61"
+"5","TPD52L1"
+"6","ZFY"

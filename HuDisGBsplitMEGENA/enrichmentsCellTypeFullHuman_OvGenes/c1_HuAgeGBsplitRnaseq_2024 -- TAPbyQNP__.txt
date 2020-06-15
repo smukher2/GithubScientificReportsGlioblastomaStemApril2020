@@ -1,0 +1,8 @@
+"","c1_HuAgeGBsplitRnaseq_2024....TAPbyQNP__"
+"1","DERL3"
+"2","INPP1"
+"3","NEMP2"
+"4","PRIM2"
+"5","SNAP91"
+"6","TCEANC2"
+"7","XKR5"

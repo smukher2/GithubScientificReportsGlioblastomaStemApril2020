@@ -1,0 +1,6 @@
+"","c1_HuAgeGBsplitRnaseq_16....TAPbyQNP__"
+"1","BASP1"
+"2","C6orf58"
+"3","MMP16"
+"4","PPP1R2B"
+"5","PREX1"

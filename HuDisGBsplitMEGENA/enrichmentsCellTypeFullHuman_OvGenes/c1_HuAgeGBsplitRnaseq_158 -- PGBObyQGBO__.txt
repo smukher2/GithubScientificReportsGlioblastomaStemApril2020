@@ -1,0 +1,7 @@
+"","c1_HuAgeGBsplitRnaseq_158....PGBObyQGBO__"
+"1","AC138969.1"
+"2","AMOTL1"
+"3","GFAP"
+"4","METTL27"
+"5","PBX2P1"
+"6","PLCD3"

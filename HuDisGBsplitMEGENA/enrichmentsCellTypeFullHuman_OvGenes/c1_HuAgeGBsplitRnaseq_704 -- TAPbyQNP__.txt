@@ -1,0 +1,7 @@
+"","c1_HuAgeGBsplitRnaseq_704....TAPbyQNP__"
+"1","APIP"
+"2","COMMD3"
+"3","MAP3K5"
+"4","PDHX"
+"5","PLA2G12A"
+"6","PROX1"

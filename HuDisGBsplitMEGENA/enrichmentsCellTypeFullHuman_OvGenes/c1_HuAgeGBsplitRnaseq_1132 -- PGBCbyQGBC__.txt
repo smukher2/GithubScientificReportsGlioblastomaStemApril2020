@@ -1,0 +1,6 @@
+"","c1_HuAgeGBsplitRnaseq_1132....PGBCbyQGBC__"
+"1","AC025475.1"
+"2","AC112220.2"
+"3","AC112220.4"
+"4","CARD6"
+"5","FZD1"

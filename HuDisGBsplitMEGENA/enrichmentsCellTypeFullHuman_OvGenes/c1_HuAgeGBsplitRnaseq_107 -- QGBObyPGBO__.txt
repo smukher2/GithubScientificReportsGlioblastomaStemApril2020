@@ -1,0 +1,8 @@
+"","c1_HuAgeGBsplitRnaseq_107....QGBObyPGBO__"
+"1","AC011816.2"
+"2","AC012414.6"
+"3","AL031121.1"
+"4","EPO"
+"5","MIR320A"
+"6","NPM1P12"
+"7","YBX2P1"

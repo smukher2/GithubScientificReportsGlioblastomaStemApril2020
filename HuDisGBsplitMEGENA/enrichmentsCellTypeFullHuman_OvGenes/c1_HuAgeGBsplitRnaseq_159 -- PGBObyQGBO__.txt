@@ -1,0 +1,7 @@
+"","c1_HuAgeGBsplitRnaseq_159....PGBObyQGBO__"
+"1","AC068620.1"
+"2","IQCD"
+"3","KRTCAP3"
+"4","OSGEPL1"
+"5","RASL11B"
+"6","RN7SL804P"

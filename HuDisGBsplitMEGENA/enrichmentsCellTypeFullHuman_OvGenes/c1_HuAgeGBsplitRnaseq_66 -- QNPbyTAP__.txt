@@ -1,0 +1,7 @@
+"","c1_HuAgeGBsplitRnaseq_66....QNPbyTAP__"
+"1","ABHD2"
+"2","BMP1"
+"3","EMP1"
+"4","GAS6"
+"5","MFGE8"
+"6","SLC22A5"

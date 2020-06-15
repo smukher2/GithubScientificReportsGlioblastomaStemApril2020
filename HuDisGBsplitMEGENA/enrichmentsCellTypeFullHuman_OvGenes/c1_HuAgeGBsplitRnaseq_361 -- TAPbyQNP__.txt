@@ -1,0 +1,4 @@
+"","c1_HuAgeGBsplitRnaseq_361....TAPbyQNP__"
+"1","CRADD"
+"2","SLC11A2"
+"3","TCP11L2"

@@ -1,0 +1,8 @@
+"","c1_HuAgeGBsplitRnaseq_597....QGBObyPGBO__"
+"1","AC025459.1"
+"2","LINC01672"
+"3","NXN"
+"4","PNMA3"
+"5","RPL24P4"
+"6","SEMA3A"
+"7","WFDC1"

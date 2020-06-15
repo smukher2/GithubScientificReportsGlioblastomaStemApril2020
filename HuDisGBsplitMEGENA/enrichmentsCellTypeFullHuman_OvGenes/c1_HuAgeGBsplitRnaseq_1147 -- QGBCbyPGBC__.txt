@@ -1,0 +1,7 @@
+"","c1_HuAgeGBsplitRnaseq_1147....QGBCbyPGBC__"
+"1","AC127537.1"
+"2","AL683813.2"
+"3","LINC00328-2P"
+"4","PRRC2CP1"
+"5","RNA5SP166"
+"6","RNF183"

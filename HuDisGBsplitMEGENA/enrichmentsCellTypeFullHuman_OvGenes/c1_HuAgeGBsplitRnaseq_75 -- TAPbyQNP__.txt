@@ -1,0 +1,6 @@
+"","c1_HuAgeGBsplitRnaseq_75....TAPbyQNP__"
+"1","ANKRD1"
+"2","RBM24"
+"3","RRM2"
+"4","TIGAR"
+"5","TNNT2"

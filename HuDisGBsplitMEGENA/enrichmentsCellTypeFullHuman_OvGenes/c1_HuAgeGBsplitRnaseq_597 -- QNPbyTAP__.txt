@@ -1,0 +1,6 @@
+"","c1_HuAgeGBsplitRnaseq_597....QNPbyTAP__"
+"1","FGFR3"
+"2","GRIA3"
+"3","NXN"
+"4","PHYHD1"
+"5","SEMA3A"

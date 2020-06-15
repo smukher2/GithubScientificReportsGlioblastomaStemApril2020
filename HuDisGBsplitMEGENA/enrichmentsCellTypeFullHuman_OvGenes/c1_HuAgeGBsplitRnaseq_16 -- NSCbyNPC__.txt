@@ -1,0 +1,6 @@
+"","c1_HuAgeGBsplitRnaseq_16....NSCbyNPC__"
+"1","COLCA2"
+"2","DHFR"
+"3","FBXO48"
+"4","MESP2"
+"5","RNU6-1328P"

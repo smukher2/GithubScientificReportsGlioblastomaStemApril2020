@@ -1,0 +1,7 @@
+"","c1_HuAgeGBsplitRnaseq_90....QNPbyTAP__"
+"1","CBX1"
+"2","CCS"
+"3","FZD9"
+"4","LITAF"
+"5","MAP2K6"
+"6","PDLIM1"

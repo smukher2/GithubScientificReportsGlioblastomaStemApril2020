@@ -1,0 +1,7 @@
+"","c1_HuAgeGBsplitRnaseq_1247....PGBObyQGBO__"
+"1","AL136379.1"
+"2","FO393411.1"
+"3","HIST1H2BI"
+"4","MRPS5P3"
+"5","RNU6-781P"
+"6","RPS2P4"

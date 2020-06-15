@@ -1,0 +1,8 @@
+"","c1_HuAgeGBsplitRnaseq_79....NSCbyNPC__"
+"1","GUCA1A"
+"2","HIPK4"
+"3","HTR1B"
+"4","KCNA4"
+"5","MYB"
+"6","RGS14"
+"7","SV2C"

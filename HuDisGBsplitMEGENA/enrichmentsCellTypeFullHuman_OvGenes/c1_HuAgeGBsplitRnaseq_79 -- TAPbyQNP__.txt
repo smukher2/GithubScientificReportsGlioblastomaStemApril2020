@@ -1,0 +1,7 @@
+"","c1_HuAgeGBsplitRnaseq_79....TAPbyQNP__"
+"1","ARHGAP20"
+"2","GPR155"
+"3","MYB"
+"4","PDE10A"
+"5","SLC35D3"
+"6","TOMM34"

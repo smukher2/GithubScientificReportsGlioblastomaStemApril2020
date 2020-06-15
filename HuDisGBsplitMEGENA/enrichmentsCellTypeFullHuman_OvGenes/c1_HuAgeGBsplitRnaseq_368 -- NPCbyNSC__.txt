@@ -1,0 +1,8 @@
+"","c1_HuAgeGBsplitRnaseq_368....NPCbyNSC__"
+"1","CLVS1"
+"2","FZD1"
+"3","GATA2"
+"4","KLHDC9"
+"5","SERPINF1"
+"6","SLC2A10"
+"7","TXLNB"

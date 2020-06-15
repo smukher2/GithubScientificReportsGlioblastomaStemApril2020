@@ -1,0 +1,7 @@
+"","c1_HuAgeGBsplitRnaseq_1297....QGBCbyPGBC__"
+"1","AC010931.3"
+"2","GRB14"
+"3","MTMR3"
+"4","RAB3B"
+"5","RGS6"
+"6","RNU6-62P"

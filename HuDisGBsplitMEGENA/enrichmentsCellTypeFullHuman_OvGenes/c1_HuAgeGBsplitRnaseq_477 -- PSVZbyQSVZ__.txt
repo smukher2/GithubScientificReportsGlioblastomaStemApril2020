@@ -1,0 +1,8 @@
+"","c1_HuAgeGBsplitRnaseq_477....PSVZbyQSVZ__"
+"1","CGNL1"
+"2","KCTD14"
+"3","OTX1"
+"4","PBX1"
+"5","PRSS12"
+"6","PTGS1"
+"7","RPH3A"

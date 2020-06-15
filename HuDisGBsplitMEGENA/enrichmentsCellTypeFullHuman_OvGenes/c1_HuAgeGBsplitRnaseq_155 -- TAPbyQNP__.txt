@@ -1,0 +1,7 @@
+"","c1_HuAgeGBsplitRnaseq_155....TAPbyQNP__"
+"1","GPR37L1"
+"2","KIFC3"
+"3","KPNA2"
+"4","RPAP2"
+"5","SPOP"
+"6","TBL1X"

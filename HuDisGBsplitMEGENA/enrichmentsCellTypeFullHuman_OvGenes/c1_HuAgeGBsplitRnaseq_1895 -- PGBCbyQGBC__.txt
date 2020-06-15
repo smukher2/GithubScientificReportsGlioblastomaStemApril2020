@@ -1,0 +1,8 @@
+"","c1_HuAgeGBsplitRnaseq_1895....PGBCbyQGBC__"
+"1","COX6B1P1"
+"2","EEF1GP7"
+"3","GPRC5A"
+"4","RPL22P12"
+"5","SPIN2B"
+"6","SPIN3"
+"7","SUV39H1"

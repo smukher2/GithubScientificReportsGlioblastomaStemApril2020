@@ -1,0 +1,8 @@
+"","c1_HuAgeGBsplitRnaseq_89....SWIM_StemLike_inGB_Differentiated_State_Hu__"
+"1","A4GALT"
+"2","BCL7A"
+"3","KIF21A"
+"4","LRP8"
+"5","P2RX7"
+"6","PELI1"
+"7","SCARB1"

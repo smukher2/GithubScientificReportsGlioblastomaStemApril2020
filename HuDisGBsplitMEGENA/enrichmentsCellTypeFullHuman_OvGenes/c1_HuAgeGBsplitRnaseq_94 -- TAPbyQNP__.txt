@@ -1,0 +1,7 @@
+"","c1_HuAgeGBsplitRnaseq_94....TAPbyQNP__"
+"1","C1GALT1"
+"2","IL21"
+"3","IRX1"
+"4","IRX2"
+"5","PCDH15"
+"6","PCDH18"

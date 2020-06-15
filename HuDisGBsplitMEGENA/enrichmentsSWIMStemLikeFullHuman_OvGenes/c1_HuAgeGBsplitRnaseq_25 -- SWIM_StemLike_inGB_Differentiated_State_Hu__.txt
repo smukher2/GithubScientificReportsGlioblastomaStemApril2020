@@ -1,0 +1,8 @@
+"","c1_HuAgeGBsplitRnaseq_25....SWIM_StemLike_inGB_Differentiated_State_Hu__"
+"1","CD109"
+"2","CITED1"
+"3","CKB"
+"4","ELOVL2"
+"5","RNF165"
+"6","SORBS2"
+"7","WWC1"

@@ -1,0 +1,6 @@
+"","c1_HuAgeGBsplitRnaseq_477....QNPbyTAP__"
+"1","DLX3"
+"2","KCTD14"
+"3","MAGEH1"
+"4","NGFR"
+"5","SDK2"

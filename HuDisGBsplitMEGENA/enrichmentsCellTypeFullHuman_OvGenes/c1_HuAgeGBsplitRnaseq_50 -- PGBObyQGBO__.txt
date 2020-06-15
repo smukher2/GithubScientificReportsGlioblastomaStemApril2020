@@ -1,0 +1,8 @@
+"","c1_HuAgeGBsplitRnaseq_50....PGBObyQGBO__"
+"1","AC007325.4"
+"2","AC073389.3"
+"3","MC1R"
+"4","PLAT"
+"5","PRDM8"
+"6","UQCRBP3"
+"7","ZNF319"

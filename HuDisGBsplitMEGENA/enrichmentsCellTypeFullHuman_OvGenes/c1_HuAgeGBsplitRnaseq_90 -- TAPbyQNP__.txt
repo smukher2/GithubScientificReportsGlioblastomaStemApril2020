@@ -1,0 +1,8 @@
+"","c1_HuAgeGBsplitRnaseq_90....TAPbyQNP__"
+"1","ADGRG6"
+"2","FBXW7"
+"3","FGD3"
+"4","FIGN"
+"5","FNBP1L"
+"6","KLHL17"
+"7","MZT2B"

@@ -1,0 +1,7 @@
+"","c1_HuAgeGBsplitRnaseq_1955....PGBCbyQGBC__"
+"1","AC098820.1"
+"2","AL157823.2"
+"3","AL805961.1"
+"4","HMGN2P21"
+"5","PKMP1"
+"6","RNU6-31P"

@@ -1,0 +1,6 @@
+"","c1_HuAgeGBsplitRnaseq_428....NPCbyNSC__"
+"1","C5orf63"
+"2","CCDC30"
+"3","CFAP161"
+"4","EPHA4"
+"5","SLC14A1"

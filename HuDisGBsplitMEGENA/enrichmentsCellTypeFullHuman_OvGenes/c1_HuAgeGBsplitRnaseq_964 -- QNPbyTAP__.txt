@@ -1,0 +1,7 @@
+"","c1_HuAgeGBsplitRnaseq_964....QNPbyTAP__"
+"1","ANKRD50"
+"2","NDUFC1"
+"3","NUDT6"
+"4","PYURF"
+"5","SEC31A"
+"6","SETD7"

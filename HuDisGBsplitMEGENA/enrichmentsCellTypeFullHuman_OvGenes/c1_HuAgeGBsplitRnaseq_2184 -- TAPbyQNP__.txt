@@ -1,0 +1,8 @@
+"","c1_HuAgeGBsplitRnaseq_2184....TAPbyQNP__"
+"1","CACHD1"
+"2","CR1"
+"3","FAM135B"
+"4","HIF1A"
+"5","IFNGR1"
+"6","PPP1R14C"
+"7","TNFAIP8"

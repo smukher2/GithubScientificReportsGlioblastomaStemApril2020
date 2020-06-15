@@ -1,0 +1,7 @@
+"","c1_HuAgeGBsplitRnaseq_57....SWIM_StemLike_inGB_Differentiated_State_Hu__"
+"1","C8orf46"
+"2","MBNL1"
+"3","POU3F2"
+"4","SCRG1"
+"5","SOX6"
+"6","SPTBN1"

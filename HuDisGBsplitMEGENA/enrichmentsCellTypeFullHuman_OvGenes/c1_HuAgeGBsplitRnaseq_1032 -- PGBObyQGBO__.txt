@@ -1,0 +1,8 @@
+"","c1_HuAgeGBsplitRnaseq_1032....PGBObyQGBO__"
+"1","AC092375.2"
+"2","AL355297.3"
+"3","AP003355.3"
+"4","CRIP1"
+"5","CYP27C1"
+"6","GPRC5A"
+"7","PPP1R26-AS1"

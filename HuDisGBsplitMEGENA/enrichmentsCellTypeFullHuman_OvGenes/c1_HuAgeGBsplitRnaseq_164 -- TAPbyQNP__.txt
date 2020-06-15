@@ -1,0 +1,8 @@
+"","c1_HuAgeGBsplitRnaseq_164....TAPbyQNP__"
+"1","ADHFE1"
+"2","ELK3"
+"3","EN2"
+"4","ESR1"
+"5","KIAA0513"
+"6","PHTF1"
+"7","PRKCG"

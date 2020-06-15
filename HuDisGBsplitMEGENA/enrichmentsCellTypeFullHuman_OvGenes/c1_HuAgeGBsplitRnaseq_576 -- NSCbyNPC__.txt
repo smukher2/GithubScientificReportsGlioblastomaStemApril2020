@@ -1,0 +1,8 @@
+"","c1_HuAgeGBsplitRnaseq_576....NSCbyNPC__"
+"1","BIRC3"
+"2","CD79B"
+"3","OLIG1"
+"4","SNX9"
+"5","SRD5A3"
+"6","TNFAIP3"
+"7","USP46"

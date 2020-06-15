@@ -1,0 +1,6 @@
+"","c1_HuAgeGBsplitRnaseq_1297....QGBObyPGBO__"
+"1","CHIC1"
+"2","FKBP1C"
+"3","PPM1H"
+"4","RNU6-62P"
+"5","TRH"

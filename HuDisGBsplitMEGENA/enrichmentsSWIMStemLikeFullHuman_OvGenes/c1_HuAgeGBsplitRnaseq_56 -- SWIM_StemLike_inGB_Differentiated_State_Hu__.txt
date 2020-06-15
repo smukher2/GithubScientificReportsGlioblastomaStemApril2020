@@ -1,0 +1,6 @@
+"","c1_HuAgeGBsplitRnaseq_56....SWIM_StemLike_inGB_Differentiated_State_Hu__"
+"1","ENOSF1"
+"2","LAMA1"
+"3","RAB33A"
+"4","TYMS"
+"5","WNK2"

@@ -1,0 +1,6 @@
+"","c1_HuAgeGBsplitRnaseq_338....QNPbyTAP__"
+"1","C17orf97"
+"2","FSCN2"
+"3","IRX5"
+"4","NPAS1"
+"5","VAT1L"

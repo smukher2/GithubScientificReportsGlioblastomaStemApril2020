@@ -1,0 +1,6 @@
+"","c1_HuAgeGBsplitRnaseq_776....PGBObyQGBO__"
+"1","HNRNPA3P12"
+"2","MYL12BP1"
+"3","PIDD1"
+"4","U73166.1"
+"5","WDR73"

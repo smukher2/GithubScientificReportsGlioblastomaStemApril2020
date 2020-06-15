@@ -1,0 +1,8 @@
+"","c1_HuAgeGBsplitRnaseq_1353....QGBObyPGBO__"
+"1","AC126755.3"
+"2","AC136443.3"
+"3","AL031123.2"
+"4","DMRT3"
+"5","HMX3"
+"6","RNU6-758P"
+"7","TTR"

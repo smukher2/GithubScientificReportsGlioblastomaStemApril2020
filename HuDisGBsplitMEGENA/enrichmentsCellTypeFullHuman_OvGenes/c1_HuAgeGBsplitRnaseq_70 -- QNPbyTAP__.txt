@@ -1,0 +1,6 @@
+"","c1_HuAgeGBsplitRnaseq_70....QNPbyTAP__"
+"1","FAM110B"
+"2","KANK2"
+"3","MED9"
+"4","SIX1"
+"5","ZNF703"

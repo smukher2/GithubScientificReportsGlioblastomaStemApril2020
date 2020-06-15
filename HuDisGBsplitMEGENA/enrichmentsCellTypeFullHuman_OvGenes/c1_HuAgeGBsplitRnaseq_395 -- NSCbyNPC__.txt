@@ -1,0 +1,8 @@
+"","c1_HuAgeGBsplitRnaseq_395....NSCbyNPC__"
+"1","ATPAF1"
+"2","CDK4"
+"3","FANCL"
+"4","GDF3"
+"5","SMIM22"
+"6","TMEM69"
+"7","VRK2"

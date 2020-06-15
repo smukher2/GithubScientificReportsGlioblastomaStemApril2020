@@ -1,0 +1,7 @@
+"","c1_HuAgeGBsplitRnaseq_85....SWIM_StemLike_inGB_Differentiated_State_Hu__"
+"1","CTGF"
+"2","CXorf36"
+"3","IGFBP7"
+"4","IL4R"
+"5","LAMA4"
+"6","SLCO4A1"

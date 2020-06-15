@@ -1,0 +1,8 @@
+"","c1_HuAgeGBsplitRnaseq_1106....NPCbyNSC__"
+"1","C8G"
+"2","CASKIN1"
+"3","DUSP26"
+"4","JPH4"
+"5","RNF112"
+"6","SERF1A"
+"7","TSPOAP1"

@@ -1,0 +1,8 @@
+"","c1_HuAgeGBsplitRnaseq_1147....PGBCbyQGBC__"
+"1","AC023232.1"
+"2","AC073869.3"
+"3","AK2P2"
+"4","RN7SL591P"
+"5","RN7SL618P"
+"6","RNU6ATAC36P"
+"7","RPSAP49"

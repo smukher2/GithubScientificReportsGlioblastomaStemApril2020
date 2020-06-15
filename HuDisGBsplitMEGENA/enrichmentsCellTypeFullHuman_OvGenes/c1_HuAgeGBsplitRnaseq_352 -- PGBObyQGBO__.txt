@@ -1,0 +1,8 @@
+"","c1_HuAgeGBsplitRnaseq_352....PGBObyQGBO__"
+"1","AC026367.1"
+"2","AC104073.2"
+"3","AP000553.3"
+"4","EIF3LP3"
+"5","FAM92A1P1"
+"6","RNU7-134P"
+"7","TUBBP2"

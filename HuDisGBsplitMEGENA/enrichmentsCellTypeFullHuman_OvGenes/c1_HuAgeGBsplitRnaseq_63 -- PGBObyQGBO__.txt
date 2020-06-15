@@ -1,0 +1,8 @@
+"","c1_HuAgeGBsplitRnaseq_63....PGBObyQGBO__"
+"1","ACTBP9"
+"2","AF131216.2"
+"3","MT-TD"
+"4","MT-TG"
+"5","MT-TS1"
+"6","RPL19P21"
+"7","SNED1"

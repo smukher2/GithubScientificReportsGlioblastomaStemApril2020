@@ -1,0 +1,8 @@
+"","c1_HuAgeGBsplitRnaseq_73....PGBObyQGBO__"
+"1","AC073342.3"
+"2","AC091953.2"
+"3","AC136632.2"
+"4","AGAP2"
+"5","EPS8"
+"6","RPL34P6"
+"7","RPL41P1"

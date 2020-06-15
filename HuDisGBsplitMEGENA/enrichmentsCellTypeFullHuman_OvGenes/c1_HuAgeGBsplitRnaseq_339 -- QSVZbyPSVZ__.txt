@@ -1,0 +1,8 @@
+"","c1_HuAgeGBsplitRnaseq_339....QSVZbyPSVZ__"
+"1","C4orf19"
+"2","IGF2BP3"
+"3","IRGM"
+"4","NXT2"
+"5","PLLP"
+"6","SEMA6D"
+"7","TNFRSF1A"

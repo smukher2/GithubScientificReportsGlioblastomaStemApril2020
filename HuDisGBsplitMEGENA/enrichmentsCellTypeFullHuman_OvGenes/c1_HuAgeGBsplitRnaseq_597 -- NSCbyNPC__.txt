@@ -1,0 +1,7 @@
+"","c1_HuAgeGBsplitRnaseq_597....NSCbyNPC__"
+"1","ELOVL2"
+"2","KCNE5"
+"3","KLHDC7A"
+"4","PLCH1"
+"5","RNF149"
+"6","TACC3"

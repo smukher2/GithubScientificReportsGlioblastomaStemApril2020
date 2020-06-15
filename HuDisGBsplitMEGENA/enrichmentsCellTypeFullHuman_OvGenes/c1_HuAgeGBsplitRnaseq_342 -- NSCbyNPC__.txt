@@ -1,0 +1,4 @@
+"","c1_HuAgeGBsplitRnaseq_342....NSCbyNPC__"
+"1","DNAJC10"
+"2","FZD10"
+"3","VPS13A"

@@ -1,0 +1,7 @@
+"","c1_HuAgeGBsplitRnaseq_2034....PGBObyQGBO__"
+"1","AC069213.3"
+"2","AC099552.4"
+"3","AL359263.1"
+"4","HYAL1"
+"5","KRT18"
+"6","KRT8"
