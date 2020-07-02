@@ -11,7 +11,7 @@ Shradha Mukherjee*#
 Address correspondence to: Shradha Mukherjee, PhD; Garland Avenue, Downtown Los Angeles, Los Angeles, CA 90017, U.S. Email: smukher2@gmail.com
 * First author and # Corresponding author
 
-Shradha Mukherjee, PhD in Biochemistry 
+Shradha Mukherjee, PhD in Biochemistry,                                                                                                                                       
 MS in Chemistry, MAS in Health Informatics 
 
 Linkedin Link https://www.linkedin.com/in/shradhamukherjee                                                                                        
