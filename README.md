@@ -1,12 +1,15 @@
 # GithubScientificReports2020
 
-**Quiescent stem cell marker genes in glioma gene networks are sufficient to distinguish between normal and glioblastoma (GBM) samples. 
+# Citation: This github repository is made open access in hope that it will enable researchers replicate and/or adapt it for their work. So if you use or adapt the results, inferences and computational pipelines presented here, I will be grateful if you please help by citing it as follows. 
 
+# Please help by citing this article as follows: 
+## Mukherjee, S. Quiescent stem cell marker genes in glioma gene networks are sufficient to distinguish between normal and glioblastoma (GBM) samples. Sci Rep 10, 10937 (2020). https://doi.org/10.1038/s41598-020-67753-5
+
+
+# Author Information
 Shradha Mukherjee*#
-Independent Researcher
 Address correspondence to: Shradha Mukherjee, PhD; Garland Avenue, Downtown Los Angeles, Los Angeles, CA 90017, U.S. Email: smukher2@gmail.com
 * First author and # Corresponding author
-
 
 Shradha Mukherjee, PhD in Biochemistry 
 MS in Chemistry, MAS in Health Informatics 
@@ -14,13 +17,7 @@ Linkedin Link https://www.linkedin.com/in/shradhamukherjee
 Researchgate Link https://www.researchgate.net/profile/Shradha_Mukherjee                                                         
 Github Link https://github.com/smukher2
 Pubmed Link https://www.ncbi.nlm.nih.gov/pubmed/?term=Shradha+Mukherjee   
-
-# Citation: This github repository is made open access in hope that it will enable researchers replicate and/or adapt it for their work. So if you use or adapt the results, inferences and computational pipelines presented here, I will be grateful if you please help by citing it as follows. 
-
-
-# Mukherjee, S. Quiescent stem cell marker genes in glioma gene networks are sufficient to distinguish between normal and glioblastoma (GBM) samples. Scientific Reports (accepted 2020).
- 
-
+Youtube Channel Link https://www.youtube.com/user/smukher2/playlists
 
 
 # Protocol: Organization of folders containing subfolders, files and codes. 
