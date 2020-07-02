@@ -16,7 +16,7 @@ MS in Chemistry, MAS in Health Informatics 
 
 Linkedin Link https://www.linkedin.com/in/shradhamukherjee                                                                                        
 Researchgate Link https://www.researchgate.net/profile/Shradha_Mukherjee                                                         
-Github Link https://github.com/smukher2
+Github Link https://github.com/smukher2                                                                                                                                       
 Pubmed Link https://www.ncbi.nlm.nih.gov/pubmed/?term=Shradha+Mukherjee   
 Youtube Channel Link https://www.youtube.com/user/smukher2/playlists
 
