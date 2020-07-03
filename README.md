@@ -8,7 +8,7 @@
 # Please help by citing this article and methods as follows (two citations): 
 ### Mukherjee, S. Quiescent stem cell marker genes in glioma gene networks are sufficient to distinguish between normal and glioblastoma (GBM) samples. Sci Rep 10, 10937 (2020). https://doi.org/10.1038/s41598-020-67753-5
 
-### Mukherjee, S. “Quiescent stem cell marker genes in glioma gene networks are sufficient to distinguish between normal and glioblastoma (GBM) samples” Protocol Exchange (2020) DOI 10.21203/rs.3.pex-977/v1
+### Mukherjee, S. Quiescent stem cell marker genes in glioma gene networks are sufficient to distinguish between normal and glioblastoma (GBM) samples Protocol Exchange (2020) DOI 10.21203/rs.3.pex-977/v1
 
 
 
