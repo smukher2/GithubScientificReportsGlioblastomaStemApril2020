@@ -2,8 +2,14 @@
 
 ## This github repository is made open access in hope that it will enable researchers replicate and/or adapt it for their work. So if you use or adapt the results, inferences and computational pipelines presented here, I will be grateful if you please help by citing it as follows. 
 
-# Please help by citing this article as follows: 
-## Mukherjee, S. Quiescent stem cell marker genes in glioma gene networks are sufficient to distinguish between normal and glioblastoma (GBM) samples. Sci Rep 10, 10937 (2020). https://doi.org/10.1038/s41598-020-67753-5
+### Alternative link for download from protocol exchange
+### DOI link for protocol exchange: https://dx.doi.org/10.21203/rs.3.pex-977/v1
+
+# Please help by citing this article and methods as follows (two citations): 
+### Mukherjee, S. Quiescent stem cell marker genes in glioma gene networks are sufficient to distinguish between normal and glioblastoma (GBM) samples. Sci Rep 10, 10937 (2020). https://doi.org/10.1038/s41598-020-67753-5
+
+### Mukherjee, S. “Quiescent stem cell marker genes in glioma gene networks are sufficient to distinguish between normal and glioblastoma (GBM) samples” Protocol Exchange (2020) DOI 10.21203/rs.3.pex-977/v1
+
 
 
 # Author Information
