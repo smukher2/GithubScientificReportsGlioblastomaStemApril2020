@@ -13,13 +13,13 @@
 
 # Author Information
 Shradha Mukherjee*#
-Address correspondence to: Shradha Mukherjee, PhD; Garland Avenue, Downtown Los Angeles, Los Angeles, CA 90017, U.S. Email: smukher2@gmail.com
+Address correspondence to: Shradha Mukherjee, PhD; Alias Goldy; Garland Avenue, Downtown Los Angeles, Los Angeles, CA 90017, U.S. Email: smukher2@gmail.com
 * First author and # Corresponding author
 
 Shradha Mukherjee, PhD in Biochemistry,                                                                                                                                       
 MS in Chemistry, MAS in Health Informatics 
 
-Linkedin Link https://www.linkedin.com/in/shradhamukherjee                                                                                        
+CV/Resume Link https://github.com/smukher2/Shradha_Mukherjee_Resume                                                                                         
 Researchgate Link https://www.researchgate.net/profile/Shradha_Mukherjee                                                         
 Github Link https://github.com/smukher2                                                                                                                                       
 Pubmed Link https://www.ncbi.nlm.nih.gov/pubmed/?term=Shradha+Mukherjee   
